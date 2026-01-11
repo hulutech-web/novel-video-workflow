@@ -3,9 +3,12 @@ module novel-video-workflow
 go 1.25.5
 
 require (
+	github.com/fogleman/gg v1.3.0
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/mark3labs/mcp-go v0.43.2
 	github.com/spf13/viper v1.21.0
 	go.uber.org/zap v1.27.1
+	golang.org/x/image v0.34.0
 )
 
 require (

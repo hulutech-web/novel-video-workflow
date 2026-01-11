@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"novel-video-workflow/internal/mcp"
+	"novel-video-workflow/pkg/mcp"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"syscall"
 
-	"novel-video-workflow/internal/workflow"
+	"novel-video-workflow/pkg/workflow"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
