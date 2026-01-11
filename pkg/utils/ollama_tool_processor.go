@@ -33,7 +33,7 @@ type MCPServer struct {
 
 // NewMCPServer 创建新的MCP服务器实例
 func NewMCPServer() (*MCPServer, error) {
-	cmd := exec.Command("go", "run", "main.go", "mcp")
+	cmd := exec.Command("go", "run", ".", "mcp")
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
@@ -122,10 +122,10 @@ func main() {
 		actualToolName = "generate_indextts2_audio"
 		// 设置默认值
 		if _, exists := toolCall.Arguments["reference_audio"]; !exists {
-			toolCall.Arguments["reference_audio"] = "./ref.m4a"
+			toolCall.Arguments["reference_audio"] = "./assets/ref_audio/ref.m4a"
 		}
 		if _, exists := toolCall.Arguments["output_file"]; !exists {
-			toolCall.Arguments["output_file"] = fmt.Sprintf("./output/ollama_desktop_output_%d.wav", time.Now().Unix())
+			toolCall.Arguments["output_file"] = fmt.Sprintf("./output/ollama_output_%d.wav", time.Now().Unix())
 		}
 	case "process_chapter":
 		actualToolName = "process_chapter"

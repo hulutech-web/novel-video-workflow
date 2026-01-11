@@ -19,50 +19,30 @@ pip3 install git+https://github.com/IndexTTS/IndexTTS.git
 
 # 4. 安装其他工具
 echo "安装其他工具..."
-brew install --cask aegisub
 brew install ffmpeg
-brew install drawthings
 
-# 5. 创建配置文件
-mkdir -p ~/.novel-video
-cp config.yaml ~/.novel-video/
+# 5. 创建输出目录
+mkdir -p ./output
+mkdir -p ./assets
 
-# 6. 设置Claude Desktop MCP
-CLAUDE_CONFIG="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
-if [ -f "$CLAUDE_CONFIG" ]; then
-    echo "配置Claude Desktop MCP..."
-    # 备份原配置
-    cp "$CLAUDE_CONFIG" "${CLAUDE_CONFIG}.bak"
-
-    # 添加MCP配置
-    python3 -c "
-import json
-import os
-
-config_path = '$CLAUDE_CONFIG'
-with open(config_path, 'r') as f:
-    config = json.load(f)
-
-project_path = os.path.abspath('.')
-mcp_config = {
-    'mcpServers': {
-        'novel-video': {
-            'command': 'go',
-            'args': ['run', os.path.join(project_path, 'main.go')]
-        }
-    }
-}
-
-config.update(mcp_config)
-with open(config_path, 'w') as f:
-    json.dump(config, f, indent=2)
-"
+# 6. 配置Ollama（如果已安装）
+if command -v ollama &> /dev/null; then
+    echo "检测到Ollama已安装"
+    echo "Ollama版本: $(ollama -v)"
+    # 检查是否需要启动Ollama服务
+    if ! pgrep -f "ollama serve" > /dev/null; then
+        echo "请确保Ollama服务正在运行: ollama serve"
+    fi
+else
+    echo "Ollama未安装，请访问 https://ollama.com/ 下载安装"
+    echo "或者运行: brew install ollama"
 fi
 
 echo "安装完成！"
 echo "使用方法："
-echo "1. 启动Claude Desktop"
-echo "2. 在聊天中可以使用："
+echo "1. 启动Ollama服务: ollama serve"
+echo "2. 使用ollama_tool_processor作为本地MCP服务"
+echo "3. 在Ollama中可以调用以下工具:"
+echo "   - generate_indextts2_audio: 生成音频"
 echo "   - process_chapter: 处理单个章节"
-echo "   - batch_process: 批量处理小说"
-echo "   - generate_audio: 生成音频"
+echo "   - generate_subtitles_from_indextts2: 生成字幕"
