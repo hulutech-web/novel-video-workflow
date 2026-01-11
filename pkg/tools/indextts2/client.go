@@ -34,7 +34,7 @@ func NewIndexTTS2Client(logger *zap.Logger, baseURL string) *IndexTTS2Client {
 		BaseURL: baseURL,
 		Logger:  logger,
 		HTTPClient: &http.Client{
-			Timeout: 300 * time.Second, // TTS生成可能需要较长时间
+			Timeout: 300 * time.Minute, // TTS生成可能需要较长时间,这里设置为300分钟，因为可能处理的文字很多
 		},
 	}
 }
@@ -425,7 +425,7 @@ func (c *IndexTTS2Client) DownloadAudio(audioURL, savePath string) error {
 
 // GenerateTTSWithAudio 完整的TTS生成流程
 func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath string) error {
-	c.Logger.Info("开始TTS生成", 
+	c.Logger.Info("开始TTS生成",
 		zap.String("audio_path", audioPath),
 		zap.String("text", text),
 		zap.String("output_path", outputPath))
@@ -438,7 +438,7 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 	// 获取文件信息以显示文件大小
 	if fileInfo, err := os.Stat(audioPath); err == nil {
 		size := fileInfo.Size()
-		c.Logger.Info("音频文件信息", 
+		c.Logger.Info("音频文件信息",
 			zap.String("path", audioPath),
 			zap.Int64("size_bytes", size),
 			zap.Float64("size_mb", float64(size)/(1024*1024)))
@@ -574,33 +574,33 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	// 根据WebUI的实现，我们需要特别注意参数类型和值
 	// 根据错误信息，服务端实际期望的是英文选项
 	emoControlMethod := "Same as the voice reference" // 使用服务端实际接受的英文选项
-	
+
 	requestData := map[string]interface{}{
 		"data": []interface{}{
-			emoControlMethod,              // 0: emo_control_method - 情感控制方式
-			uploadResp,                    // 1: prompt - 音色参考音频（使用上传后的路径）
-			text,                          // 2: text - 输入文本
-			nil,                           // 3: emo_ref_path - 情感参考音频路径(设为nil)
-			0.65,                          // 4: emo_weight - 情感权重
-			0.0,                           // 5: vec1 - 情感向量1(喜)
-			0.0,                           // 6: vec2 - 情感向量2(怒)
-			0.0,                           // 7: vec3 - 情感向量3(哀)
-			0.0,                           // 8: vec4 - 情感向量4(惧)
-			0.0,                           // 9: vec5 - 情感向量5(厌恶)
-			0.0,                           // 10: vec6 - 情感向量6(低落)
-			0.0,                           // 11: vec7 - 情感向量7(惊喜)
-			0.0,                           // 12: vec8 - 情感向量8(平静)
-			"",                            // 13: emo_text - 情感描述文本
-			false,                         // 14: emo_random - 情感随机化
-			120,                           // 15: max_text_tokens_per_segment - 最大文本分段token数
-			true,                          // 16: do_sample - 是否采样
-			0.8,                           // 17: top_p
-			30,                            // 18: top_k
-			0.8,                           // 19: temperature
-			0.0,                           // 20: length_penalty
-			3,                             // 21: num_beams
-			10.0,                          // 22: repetition_penalty
-			1500,                          // 23: max_mel_tokens
+			emoControlMethod, // 0: emo_control_method - 情感控制方式
+			uploadResp,       // 1: prompt - 音色参考音频（使用上传后的路径）
+			text,             // 2: text - 输入文本
+			nil,              // 3: emo_ref_path - 情感参考音频路径(设为nil)
+			0.65,             // 4: emo_weight - 情感权重
+			0.0,              // 5: vec1 - 情感向量1(喜)
+			0.0,              // 6: vec2 - 情感向量2(怒)
+			0.0,              // 7: vec3 - 情感向量3(哀)
+			0.0,              // 8: vec4 - 情感向量4(惧)
+			0.0,              // 9: vec5 - 情感向量5(厌恶)
+			0.0,              // 10: vec6 - 情感向量6(低落)
+			0.0,              // 11: vec7 - 情感向量7(惊喜)
+			0.0,              // 12: vec8 - 情感向量8(平静)
+			"",               // 13: emo_text - 情感描述文本
+			false,            // 14: emo_random - 情感随机化
+			120,              // 15: max_text_tokens_per_segment - 最大文本分段token数
+			true,             // 16: do_sample - 是否采样
+			0.8,              // 17: top_p
+			30,               // 18: top_k
+			0.8,              // 19: temperature
+			0.0,              // 20: length_penalty
+			3,                // 21: num_beams
+			10.0,             // 22: repetition_penalty
+			1500,             // 23: max_mel_tokens
 		},
 		"fn_index":     9,                                    // 函数索引，从配置中得知gen_single的ID是9
 		"session_hash": fmt.Sprintf("%d", time.Now().Unix()), // 会话哈希

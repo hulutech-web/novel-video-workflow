@@ -8,6 +8,7 @@ import (
 	mcp_server "github.com/mark3labs/mcp-go/server"
 	"go.uber.org/zap"
 	aegisub "novel-video-workflow/pkg/tools/aegisub"
+	"novel-video-workflow/pkg/tools/file"
 	"novel-video-workflow/pkg/tools/indextts2"
 	tts "novel-video-workflow/pkg/tools/tts"
 	"novel-video-workflow/pkg/workflow"
@@ -80,6 +81,15 @@ func (h *Handler) RegisterTools() {
 
 	h.server.AddTool(generateSubtitlesTool, h.handleGenerateSubtitlesFromIndextts2)
 	h.toolNames = append(h.toolNames, "generate_subtitles_from_indextts2")
+
+	// Register file_split_novel_into_chapters tool - 用于将小说按章节拆分成独立文件夹和文件
+	fileSplitNovelTool := mcp.NewTool("file_split_novel_into_chapters",
+		mcp.WithDescription("Split a novel file into separate chapter folders and files based on chapter markers (e.g., '第x章')"),
+		mcp.WithString("novel_path", mcp.Required(), mcp.Description("The path to the novel file to split")),
+	)
+
+	h.server.AddTool(fileSplitNovelTool, h.handleFileSplitNovelIntoChapters)
+	h.toolNames = append(h.toolNames, "file_split_novel_into_chapters")
 
 	h.logger.Info("MCP tools registered",
 		zap.Int("tool_count", len(h.toolNames)))
@@ -300,6 +310,50 @@ func (h *Handler) handleGenerateSubtitlesFromIndextts2(ctx context.Context, requ
 		"output_file":         outputFile,
 		"tool":                "aegisub_generator",
 		"text_content_length": len(textContent),
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
+}
+// handleFileSplitNovelIntoChapters splits a novel file into separate chapter folders and files
+func (h *Handler) handleFileSplitNovelIntoChapters(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	novelPath, err := request.RequireString("novel_path")
+	if err != nil {
+		h.logger.Error("Missing novel_path parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: novel_path"), nil
+	}
+
+	// 使用FileManager工具来拆分小说
+	fileManager := file.NewFileManager()
+	chapters, err := fileManager.SplitNovelFileIntoChapters(novelPath)
+	if err != nil {
+		h.logger.Error("Failed to split novel into chapters", zap.Error(err))
+		response := map[string]interface{}{
+			"success": false,
+			"error":   fmt.Sprintf("Failed to split novel: %v", err),
+			"novel_path": novelPath,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 成功响应
+	response := map[string]interface{}{
+		"success":      true,
+		"novel_path":   novelPath,
+		"chapter_count": len(chapters),
+		"message":      fmt.Sprintf("Successfully split novel into %d chapters", len(chapters)),
 	}
 
 	responseJSON, err := json.MarshalIndent(response, "", "  ")

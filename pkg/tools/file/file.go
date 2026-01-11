@@ -251,3 +251,47 @@ func (fm *FileManager) GetNovelChaptersFromInput(novelName string) ([]string, er
 
 	return chapterFiles, nil
 }
+
+// SplitNovelFileIntoChapters 从文件读取小说并将其拆分为多个章节文件
+func (fm *FileManager) SplitNovelFileIntoChapters(novelFilePath string) ([]string, error) {
+	// 读取小说文件
+	content, err := os.ReadFile(novelFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("无法读取小说文件: %v", err)
+	}
+
+	novelText := string(content)
+
+	// 拆分章节
+	chapters := fm.SplitNovelIntoChapters(novelText)
+
+	if len(chapters) == 0 {
+		return nil, fmt.Errorf("在文件中未找到任何章节")
+	}
+
+	// 确定输出目录
+	dir := filepath.Dir(novelFilePath)
+
+	// 为每个章节创建目录和文件
+	var createdFiles []string
+	for i, chapterText := range chapters {
+		// 从章节文本中提取章节号
+		chapterNum := fm.extractChapterNumber(chapterText)
+		if chapterNum == 0 { // 如果无法提取章节号，使用顺序号
+			chapterNum = i + 1
+		}
+		chapterDir := filepath.Join(dir, fmt.Sprintf("chapter_%02d", chapterNum))
+		if err := os.MkdirAll(chapterDir, 0755); err != nil {
+			return nil, fmt.Errorf("创建章节目录失败: %w", err)
+		}
+
+		// 创建章节文本文件
+		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
+		if err := os.WriteFile(chapterFile, []byte(chapterText), 0644); err != nil {
+			return nil, fmt.Errorf("保存章节文件失败: %w", err)
+		}
+		createdFiles = append(createdFiles, chapterFile)
+	}
+
+	return createdFiles, nil
+}
