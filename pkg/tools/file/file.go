@@ -45,7 +45,7 @@ func (fm *FileManager) CreateChapterStructure(chapterNum int, text string, baseD
 	}
 
 	// 保存文本文件
-	textFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%d.txt", chapterNum))
+	textFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
 	if err := os.WriteFile(textFile, []byte(text), 0644); err != nil {
 		return nil, fmt.Errorf("保存文本文件失败: %w", err)
 	}
@@ -92,17 +92,29 @@ func (fm *FileManager) CreateNovelInputStructure(novelName, novelText string) er
 	// 为每个章节创建目录和文件
 	for i, chapterText := range chapters {
 		// 从章节文本中提取章节号
-		chapterNum := fm.extractChapterNumber(chapterText)
+		chapterNum := fm.ExtractChapterNumber(chapterText)
 		if chapterNum == 0 { // 如果无法提取章节号，使用顺序号
 			chapterNum = i + 1
 		}
 		chapterDir := filepath.Join(novelDir, fmt.Sprintf("chapter_%02d", chapterNum))
+		
+		// 检查章节文件是否已存在以及内容是否相同
+		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
+		if existingContent, err := os.ReadFile(chapterFile); err == nil {
+			// 文件已存在，检查内容是否相同
+			if string(existingContent) == chapterText {
+				fmt.Printf("⚠️  章节 %d 内容已存在且相同，跳过处理\n", chapterNum)
+				continue // 跳过相同内容的章节
+			} else {
+				fmt.Printf("📝 章节 %d 内容已存在但不同，更新内容\n", chapterNum)
+			}
+		}
+		
 		if err := os.MkdirAll(chapterDir, 0755); err != nil {
 			return fmt.Errorf("创建章节目录失败: %w", err)
 		}
 
 		// 创建章节文本文件
-		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
 		if err := os.WriteFile(chapterFile, []byte(chapterText), 0644); err != nil {
 			return fmt.Errorf("保存章节文件失败: %w", err)
 		}
@@ -152,8 +164,8 @@ func (fm *FileManager) SplitNovelIntoChapters(novelText string) []string {
 	return chapters
 }
 
-// extractChapterNumber 从章节文本中提取章节号
-func (fm *FileManager) extractChapterNumber(chapterText string) int {
+// ExtractChapterNumber 从章节文本中提取章节号
+func (fm *FileManager) ExtractChapterNumber(chapterText string) int {
 	// 查找章节标题行
 	lines := strings.Split(chapterText, "\n")
 	for _, line := range lines {
@@ -168,20 +180,45 @@ func (fm *FileManager) extractChapterNumber(chapterText string) int {
 				return num
 			}
 			// 如果是汉字数字，转换为阿拉伯数字
-			return fm.convertChineseNumberToArabic(chapterNumStr)
+			return fm.ConvertChineseNumberToArabic(chapterNumStr)
 		}
 	}
 	return 0 // 无法提取章节号时返回0
 }
 
-// convertChineseNumberToArabic 将中文数字转换为阿拉伯数字
-func (fm *FileManager) convertChineseNumberToArabic(chineseNum string) int {
+// ConvertChineseNumberToArabic 将中文数字转换为阿拉伯数字
+func (fm *FileManager) ConvertChineseNumberToArabic(chineseNum string) int {
 	chineseToArabic := map[string]int{
-		"一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
+		// 基础数字
+		"零": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
 		"六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+		// 十一到二十
 		"十一": 11, "十二": 12, "十三": 13, "十四": 14, "十五": 15,
 		"十六": 16, "十七": 17, "十八": 18, "十九": 19, "二十": 20,
-		"零": 0, "两": 2,
+		// 二十一到三十
+		"二十一": 21, "二十二": 22, "二十三": 23, "二十四": 24, "二十五": 25,
+		"二十六": 26, "二十七": 27, "二十八": 28, "二十九": 29, "三十": 30,
+		// 三十一到四十
+		"三十一": 31, "三十二": 32, "三十三": 33, "三十四": 34, "三十五": 35,
+		"三十六": 36, "三十七": 37, "三十八": 38, "三十九": 39, "四十": 40,
+		// 四十一到五十
+		"四十一": 41, "四十二": 42, "四十三": 43, "四十四": 44, "四十五": 45,
+		"四十六": 46, "四十七": 47, "四十八": 48, "四十九": 49, "五十": 50,
+		// 五十一到六十
+		"五十一": 51, "五十二": 52, "五十三": 53, "五十四": 54, "五十五": 55,
+		"五十六": 56, "五十七": 57, "五十八": 58, "五十九": 59, "六十": 60,
+		// 六十一到七十
+		"六十一": 61, "六十二": 62, "六十三": 63, "六十四": 64, "六十五": 65,
+		"六十六": 66, "六十七": 67, "六十八": 68, "六十九": 69, "七十": 70,
+		// 七十一到八十
+		"七十一": 71, "七十二": 72, "七十三": 73, "七十四": 74, "七十五": 75,
+		"七十六": 76, "七十七": 77, "七十八": 78, "七十九": 79, "八十": 80,
+		// 八十一到九十
+		"八十一": 81, "八十二": 82, "八十三": 83, "八十四": 84, "八十五": 85,
+		"八十六": 86, "八十七": 87, "八十八": 88, "八十九": 89, "九十": 90,
+		// 九十一到九十九
+		"九十一": 91, "九十二": 92, "九十三": 93, "九十四": 94, "九十五": 95,
+		"九十六": 96, "九十七": 97, "九十八": 98, "九十九": 99,
 	}
 	if num, exists := chineseToArabic[chineseNum]; exists {
 		return num
@@ -276,17 +313,29 @@ func (fm *FileManager) SplitNovelFileIntoChapters(novelFilePath string) ([]strin
 	var createdFiles []string
 	for i, chapterText := range chapters {
 		// 从章节文本中提取章节号
-		chapterNum := fm.extractChapterNumber(chapterText)
+		chapterNum := fm.ExtractChapterNumber(chapterText)
 		if chapterNum == 0 { // 如果无法提取章节号，使用顺序号
 			chapterNum = i + 1
 		}
 		chapterDir := filepath.Join(dir, fmt.Sprintf("chapter_%02d", chapterNum))
+		
+		// 检查章节文件是否已存在以及内容是否相同
+		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
+		if existingContent, err := os.ReadFile(chapterFile); err == nil {
+			// 文件已存在，检查内容是否相同
+			if string(existingContent) == chapterText {
+				fmt.Printf("⚠️  章节 %d 内容已存在且相同，跳过处理\n", chapterNum)
+				continue // 跳过相同内容的章节
+			} else {
+				fmt.Printf("📝 章节 %d 内容已存在但不同，更新内容\n", chapterNum)
+			}
+		}
+		
 		if err := os.MkdirAll(chapterDir, 0755); err != nil {
 			return nil, fmt.Errorf("创建章节目录失败: %w", err)
 		}
 
 		// 创建章节文本文件
-		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
 		if err := os.WriteFile(chapterFile, []byte(chapterText), 0644); err != nil {
 			return nil, fmt.Errorf("保存章节文件失败: %w", err)
 		}

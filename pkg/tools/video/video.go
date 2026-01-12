@@ -42,7 +42,7 @@ func NewVideoProcessor(logger *zap.Logger) *VideoProcessor {
 
 // CreateVideoProject 创建视频项目
 func (vp *VideoProcessor) CreateVideoProject(chapterDir string, chapterNum int) (*VideoProject, error) {
-	projectName := fmt.Sprintf("chapter_%d_project", chapterNum)
+	projectName := fmt.Sprintf("chapter_%02d_project", chapterNum)
 	projectDir := filepath.Join(chapterDir, projectName)
 
 	// 创建项目目录
@@ -70,12 +70,12 @@ func (vp *VideoProcessor) CreateVideoProject(chapterDir string, chapterNum int) 
 
 // GenerateEditList 生成编辑清单
 func (vp *VideoProcessor) GenerateEditList(chapterDir string, chapterNum int) (string, error) {
-	editListFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%d_edit_list.json", chapterNum))
+	editListFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d_edit_list.json", chapterNum))
 
 	// 这里可以实现生成编辑清单的逻辑
 	// 暂时返回一个占位文件
 	content := fmt.Sprintf(`{
-  "chapter": %d,
+  "chapter": %02d,
   "created_at": "%s",
   "assets": {
     "audio": "%s",
@@ -84,8 +84,8 @@ func (vp *VideoProcessor) GenerateEditList(chapterDir string, chapterNum int) (s
   },
   "timeline": []
 }`, chapterNum, time.Now().Format(time.RFC3339), 
-		filepath.Join(chapterDir, "audio", fmt.Sprintf("chapter_%d.wav", chapterNum)),
-		filepath.Join(chapterDir, "subtitles", fmt.Sprintf("chapter_%d.srt", chapterNum)))
+		filepath.Join(chapterDir, "audio", fmt.Sprintf("chapter_%02d.wav", chapterNum)),
+		filepath.Join(chapterDir, "subtitles", fmt.Sprintf("chapter_%02d.srt", chapterNum)))
 
 	if err := os.WriteFile(editListFile, []byte(content), 0644); err != nil {
 		return "", fmt.Errorf("写入编辑清单文件失败: %w", err)

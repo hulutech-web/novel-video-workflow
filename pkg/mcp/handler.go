@@ -4,17 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	mcp "github.com/mark3labs/mcp-go/mcp"
-	mcp_server "github.com/mark3labs/mcp-go/server"
-	"go.uber.org/zap"
-	aegisub "novel-video-workflow/pkg/tools/aegisub"
-	"novel-video-workflow/pkg/tools/file"
-	"novel-video-workflow/pkg/tools/indextts2"
-	tts "novel-video-workflow/pkg/tools/tts"
-	"novel-video-workflow/pkg/workflow"
 	"os"
 	"path/filepath"
 	"time"
+
+	"go.uber.org/zap"
+
+	aegisub "novel-video-workflow/pkg/tools/aegisub"
+	drawthings "novel-video-workflow/pkg/tools/drawthings"
+	"novel-video-workflow/pkg/tools/file"
+	"novel-video-workflow/pkg/tools/indextts2"
+	"novel-video-workflow/pkg/workflow"
+
+	mcp "github.com/mark3labs/mcp-go/mcp"
+	mcp_server "github.com/mark3labs/mcp-go/server"
 )
 
 // Handler processes MCP requests
@@ -49,17 +52,6 @@ func (h *Handler) RegisterTools() {
 	h.server.AddTool(processChapterTool, h.handleProcessChapter)
 	h.toolNames = append(h.toolNames, "process_chapter")
 
-	// Register generate_audio tool
-	generateAudioTool := mcp.NewTool("generate_audio",
-		mcp.WithDescription("Generate audio file (TTS)"),
-		mcp.WithString("text", mcp.Required(), mcp.Description("The text to convert to speech")),
-		mcp.WithString("reference_audio", mcp.Description("Reference audio file path for voice cloning")),
-		mcp.WithString("output_file", mcp.Description("Output audio file path")),
-	)
-
-	h.server.AddTool(generateAudioTool, h.handleGenerateAudio)
-	h.toolNames = append(h.toolNames, "generate_audio")
-
 	// Register generate_indextts2_audio tool - 新增的Indextts2 TTS工具
 	generateIndextts2AudioTool := mcp.NewTool("generate_indextts2_audio",
 		mcp.WithDescription("Generate audio file using IndexTTS2 with advanced voice cloning capabilities"),
@@ -90,6 +82,59 @@ func (h *Handler) RegisterTools() {
 
 	h.server.AddTool(fileSplitNovelTool, h.handleFileSplitNovelIntoChapters)
 	h.toolNames = append(h.toolNames, "file_split_novel_into_chapters")
+
+	// Register generate_image_from_text tool - DrawThings文生图工具
+	generateImageFromTextTool := mcp.NewTool("generate_image_from_text",
+		mcp.WithDescription("Generate image from text using DrawThings API with suspense style"),
+		mcp.WithString("text", mcp.Required(), mcp.Description("The text to generate image from")),
+		mcp.WithString("output_file", mcp.Required(), mcp.Description("Output image file path")),
+		mcp.WithNumber("width", mcp.Description("Image width"), mcp.DefaultNumber(float64(512))),
+		mcp.WithNumber("height", mcp.Description("Image height"), mcp.DefaultNumber(float64(896))),
+		mcp.WithBoolean("is_suspense", mcp.Description("Apply suspense style"), mcp.DefaultBool(true)),
+	)
+
+	h.server.AddTool(generateImageFromTextTool, h.handleGenerateImageFromText)
+	h.toolNames = append(h.toolNames, "generate_image_from_text")
+
+	// Register generate_image_from_image tool - DrawThings图生图工具
+	generateImageFromImageTool := mcp.NewTool("generate_image_from_image",
+		mcp.WithDescription("Generate image from reference image using DrawThings API with suspense style"),
+		mcp.WithString("init_image_path", mcp.Required(), mcp.Description("Reference image path for img2img")),
+		mcp.WithString("text", mcp.Required(), mcp.Description("The text to guide image generation")),
+		mcp.WithString("output_file", mcp.Required(), mcp.Description("Output image file path")),
+		mcp.WithNumber("width", mcp.Description("Image width"), mcp.DefaultNumber(float64(512))),
+		mcp.WithNumber("height", mcp.Description("Image height"), mcp.DefaultNumber(float64(896))),
+		mcp.WithBoolean("is_suspense", mcp.Description("Apply suspense style"), mcp.DefaultBool(true)),
+	)
+
+	h.server.AddTool(generateImageFromImageTool, h.handleGenerateImageFromImage)
+	h.toolNames = append(h.toolNames, "generate_image_from_image")
+
+	// Register generate_images_from_chapter tool - DrawThings章节文生图工具
+	generateImagesFromChapterTool := mcp.NewTool("generate_images_from_chapter",
+		mcp.WithDescription("Generate images from chapter text using DrawThings API with suspense style"),
+		mcp.WithString("chapter_text", mcp.Required(), mcp.Description("The chapter text to generate images from")),
+		mcp.WithString("output_dir", mcp.Required(), mcp.Description("Output directory for generated images")),
+		mcp.WithNumber("width", mcp.Description("Image width"), mcp.DefaultNumber(float64(512))),
+		mcp.WithNumber("height", mcp.Description("Image height"), mcp.DefaultNumber(float64(896))),
+		mcp.WithBoolean("is_suspense", mcp.Description("Apply suspense style"), mcp.DefaultBool(true)),
+	)
+
+	h.server.AddTool(generateImagesFromChapterTool, h.handleGenerateImagesFromChapter)
+	h.toolNames = append(h.toolNames, "generate_images_from_chapter")
+
+	// Register generate_images_from_chapter_with_ai_prompt tool - DrawThings章节文生图工具(使用AI生成提示词)
+	generateImagesFromChapterWithAIPromptTool := mcp.NewTool("generate_images_from_chapter_with_ai_prompt",
+		mcp.WithDescription("Generate images from chapter text using AI-generated prompts with DrawThings API and suspense style"),
+		mcp.WithString("chapter_text", mcp.Required(), mcp.Description("The chapter text to generate images from")),
+		mcp.WithString("output_dir", mcp.Required(), mcp.Description("Output directory for generated images")),
+		mcp.WithNumber("width", mcp.Description("Image width"), mcp.DefaultNumber(float64(512))),
+		mcp.WithNumber("height", mcp.Description("Image height"), mcp.DefaultNumber(float64(896))),
+		mcp.WithBoolean("is_suspense", mcp.Description("Apply suspense style"), mcp.DefaultBool(true)),
+	)
+
+	h.server.AddTool(generateImagesFromChapterWithAIPromptTool, h.handleGenerateImagesFromChapterWithAIPrompt)
+	h.toolNames = append(h.toolNames, "generate_images_from_chapter_with_ai_prompt")
 
 	h.logger.Info("MCP tools registered",
 		zap.Int("tool_count", len(h.toolNames)))
@@ -128,6 +173,99 @@ func (h *Handler) handleProcessChapter(ctx context.Context, request mcp.CallTool
 	return mcp.NewToolResultText(string(resultJSON)), nil
 }
 
+// handleGenerateAudioUpdated generates audio using IndexTTS2 directly (updated version to avoid duplicate implementation)
+func (h *Handler) handleGenerateAudioUpdated(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	text, err := request.RequireString("text")
+	if err != nil {
+		h.logger.Error("Missing text parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: text"), nil
+	}
+
+	// 获取可选参数
+	referenceAudio := request.GetString("reference_audio", "")
+	outputFile := request.GetString("output_file", "")
+
+	// 如果没有提供参考音频，尝试使用默认值
+	if referenceAudio == "" {
+		// 尝试查找默认参考音频
+		possibilities := []string{
+			"./ref.m4a",
+			"./音色.m4a",
+			"./assets/ref_audio/ref.m4a",
+			"./assets/ref_audio/音色.m4a",
+		}
+
+		for _, path := range possibilities {
+			if _, err := os.Stat(path); err == nil {
+				referenceAudio = path
+				h.logger.Info("Using default reference audio", zap.String("audio", referenceAudio))
+				break
+			}
+		}
+
+		if referenceAudio == "" {
+			return mcp.NewToolResultError("No reference audio file provided and no default found"), nil
+		}
+	}
+
+	// 检查参考音频是否存在
+	if _, err := os.Stat(referenceAudio); os.IsNotExist(err) {
+		h.logger.Error("Reference audio file does not exist", zap.String("file", referenceAudio))
+		return mcp.NewToolResultError(fmt.Sprintf("Reference audio file does not exist: %s", referenceAudio)), nil
+	}
+
+	// 如果outputFile为空，生成默认路径
+	if outputFile == "" {
+		outputFile = fmt.Sprintf("output/audio_output_%d.wav", time.Now().Unix())
+	}
+
+	// 确保输出目录存在
+	outputDir := filepath.Dir(outputFile)
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用新的Indextts2客户端
+	client := indextts2.NewIndexTTS2Client(h.logger, "http://localhost:7860")
+
+	// 调用Indextts2客户端生成音频
+	var result indextts2.TTSResult
+	err = client.GenerateTTSWithAudio(referenceAudio, text, outputFile)
+	if err != nil {
+		h.logger.Error("Failed to generate audio with Indextts2", zap.Error(err))
+		result = indextts2.TTSResult{
+			Success: false,
+			Error:   fmt.Sprintf("Failed to generate audio with Indextts2: %v", err),
+		}
+	} else {
+		result = indextts2.TTSResult{
+			Success:   true,
+			AudioPath: outputFile,
+		}
+	}
+
+	response := map[string]interface{}{
+		"success":         result.Success,
+		"file":            result.AudioPath,
+		"engine":          "indextts2_updated",
+		"text":            text,
+		"reference_audio": referenceAudio,
+	}
+
+	if !result.Success {
+		response["error"] = result.Error
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
+}
+
 // handleGenerateAudio generates audio
 func (h *Handler) handleGenerateAudio(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	text, err := request.RequireString("text")
@@ -140,16 +278,72 @@ func (h *Handler) handleGenerateAudio(ctx context.Context, request mcp.CallToolR
 	referenceAudio := request.GetString("reference_audio", "")
 	outputFile := request.GetString("output_file", "")
 
-	ttsTool := tts.NewTTSProcessor(h.logger)
-	result, err := ttsTool.Generate(text, outputFile, referenceAudio)
+	// 如果没有提供参考音频，尝试使用默认值
+	if referenceAudio == "" {
+		// 尝试查找默认参考音频
+		possibilities := []string{
+			"./ref.m4a",
+			"./音色.m4a",
+			"./assets/ref_audio/ref.m4a",
+			"./assets/ref_audio/音色.m4a",
+		}
+
+		for _, path := range possibilities {
+			if _, err := os.Stat(path); err == nil {
+				referenceAudio = path
+				h.logger.Info("Using default reference audio", zap.String("audio", referenceAudio))
+				break
+			}
+		}
+
+		if referenceAudio == "" {
+			return mcp.NewToolResultError("No reference audio file provided and no default found"), nil
+		}
+	}
+
+	// 检查参考音频是否存在
+	if _, err := os.Stat(referenceAudio); os.IsNotExist(err) {
+		h.logger.Error("Reference audio file does not exist", zap.String("file", referenceAudio))
+		return mcp.NewToolResultError(fmt.Sprintf("Reference audio file does not exist: %s", referenceAudio)), nil
+	}
+
+	// 如果outputFile为空，生成默认路径
+	if outputFile == "" {
+		outputFile = fmt.Sprintf("output/audio_output_%d.wav", time.Now().Unix())
+	}
+
+	// 确保输出目录存在
+	outputDir := filepath.Dir(outputFile)
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用新的Indextts2客户端
+	client := indextts2.NewIndexTTS2Client(h.logger, "http://localhost:7860")
+
+	// 调用Indextts2客户端生成音频
+	var result indextts2.TTSResult
+	err = client.GenerateTTSWithAudio(referenceAudio, text, outputFile)
 	if err != nil {
-		h.logger.Error("Failed to generate audio", zap.Error(err))
-		return mcp.NewToolResultError(fmt.Sprintf("Failed to generate audio: %v", err)), nil
+		h.logger.Error("Failed to generate audio with Indextts2", zap.Error(err))
+		result = indextts2.TTSResult{
+			Success: false,
+			Error:   fmt.Sprintf("Failed to generate audio with Indextts2: %v", err),
+		}
+	} else {
+		result = indextts2.TTSResult{
+			Success:   true,
+			AudioPath: outputFile,
+		}
 	}
 
 	response := map[string]interface{}{
-		"success": result.Success,
-		"file":    result.OutputFile,
+		"success":         result.Success,
+		"file":            result.AudioPath,
+		"engine":          "indextts2_updated",
+		"text":            text,
+		"reference_audio": referenceAudio,
 	}
 
 	if !result.Success {
@@ -320,6 +514,7 @@ func (h *Handler) handleGenerateSubtitlesFromIndextts2(ctx context.Context, requ
 
 	return mcp.NewToolResultText(string(responseJSON)), nil
 }
+
 // handleFileSplitNovelIntoChapters splits a novel file into separate chapter folders and files
 func (h *Handler) handleFileSplitNovelIntoChapters(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	novelPath, err := request.RequireString("novel_path")
@@ -334,8 +529,8 @@ func (h *Handler) handleFileSplitNovelIntoChapters(ctx context.Context, request 
 	if err != nil {
 		h.logger.Error("Failed to split novel into chapters", zap.Error(err))
 		response := map[string]interface{}{
-			"success": false,
-			"error":   fmt.Sprintf("Failed to split novel: %v", err),
+			"success":    false,
+			"error":      fmt.Sprintf("Failed to split novel: %v", err),
 			"novel_path": novelPath,
 		}
 
@@ -350,10 +545,172 @@ func (h *Handler) handleFileSplitNovelIntoChapters(ctx context.Context, request 
 
 	// 成功响应
 	response := map[string]interface{}{
-		"success":      true,
-		"novel_path":   novelPath,
+		"success":       true,
+		"novel_path":    novelPath,
 		"chapter_count": len(chapters),
-		"message":      fmt.Sprintf("Successfully split novel into %d chapters", len(chapters)),
+		"message":       fmt.Sprintf("Successfully split novel into %d chapters", len(chapters)),
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
+}
+
+// handleGenerateImageFromText generates image from text using DrawThings API
+func (h *Handler) handleGenerateImageFromText(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	text, err := request.RequireString("text")
+	if err != nil {
+		h.logger.Error("Missing text parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: text"), nil
+	}
+
+	outputFile, err := request.RequireString("output_file")
+	if err != nil {
+		h.logger.Error("Missing output_file parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: output_file"), nil
+	}
+
+	// 获取可选参数
+	width := int(request.GetInt("width", 512))
+	height := int(request.GetInt("height", 896))
+	isSuspense := request.GetBool("is_suspense", true)
+
+	// 确保输出目录存在
+	outputDir := filepath.Dir(outputFile)
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用DrawThings客户端生成图像
+	client := drawthings.NewDrawThingsClient(h.logger, "http://localhost:7861")
+
+	err = client.GenerateImageFromText(text, outputFile, width, height, isSuspense)
+	if err != nil {
+		h.logger.Error("Failed to generate image from text", zap.Error(err))
+		response := map[string]interface{}{
+			"success":     false,
+			"error":       fmt.Sprintf("Failed to generate image: %v", err),
+			"text":        text,
+			"output_file": outputFile,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 成功响应
+	response := map[string]interface{}{
+		"success":     true,
+		"output_file": outputFile,
+		"text":        text,
+		"width":       width,
+		"height":      height,
+		"is_suspense": isSuspense,
+		"tool":        "drawthings_txt2img",
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
+}
+
+// handleGenerateImageFromImage generates image from reference image using DrawThings API
+func (h *Handler) handleGenerateImageFromImage(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	initImagePath, err := request.RequireString("init_image_path")
+	if err != nil {
+		h.logger.Error("Missing init_image_path parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: init_image_path"), nil
+	}
+
+	text, err := request.RequireString("text")
+	if err != nil {
+		h.logger.Error("Missing text parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: text"), nil
+	}
+
+	outputFile, err := request.RequireString("output_file")
+	if err != nil {
+		h.logger.Error("Missing output_file parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: output_file"), nil
+	}
+
+	// 获取可选参数
+	width := int(request.GetInt("width", 512))
+	height := int(request.GetInt("height", 896))
+	isSuspense := request.GetBool("is_suspense", true)
+
+	// 验证参考图像文件是否存在
+	if _, err := os.Stat(initImagePath); os.IsNotExist(err) {
+		h.logger.Error("Reference image file does not exist", zap.String("file", initImagePath))
+		response := map[string]interface{}{
+			"success":         false,
+			"error":           fmt.Sprintf("Reference image file does not exist: %s", initImagePath),
+			"init_image_path": initImagePath,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 确保输出目录存在
+	outputDir := filepath.Dir(outputFile)
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用DrawThings客户端生成图像
+	client := drawthings.NewDrawThingsClient(h.logger, "http://localhost:7861")
+
+	err = client.GenerateImageFromImage(initImagePath, text, outputFile, width, height, isSuspense)
+	if err != nil {
+		h.logger.Error("Failed to generate image from reference image", zap.Error(err))
+		response := map[string]interface{}{
+			"success":         false,
+			"error":           fmt.Sprintf("Failed to generate image: %v", err),
+			"init_image_path": initImagePath,
+			"text":            text,
+			"output_file":     outputFile,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 成功响应
+	response := map[string]interface{}{
+		"success":         true,
+		"init_image_path": initImagePath,
+		"output_file":     outputFile,
+		"text":            text,
+		"width":           width,
+		"height":          height,
+		"is_suspense":     isSuspense,
+		"tool":            "drawthings_img2img",
 	}
 
 	responseJSON, err := json.MarshalIndent(response, "", "  ")
@@ -368,4 +725,162 @@ func (h *Handler) handleFileSplitNovelIntoChapters(ctx context.Context, request 
 // GetToolNames gets all tool names
 func (h *Handler) GetToolNames() []string {
 	return h.toolNames
+}
+
+// handleGenerateImagesFromChapter generates images from chapter text using DrawThings API
+func (h *Handler) handleGenerateImagesFromChapter(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	chapterText, err := request.RequireString("chapter_text")
+	if err != nil {
+		h.logger.Error("Missing chapter_text parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: chapter_text"), nil
+	}
+
+	outputDir, err := request.RequireString("output_dir")
+	if err != nil {
+		h.logger.Error("Missing output_dir parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: output_dir"), nil
+	}
+
+	// 获取可选参数
+	width := int(request.GetInt("width", 512))
+	height := int(request.GetInt("height", 896))
+	isSuspense := request.GetBool("is_suspense", true)
+
+	// 确保输出目录存在
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用章节图像生成器
+	generator := drawthings.NewChapterImageGenerator(h.logger)
+
+	results, err := generator.GenerateImagesFromChapter(chapterText, outputDir, width, height, isSuspense)
+	if err != nil {
+		h.logger.Error("Failed to generate images from chapter", zap.Error(err))
+		response := map[string]interface{}{
+			"success":             false,
+			"error":               fmt.Sprintf("Failed to generate images: %v", err),
+			"chapter_text_length": len(chapterText),
+			"output_dir":          outputDir,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 成功响应
+	imageFiles := make([]string, len(results))
+	paragraphs := make([]string, len(results))
+	for i, result := range results {
+		imageFiles[i] = result.ImageFile
+		paragraphs[i] = result.ParagraphText
+	}
+
+	response := map[string]interface{}{
+		"success":               true,
+		"output_dir":            outputDir,
+		"chapter_text_length":   len(chapterText),
+		"generated_image_count": len(results),
+		"image_files":           imageFiles,
+		"paragraphs":            paragraphs,
+		"width":                 width,
+		"height":                height,
+		"is_suspense":           isSuspense,
+		"tool":                  "drawthings_chapter_txt2img",
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
+}
+
+// handleGenerateImagesFromChapterWithAIPrompt generates images from chapter text using AI-generated prompts with DrawThings API
+func (h *Handler) handleGenerateImagesFromChapterWithAIPrompt(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	chapterText, err := request.RequireString("chapter_text")
+	if err != nil {
+		h.logger.Error("Missing chapter_text parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: chapter_text"), nil
+	}
+
+	outputDir, err := request.RequireString("output_dir")
+	if err != nil {
+		h.logger.Error("Missing output_dir parameter", zap.Error(err))
+		return mcp.NewToolResultError("Missing required parameter: output_dir"), nil
+	}
+
+	// 获取可选参数
+	width := int(request.GetInt("width", 512))
+	height := int(request.GetInt("height", 896))
+	isSuspense := request.GetBool("is_suspense", true)
+
+	// 确保输出目录存在
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		h.logger.Error("Failed to create output directory", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to create output directory: %v", err)), nil
+	}
+
+	// 使用章节图像生成器（使用Ollama生成提示词）
+	generator := drawthings.NewChapterImageGenerator(h.logger)
+
+	results, err := generator.GenerateImagesFromChapter(chapterText, outputDir, width, height, isSuspense)
+	if err != nil {
+		h.logger.Error("Failed to generate images from chapter with AI prompts", zap.Error(err))
+		response := map[string]interface{}{
+			"success":             false,
+			"error":               fmt.Sprintf("Failed to generate images: %v", err),
+			"chapter_text_length": len(chapterText),
+			"output_dir":          outputDir,
+		}
+
+		responseJSON, err := json.MarshalIndent(response, "", "  ")
+		if err != nil {
+			h.logger.Error("Failed to serialize error response", zap.Error(err))
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+		}
+
+		return mcp.NewToolResultText(string(responseJSON)), nil
+	}
+
+	// 成功响应
+	imageFiles := make([]string, len(results))
+	paragraphs := make([]string, len(results))
+	prompts := make([]string, len(results))
+
+	for i, result := range results {
+		imageFiles[i] = result.ImageFile
+		paragraphs[i] = result.ParagraphText
+		prompts[i] = result.ImagePrompt
+	}
+
+	response := map[string]interface{}{
+		"success":               true,
+		"output_dir":            outputDir,
+		"chapter_text_length":   len(chapterText),
+		"generated_image_count": len(results),
+		"image_files":           imageFiles,
+		"paragraphs":            paragraphs,
+		"prompts":               prompts,
+		"width":                 width,
+		"height":                height,
+		"is_suspense":           isSuspense,
+		"tool":                  "drawthings_chapter_txt2img_with_ai_prompt",
+	}
+
+	responseJSON, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		h.logger.Error("Failed to serialize response", zap.Error(err))
+		return mcp.NewToolResultError(fmt.Sprintf("Failed to serialize response: %v", err)), nil
+	}
+
+	return mcp.NewToolResultText(string(responseJSON)), nil
 }

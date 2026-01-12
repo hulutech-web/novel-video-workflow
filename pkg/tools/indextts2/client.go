@@ -39,34 +39,12 @@ func NewIndexTTS2Client(logger *zap.Logger, baseURL string) *IndexTTS2Client {
 	}
 }
 
-// IndexTTSClient 为了向后兼容，提供旧的客户端接口
-type IndexTTSClient struct {
-	BaseURL    string
-	Logger     *zap.Logger
-	HTTPClient *http.Client
-}
-
-// NewIndexTTSClient 创建旧版客户端实例
-func NewIndexTTSClient(logger *zap.Logger, baseURL string) *IndexTTSClient {
-	if baseURL == "" {
-		baseURL = "http://localhost:7860" // 默认地址
-	}
-
-	return &IndexTTSClient{
-		BaseURL: baseURL,
-		Logger:  logger,
-		HTTPClient: &http.Client{
-			Timeout: 300 * time.Second, // TTS生成可能需要较长时间
-		},
-	}
-}
-
 // Option 定义配置选项类型
-type Option func(*IndexTTSClient)
+type Option func(*IndexTTS2Client)
 
 // WithSpeakerAudio 设置说话人音频
 func WithSpeakerAudio(audioPath string) Option {
-	return func(c *IndexTTSClient) {
+	return func(c *IndexTTS2Client) {
 		// 这里存储配置，实际使用在Generate方法中
 		_ = audioPath // 为了编译通过，实际实现在Generate方法中处理
 	}
@@ -77,70 +55,6 @@ type TTSResult struct {
 	Success   bool   `json:"success"`
 	AudioPath string `json:"audio_path"`
 	Error     string `json:"error,omitempty"`
-}
-
-// Generate 旧版API接口，用于向后兼容
-func (c *IndexTTSClient) Generate(text, outputFile string, opts ...Option) (*TTSResult, error) {
-	// 解析选项
-	var speakerAudio string
-	for _, opt := range opts {
-		// 这里简单处理，实际应该根据具体选项设置
-		_ = opt
-	}
-
-	// 为兼容性，这里使用默认参考音频路径
-	if speakerAudio == "" {
-		// 尝试查找默认音频文件
-		wd, _ := os.Getwd()
-		defaultPaths := []string{
-			filepath.Join(wd, "ref.m4a"),
-			filepath.Join(wd, "音色.m4a"),
-			"/Users/mac/code/ai/novel-video-workflow/ref.m4a",
-			"/Users/mac/code/ai/novel-video-workflow/音色.m4a",
-		}
-
-		for _, path := range defaultPaths {
-			if _, err := os.Stat(path); err == nil {
-				speakerAudio = path
-				break
-			}
-		}
-
-		if speakerAudio == "" {
-			return &TTSResult{
-				Success: false,
-				Error:   "未找到参考音频文件",
-			}, fmt.Errorf("未找到参考音频文件")
-		}
-	}
-
-	// 使用新的API进行TTS生成
-	client := &IndexTTS2Client{
-		BaseURL:    c.BaseURL,
-		Logger:     c.Logger,
-		HTTPClient: c.HTTPClient,
-	}
-
-	err := client.GenerateTTSWithAudio(speakerAudio, text, outputFile)
-	if err != nil {
-		return &TTSResult{
-			Success: false,
-			Error:   err.Error(),
-		}, err
-	}
-
-	// 检查输出文件是否存在
-	if _, err := os.Stat(outputFile); err != nil {
-		return &TTSResult{
-			Success: false,
-			Error:   fmt.Sprintf("输出文件不存在: %v", err),
-		}, err
-	}
-
-	return &TTSResult{
-		Success:   true,
-		AudioPath: outputFile,
-	}, nil
 }
 
 // UploadResponse 上传音频文件的响应
@@ -427,7 +341,7 @@ func (c *IndexTTS2Client) DownloadAudio(audioURL, savePath string) error {
 func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath string) error {
 	c.Logger.Info("开始TTS生成",
 		zap.String("audio_path", audioPath),
-		zap.String("text", text),
+		zap.String("text", text[:10]), //text只取前10个字符
 		zap.String("output_path", outputPath))
 
 	// 检查音频文件是否存在
@@ -448,7 +362,7 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 	}
 
 	c.Logger.Info("使用音频文件进行TTS生成", zap.String("audio_path", audioPath))
-	c.Logger.Info("正在生成TTS语音", zap.String("text", text))
+	c.Logger.Info("正在生成TTS语音", zap.String("text", text[:10]))
 
 	// 直接调用带音频文件的TTS生成
 	ttsResp, err := c.GenerateTTSWithFile(audioPath, text)
@@ -611,7 +525,7 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 		return nil, fmt.Errorf("序列化请求数据失败: %v", err)
 	}
 
-	c.Logger.Info("准备发送TTS请求", zap.String("text", text), zap.Any("first_param", requestData["data"].([]interface{})[0]))
+	c.Logger.Info("准备发送TTS请求", zap.String("text", text[:10]), zap.Any("first_param", requestData["data"].([]interface{})[0]))
 
 	// 首先将任务加入队列
 	queueEndpoint := c.BaseURL + "/gradio_api/queue/join"

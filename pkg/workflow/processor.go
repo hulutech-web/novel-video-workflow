@@ -6,12 +6,13 @@ import (
 	"novel-video-workflow/pkg/tools/file"
 	image "novel-video-workflow/pkg/tools/image"
 	video "novel-video-workflow/pkg/tools/video"
-	tts "novel-video-workflow/pkg/tools/tts"
 	aegisub "novel-video-workflow/pkg/tools/aegisub"
+	drawthings "novel-video-workflow/pkg/tools/drawthings"
 	"path/filepath"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"novel-video-workflow/pkg/tools/indextts2"
 )
 
 type ChapterParams struct {
@@ -23,39 +24,41 @@ type ChapterParams struct {
 }
 
 type ChapterResult struct {
-	ChapterDir     string   `json:"chapter_dir"`
-	TextFile       string   `json:"text_file"`
-	AudioFile      string   `json:"audio_file"`
-	SubtitleFile   string   `json:"subtitle_file"`
-	ImageFiles     []string `json:"image_files"`
-	Status         string   `json:"status"`
-	Message        string   `json:"message"`
-	VideoProject   string   `json:"video_project,omitempty"`   // 添加视频项目路径
-	EditListFile   string   `json:"edit_list_file,omitempty"`  // 添加编辑清单路径
-	ProcessingTime float64  `json:"processing_time,omitempty"` // 添加处理时间
+	ChapterDir   string
+	TextFile     string
+	AudioFile    string
+	SubtitleFile string
+	ImageFiles   []string
+	Status       string
+	Message      string
+	VideoProject string
+	EditListFile string
 }
 
 type Processor struct {
-	fileTool     *file.FileManager
-	ttsTool      *tts.TTSProcessor
-	aegisubTool  *aegisub.AegisubIntegration
-	imageTool    *image.ImageGenerator
-	logger       *zap.Logger
+	fileTool       *file.FileManager
+	ttsTool        *indextts2.IndexTTS2Client
+	aegisubTool    *aegisub.AegisubIntegration
+	imageTool      *image.ImageGenerator
+	drawThingsTool *drawthings.ChapterImageGenerator
+	logger         *zap.Logger
 }
 
 func NewProcessor(logger *zap.Logger) (*Processor, error) {
 	// 初始化各个工具
 	fileTool := file.NewFileManager()
-	ttsTool := tts.NewTTSProcessor(logger)
+	ttsTool := indextts2.NewIndexTTS2Client(logger, "http://localhost:7860")
 	aegisubTool := aegisub.NewAegisubIntegration()
 	imageTool := image.NewImageGenerator(logger)
+	drawThingsTool := drawthings.NewChapterImageGenerator(logger)
 
 	return &Processor{
-		fileTool:     fileTool,
-		ttsTool:      ttsTool,
-		aegisubTool:  aegisubTool,
-		imageTool:    imageTool,
-		logger:       logger,
+		fileTool:       fileTool,
+		ttsTool:        ttsTool,
+		aegisubTool:    aegisubTool,
+		imageTool:      imageTool,
+		drawThingsTool: drawThingsTool,
+		logger:         logger,
 	}, nil
 }
 
@@ -81,24 +84,27 @@ func (p *Processor) ProcessChapter(ctx context.Context, params ChapterParams) (*
 		zap.Int("章节", params.Number),
 	)
 
-	audioFile := filepath.Join(dirInfo.AudioDir, fmt.Sprintf("chapter_%d.wav", params.Number))
-	ttsResult, err := p.ttsTool.Generate(params.Text, audioFile, params.ReferenceAudio)
-	if err != nil {
-		p.logger.Warn("音频生成失败，继续处理",
-			zap.Error(err),
-		)
-		audioFile = "" // 清空音频文件路径
-	} else if !ttsResult.Success {
-		p.logger.Warn("音频生成失败",
-			zap.String("错误", ttsResult.Error),
-		)
+	audioFile := filepath.Join(dirInfo.AudioDir, fmt.Sprintf("chapter_%02d.wav", params.Number))
+	
+	// 直接使用IndexTTS2客户端生成音频
+	var audioErr error
+	if params.ReferenceAudio != "" {
+		audioErr = p.ttsTool.GenerateTTSWithAudio(params.ReferenceAudio, params.Text, audioFile)
+		if audioErr != nil {
+			p.logger.Warn("音频生成失败，继续处理",
+				zap.Error(audioErr),
+			)
+			audioFile = "" // 清空音频文件路径
+		}
+	} else {
+		p.logger.Info("未提供参考音频，跳过音频生成")
 		audioFile = ""
 	}
 
 	// 3. 生成字幕
 	p.logger.Info("开始生成字幕...")
 
-	subtitleFile := filepath.Join(dirInfo.SubtitleDir, fmt.Sprintf("chapter_%d.srt", params.Number))
+	subtitleFile := filepath.Join(dirInfo.SubtitleDir, fmt.Sprintf("chapter_%02d.srt", params.Number))
 
 	var subtitleErr error
 
@@ -107,7 +113,7 @@ func (p *Processor) ProcessChapter(ctx context.Context, params ChapterParams) (*
 
 	switch generatorType {
 	case "aegisub":
-		if ttsResult != nil && ttsResult.Success && audioFile != "" {
+		if audioFile != "" {
 			// 使用AegisubIntegration生成字幕
 			subtitleErr = p.aegisubTool.ProcessIndextts2OutputWithCustomName(
 				audioFile,
@@ -119,7 +125,7 @@ func (p *Processor) ProcessChapter(ctx context.Context, params ChapterParams) (*
 		// 如果选择静态字幕生成，我们暂时跳过（因为没有实现）
 		p.logger.Info("静态字幕生成暂未实现")
 	default: // auto
-		if ttsResult != nil && ttsResult.Success && audioFile != "" {
+		if audioFile != "" {
 			// 使用AegisubIntegration生成字幕
 			subtitleErr = p.aegisubTool.ProcessIndextts2OutputWithCustomName(
 				audioFile,
@@ -139,20 +145,30 @@ func (p *Processor) ProcessChapter(ctx context.Context, params ChapterParams) (*
 		p.logger.Info("字幕生成成功", zap.String("文件", subtitleFile))
 	}
 
-	// 4. 生成场景图片
-	p.logger.Info("开始生成场景图片...",
+	// 4. 使用DrawThings API生成场景图片 - 通过AI分析场景生成提示词
+	p.logger.Info("开始使用DrawThings生成场景图片...",
 		zap.Int("章节", params.Number),
 		zap.String("输出目录", dirInfo.ImageDir),
 		zap.Int("最大图片数", params.MaxImages),
 	)
 
-	sceneImages, err := p.imageTool.GenerateSceneImages(
-		params.Text,
-		dirInfo.ImageDir,
-		params.MaxImages,
-	)
+	// 使用AI生成提示词并生成图像
+	imageDir := dirInfo.ImageDir
+	sceneImages, err := p.drawThingsTool.GenerateImagesFromChapter(params.Text, imageDir, 1024, 1792, true)
 	if err != nil {
-		p.logger.Warn("场景图片生成失败", zap.Error(err))
+		p.logger.Warn("使用DrawThings生成场景图片失败", zap.Error(err))
+		
+		// 回退到原有图片生成方法
+		_, err2 := p.imageTool.GenerateSceneImages(
+			params.Text,
+			dirInfo.ImageDir,
+			params.MaxImages,
+		)
+		if err2 != nil {
+			p.logger.Warn("回退图片生成也失败", zap.Error(err2))
+		} else {
+			p.logger.Info("使用回退方法生成图片成功")
+		}
 	}
 
 	var imageFiles []string
@@ -189,12 +205,12 @@ func (p *Processor) ProcessChapter(ctx context.Context, params ChapterParams) (*
 }
 
 func (p *Processor) generateEditList(chapterDir string, chapterNum int,
-	ttsResult *tts.TTSResult, subtitleFile string, images []string) map[string]interface{} {
+	ttsResult *indextts2.TTSResult, subtitleFile string, images []string) map[string]interface{} {
 
 	return map[string]interface{}{
 		"chapter": chapterNum,
 		"assets": map[string]interface{}{
-			"audio":    ttsResult.OutputFile,
+			"audio":    ttsResult.AudioPath,
 			"subtitle": subtitleFile,
 			"images":   images,
 		},
@@ -202,7 +218,7 @@ func (p *Processor) generateEditList(chapterDir string, chapterNum int,
 			{
 				"time": "00:00",
 				"type": "audio_start",
-				"file": ttsResult.OutputFile,
+				"file": ttsResult.AudioPath,
 			},
 		},
 	}

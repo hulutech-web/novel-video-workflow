@@ -2,7 +2,7 @@
 paths:
   base_dir: "~/NovelVideos"
   novel_source: "~/Documents/Novels"
-  reference_audio: "~/reference_audio.wav"
+  reference_audio: "./assets/ref_audio/ref.m4a"
   output_template: "chapter_{chapter:02d}"
 
 # TTS配置
@@ -18,7 +18,6 @@ tts:
     timeout_seconds: 300
     max_retries: 3
 
-
 # 工作流配置
 workflow:
   max_concurrent: 2
@@ -28,30 +27,23 @@ workflow:
 # 图片生成配置
 image:
   engine: "drawthings"  # 可选: drawthings, stable_diffusion, dall_e
-  width: 768
-  height: 512
+  width: 512            # 调整为更适合手机观看的尺寸
+  height: 896           # 调整为更适合手机观看的尺寸
   steps: 30
   cfg_scale: 7.5
-  style_preset: "anime"  # anime, realistic, fantasy
-  negative_prompt: "low quality, blurry, distorted"
-
-  # Stable Diffusion 配置
-  sd_api_url: "http://localhost:7860"
-  sd_model: "dreamshaper_8.safetensors"
-
-  # DALL-E 配置
-  dalle_api_key: ""
-  dalle_model: "dall-e-3"
+  style_preset: "suspense_horror"  # 悬疑惊悚风格
+  negative_prompt: "low quality, blurry, distorted, bright lighting, cheerful atmosphere"
 
   # DrawThings 配置
   drawthings_model: "dreamshaper_8.safetensors"
   drawthings_scheduler: "DPM++ 2M Karras"
+  api_url: "http://localhost:7861"
 
 # 视频处理配置
 video:
   resolution:
-    width: 1920
-    height: 1080
+    width: 1080
+    height: 1920      # 竖屏视频，适合手机观看
   frame_rate: 30
   audio_sample_rate: 44100
   default_image_duration: 5.0  # 默认图片显示时长(秒)
@@ -78,10 +70,11 @@ video:
     codec: "h264"
     bitrate: "10M"
     preset: "medium"
+
 # 字幕配置
 subtitle:
   # 生成方式: auto, aegisub, static
-  generator: "auto"
+  generator: "aegisub"
 
   # 字幕样式
   style: "Default"
@@ -115,4 +108,32 @@ subtitle:
 
   # Aegisub配置
   aegisub_path: "/Applications/Aegisub.app"
+  script_path: "./pkg/tools/aegisub/aegisub_subtitle_gen.sh"
   use_automation: true
+
+# Ollama配置
+ollama:
+  api_url: "http://localhost:11434"
+  model: "llama3:8b"
+  timeout_seconds: 120
+  max_tokens: 2048
+  temperature: 0.7
+
+# DrawThings配置
+drawthings:
+  api_url: "http://localhost:7861"
+  timeout_seconds: 300
+  width: 512
+  height: 896
+  steps: 30
+  cfg_scale: 7.0
+  scheduler: "DPM++ 2M Karras"
+  negative_prompt: "low quality, blurry, distorted, bright lighting, cheerful atmosphere"
+
+# IndexTTS2配置
+indextts2:
+  api_url: "http://localhost:7860"
+  timeout_seconds: 300
+  max_retries: 3
+  voice_model: "default"
+  sample_rate: 24000
