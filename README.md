@@ -1,75 +1,10 @@
-# Novel Video Workflow
+# Novel Video Workflow  
 
-这是一个自动化的小说视频生成工作流程，能够将文本小说转换为带有音频、字幕和图像的视频内容。
-## 流程架构  
+![logo.png](logo.png)
 
-![img.png](img.png)
+这是一个自动化的小说视频生成工作流程，能够将文本小说转换为带有音频、字幕和图像的视频
 
-## 功能特性
-
-- 智能章节分割
-- AI驱动的文本转语音
-- 自动生成字幕/台词
-- AI图像生成
-- 自动化工作流程管理
-- MCP（Model Context Protocol）服务集成
-
-## 工作流程
-
-1. 从 `input` 目录读取小说文本
-2. 智能分章节功能将小说拆分为多个章节
-3. 对每个章节依次执行：
-   - 音频生成（使用参考音频进行TTS）
-   - 台词/字幕生成（基于音频和文本）
-   - 图像生成（使用AI模型生成匹配图像）
-4. 所有输出文件按章节分别存储
-
-## 目录结构
-
-处理后的文件将按以下结构组织：
-
-```
-output/
-└── 小说名称/
-    └── chapter_01/
-        ├── chapter_01.wav      # 音频文件
-        ├── chapter_01.srt      # 字幕文件
-        └── images/             # 图像目录
-            ├── scene_01.png
-            ├── scene_02.png
-            └── ...
-```
-
-输入目录结构：
-```
-input/
-└── 小说名称/
-    └── chapter_01/
-        └── chapter_01.txt
-```
-
-## MCP 服务集成
-
-本项目实现了MCP（Model Context Protocol）协议，支持以下服务：
-
-### 1. IndexTTS2 服务
-- **端口**: `http://localhost:7860`
-- **功能**: 高质量语音合成，支持声音克隆
-- **依赖**: 参考音频文件 `./assets/ref_audio/ref.m4a`
-
-### 2. DrawThings 服务
-- **端口**: `http://localhost:7861`
-- **功能**: AI图像生成，基于Stable Diffusion
-- **模型**: `dreamshaper_8.safetensors`
-
-### 3. Ollama 服务
-- **端口**: `http://localhost:11434`
-- **功能**: 大语言模型推理，用于提示词生成和内容分析
-- **模型**: `llama3:8b`
-
-### 4. Aegisub 服务
-- **功能**: 字幕生成与时间轴匹配
-- **依赖**: Aegisub应用及脚本
+内容。
 
 ## MCP服务架构图
 
@@ -147,6 +82,74 @@ graph TB
     class OUT1,OUT2,OUT3,OUT4 outputClass
 ```
 
+## 功能特性
+
+- 智能章节分割
+- AI驱动的文本转语音
+- 自动生成字幕/台词
+- AI图像生成
+- 自动化工作流程管理
+- MCP（Model Context Protocol）服务集成
+
+## 工作流程
+
+1. 从 `input` 目录读取小说文本
+2. 智能分章节功能将小说拆分为多个章节
+3. 对每个章节依次执行：
+   - 音频生成（使用参考音频进行TTS）
+   - 台词/字幕生成（基于音频和文本）
+   - 图像生成（使用AI模型生成匹配图像）
+4. 所有输出文件按章节分别存储
+
+## 目录结构
+
+处理后的文件将按以下结构组织：
+
+```
+output/
+└── 小说名称/
+    └── chapter_01/
+        ├── chapter_01.wav      # 音频文件
+        ├── chapter_01.srt      # 字幕文件
+        └── images/             # 图像目录
+            ├── scene_01.png
+            ├── scene_02.png
+            └── ...
+```
+
+输入目录结构：
+```
+input/
+└── 小说名称/
+    └── chapter_01/
+        └── chapter_01.txt
+```
+
+## MCP 服务集成
+
+本项目实现了MCP（Model Context Protocol）协议，支持以下服务：
+
+### 1. IndexTTS2 服务
+- **端口**: `http://localhost:7860`
+- **功能**: 高质量语音合成，支持声音克隆
+- **依赖**: 参考音频文件 `./assets/ref_audio/ref.m4a`
+
+### 2. DrawThings 服务
+- **端口**: `http://localhost:7861`
+- **功能**: AI图像生成，基于Stable Diffusion
+- **模型**: `dreamshaper_8.safetensors`
+
+### 3. Ollama 服务
+- **端口**: `http://localhost:11434`
+- **功能**: 大语言模型推理，用于提示词生成和内容分析
+- **模型**: `llama3:8b`
+
+### 4. Aegisub 服务
+- **功能**: 字幕生成与时间轴匹配
+- **依赖**: Aegisub应用及脚本
+
+
+
 ## 依赖项
 
 - Go 1.19+
@@ -212,3 +215,35 @@ graph TB
 - [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md) - 完整项目说明文档
 - [MCP_ARCHITECTURE.md](MCP_ARCHITECTURE.md) - MCP服务架构详解
 - [FULL_USER_GUIDE.md](FULL_USER_GUIDE.md) - 完整用户指南
+
+
+## 成果展示（output目录)
+
+### 智能分镜 
+
+![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_01.png)
+
+![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_02.png)
+
+![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_03.png)
+
+![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_04.png)
+
+![scene_05.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_05.png)
+
+![scene_06.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_06.png)
+
+![scene_07.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_07.png)
+
+![scene_08.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_08.png)
+
+### 音频文件  
+
+[chapter_07.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.wav)
+
+### 台词文件  
+
+[chapter_07.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.srt)
+
+
+最后，祝君 事业成功！
