@@ -1,10 +1,11 @@
+<p align="center">
+ <img src="https://github.com/hulutech-web/novel-video-workflow/blob/master/logo.png?raw=true" width="300" />
+</p>
+
+
 # Novel Video Workflow  
 
-![logo.png](logo.png)
-
-这是一个自动化的小说视频生成工作流程，能够将文本小说转换为带有音频、字幕和图像的视频
-
-内容。
+这是一个自动化的小说视频生成MCP工作流，能够将文本小说转换为带有音频、字幕和图像的视频内容。
 
 ## MCP服务架构图
 
