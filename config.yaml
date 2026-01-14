@@ -36,7 +36,7 @@ image:
 
   # DrawThings 配置
   drawthings_model: "dreamshaper_8.safetensors"
-  drawthings_scheduler: "DPM++ 2M Karras"
+  drawthings_scheduler: "DPM++ 2M Trailing"
   api_url: "http://localhost:7861"
 
 # 视频处理配置

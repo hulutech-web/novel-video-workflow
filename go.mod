@@ -5,6 +5,7 @@ go 1.25.5
 require (
 	github.com/fogleman/gg v1.3.0
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
+	github.com/jessevdk/go-flags v1.6.1
 	github.com/mark3labs/mcp-go v0.43.2
 	github.com/spf13/viper v1.21.0
 	go.uber.org/zap v1.27.1
@@ -17,6 +18,7 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/gorilla/websocket v1.5.0
 	github.com/invopop/jsonschema v0.13.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
@@ -34,3 +36,11 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace novel-video-workflow/pkg/mcp => ./pkg/mcp
+
+replace novel-video-workflow/pkg/workflow => ./pkg/workflow
+
+replace novel-video-workflow/mcp_pkg => ./pkg/mcp
+
+replace novel-video-workflow/pkg/tools/drawthings => ./pkg/tools/drawthings

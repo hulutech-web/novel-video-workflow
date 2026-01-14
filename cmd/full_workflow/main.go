@@ -249,7 +249,6 @@ func checkRefAudio() error {
 	paths := []string{
 		"./assets/ref_audio/ref.m4a",
 		"./assets/ref_audio/音色.m4a",
-		"/Users/mac/code/ai/novel-video-workflow/assets/ref_audio/ref.m4a",
 	}
 
 	for _, path := range paths {
