@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说视频工作流控制台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        dark: '#1f2937',
+                        light: '#f9fafb'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 视频背景容器 */
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            overflow: hidden;
+        }
+        
+        /* 视频背景容器 */
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            overflow: hidden;
+        }
+        
+        /* SVG蒙版层 */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23ffffff" stroke-width="0.5" stroke-opacity="0.1"/><circle cx="50" cy="50" r="45" fill="none" stroke="%23ffffff" stroke-opacity="0.05" stroke-width="0.3"/><path d="M20,20 Q40,5 60,20 T100,20" fill="none" stroke="%23ffffff" stroke-opacity="0.05" stroke-width="0.2"/><path d="M10,80 Q30,65 50,80 T90,80" fill="none" stroke="%23ffffff" stroke-opacity="0.05" stroke-width="0.2"/><path d="M70,10 Q85,30 70,50 T70,90" fill="none" stroke="%23ffffff" stroke-opacity="0.05" stroke-width="0.2"/></svg>') repeat;
+            z-index: -90;
+            pointer-events: none;
+        }
+        
+        /* 创作主题装饰元素 */
+        .creative-element {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.15;
+            color: white;
+            font-size: 2rem;
+            animation: rotate 25s linear infinite;
+        }
+        
+        .creative-element:nth-child(2) {
+            top: 20%;
+            left: 10%;
+            font-size: 3rem;
+            animation-delay: -5s;
+        }
+        
+        .creative-element:nth-child(3) {
+            top: 60%;
+            right: 15%;
+            font-size: 2.5rem;
+            animation-delay: -10s;
+        }
+        
+        .creative-element:nth-child(4) {
+            bottom: 20%;
+            left: 20%;
+            font-size: 2.8rem;
+            animation-delay: -15s;
+        }
+        
+        .creative-element:nth-child(5) {
+            top: 40%;
+            right: 25%;
+            font-size: 2.2rem;
+            animation-delay: -18s;
+        }
+        
+        .creative-element:nth-child(6) {
+            top: 10%;
+            right: 10%;
+            font-size: 4rem;
+            animation-delay: -8s;
+        }
+        
+        .creative-element:nth-child(7) {
+            bottom: 15%;
+            right: 20%;
+            font-size: 3.5rem;
+            animation-delay: -20s;
+        }
+        
+        .creative-element:nth-child(8) {
+            top: 30%;
+            left: 25%;
+            font-size: 3.2rem;
+            animation-delay: -12s;
+        }
+        
+        .creative-element:nth-child(9) {
+            bottom: 30%;
+            right: 30%;
+            font-size: 2.7rem;
+            animation-delay: -22s;
+        }
+        
+        .creative-element:nth-child(10) {
+            top: 70%;
+            left: 5%;
+            font-size: 2.5rem;
+            animation-delay: -25s;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* 影视创作大图标 */
+        .cinema-icon {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12rem;
+            opacity: 0.05;
+            z-index: -95;
+            pointer-events: none;
+            animation: pulse 8s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.03; }
+            100% { opacity: 0.07; }
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #1c1c1e 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .glass-effect {
+            background: rgba(30, 30, 36, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 提升标题部分的层级 */
+        header {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* 动态AI渐变标题 */
+        .ai-gradient-text {
+            background: linear-gradient(45deg, 
+                #FF6B6B, #FF8E53, #FFCE54, #8CC97D, 
+                #4BC0C0, #5C9EFF, #AC7AFF, #FF6B9D,
+                #6B6BFF, #6BFFD9, #FF6BB3, #B36BFF);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 6s ease-in-out infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 50% 100%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 0%; }
+            100% { background-position: 0% 50%; }
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .future-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        .future-glow:hover {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* 视频创作主题增强 */
+        .creative-header {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .creative-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 视频背景 -->
+
+    <video id="myVideo" muted autoplay loop class="video-background">
+        <source src="assets/m1.mp4" type="video/mp4">
+        <source src="assets/m2.mp4" type="video/mp4">
+        <source src="assets/m3.mp4" type="video/mp4">
+        <source src="assets/m4.mp4" type="video/mp4">
+        <source src="assets/m5.mp4" type="video/mp4">
+        <source src="assets/m6.mp4" type="video/mp4">
+        您的浏览器不支持视频标签。
+        <!-- 添加视频源 -->
+    </video>
+
+    <script>
+        var video = document.getElementById("myVideo");
+        var videos = ["assets/m1.mp4", "assets/m2.mp4", "assets/m3.mp4", "assets/m4.mp4", "assets/m5.mp4","assets/m6.mp4"];
+        var currentIndex = Math.floor(Math.random() * videos.length); // 随机选择起始视频
+
+        // 随机播放下一个视频
+        video.addEventListener("ended", function() {
+            var previousIndex = currentIndex;
+            // 随机选择下一个视频，确保不重复播放同一个视频
+            do {
+                currentIndex = Math.floor(Math.random() * videos.length);
+            } while (videos.length > 1 && currentIndex === previousIndex);
+            
+            video.src = videos[currentIndex];
+            video.load(); // 重新加载新视频源
+            video.play();
+        });
+
+        // 初始化随机播放第一个视频
+        video.src = videos[currentIndex];
+        video.play();
+    </script>
+    <!-- SVG蒙版层 -->
+    <div class="background-overlay"></div>
+    
+    <!-- 影视创作大图标 -->
+    <div class="cinema-icon">🎦</div>
+    
+    <!-- 创作主题装饰元素 -->
+    <div class="creative-element">
+        <i class="fas fa-film"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-video"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-camera"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-edit"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-lightbulb"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-music"></i>
+    </div>
+    <div class="creative-element">
+        <i class="fas fa-star"></i>
+    </div>
+    
+    <!-- Full-width Header with glass effect -->
+    <header class="w-full mb-6 text-center relative z-20 glass-effect rounded-none p-6 mx-0">
+        <h1 class="text-4xl md:text-5xl font-bold mb-2 flex items-center justify-center">
+            <i class="fas fa-clapperboard mr-2 text-6xl md:text-6xl ai-gradient-text"></i>
+            <span class="ai-gradient-text">小说视频工作流</span>
+        </h1>
+        <p class="text-2xl text-indigo-200 mb-1">AI驱动的智能内容生成系统</p>
+        <p class="text-xl text-purple-200">一键将文字转化为多媒体内容，释放创作无限可能</p>
+    </header>
+
+    <div class="container mx-auto px-3 py-4 max-w-6xl relative z-10">
+        <!-- Navigation Tabs - Centered layout -->
+        <div class="mb-8 glass-effect rounded-2xl overflow-hidden relative z-20">
+            <div class="flex flex-wrap justify-center border-b border-white border-opacity-30">
+                <button class="nav-tab active px-8 py-4 font-semibold text-sm md:text-base text-white bg-white bg-opacity-30 hover:bg-white hover:bg-opacity-40 transition-colors future-glow" onclick="switchTab('dashboard')">
+                    <i class="fas fa-film mr-2 text-lg"></i>仪表板
+                </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('tools')">
+                    <i class="fas fa-cogs mr-2 text-lg"></i>MCP 工具
+                </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('upload')">
+                    <i class="fas fa-file-upload mr-2 text-lg"></i>上传并处理
+                </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('filemanager')">
+                    <i class="fas fa-folder mr-2 text-lg"></i>文件管理
+                </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('tutorial')">
+                    <i class="fas fa-graduation-cap mr-2 text-lg"></i>教程
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active glass-effect rounded-xl p-6 mb-4 card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-film mr-2 text-blue-300 text-xl"></i>工作流仪表板
+            </h2>
+            <div class="mb-4">
+                <p class="mb-3 text-base text-gray-200">当前状态: <span id="current-status" class="font-bold text-green-400">空闲</span></p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="oneClickFilm()" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base">
+                        <i class="fas fa-film mr-2 text-base"></i>一键出片
+                    </button>
+                    <button onclick="stopExecution()" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base">
+                        <i class="fas fa-stop-circle mr-2 text-base"></i>停止执行
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Tab -->
+        <div id="tools" class="tab-content glass-effect rounded-xl p-6 mb-4 hidden card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-cogs mr-2 text-blue-300 text-xl"></i>MCP 工具
+            </h2>
+            <div id="tools-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="upload" class="tab-content glass-effect rounded-2xl p-8 mb-6 hidden card-hover relative z-20">
+            <h2 class="text-2xl font-bold mb-6 text-white flex items-center">
+                <i class="fas fa-file-upload mr-3 text-blue-300 text-2xl"></i>上传文件夹并处理
+            </h2>
+            <div class="upload-area border-2 border-dashed border-gray-400 rounded-xl p-12 text-center mb-6 glass-effect hover:border-gray-300 transition-all duration-200 cursor-pointer future-glow" id="folderUploadArea">
+                <i class="fas fa-cloud-upload text-4xl text-gray-400 mb-4"></i>
+                <p class="text-lg text-white mb-2 font-medium">拖放文件夹到此处或点击选择</p>
+                <p class="text-base text-gray-300">支持文件夹上传，标准格式为'小说名/小说名.txt'</p>
+                <p class="text-sm text-yellow-200 mt-2">注意：浏览器会显示安全提示，仅在信任本站点时上传</p>
+                <input type="file" id="folderInput" webkitdirectory directory multiple class="hidden" onchange="handleFolderUpload(this.files)" />
+            </div>
+            <div class="flex flex-wrap gap-4">
+                <button onclick="document.getElementById('folderInput').click()" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base">
+                    <i class="fas fa-folder-open mr-2 text-base"></i>选择文件夹
+                </button>
+                <button onclick="processFolder()" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base">
+                    <i class="fas fa-cogs mr-2 text-base"></i>处理上传的文件夹
+                </button>
+            </div>
+            <p id="uploadStatus" class="mt-6 text-xl text-gray-200"></p>
+        </div>
+
+        <!-- File Manager Tab -->
+        <div id="filemanager" class="tab-content glass-effect rounded-xl p-6 mb-4 hidden card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-folder mr-2 text-blue-300 text-xl"></i>文件管理
+            </h2>
+            <div class="file-manager-container">
+                <div class="file-nav mb-4 flex flex-wrap gap-3 justify-center">
+                    <button onclick="changeDirectory('./input')" class="btn-dir bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-5 py-2 rounded-md transition-all duration-200 flex items-center shadow-md hover:shadow-lg future-glow text-sm">
+                        <i class="fas fa-folder mr-2 text-sm"></i>输入目录 (./input)
+                    </button>
+                    <button onclick="changeDirectory('./output')" class="btn-dir bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-5 py-2 rounded-md transition-all duration-200 flex items-center shadow-md hover:shadow-lg future-glow text-sm">
+                        <i class="fas fa-folder mr-2 text-sm"></i>输出目录 (./output)
+                    </button>
+                </div>
+                <div class="file-actions mb-4 text-center">
+                    <div class="upload-section inline-block">
+                        <input type="file" id="fileUpload" onchange="handleFileUpload(this.files)" class="hidden" />
+                        <button onclick="document.getElementById('fileUpload').click()" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-5 py-2 rounded-md transition-all duration-200 flex items-center shadow-md hover:shadow-lg future-glow text-sm">
+                            <i class="fas fa-upload mr-2 text-sm"></i>上传文件
+                        </button>
+                    </div>
+                </div>
+                <div id="fileList" class="file-list glass-effect rounded-xl p-4"></div>
+            </div>
+        </div>
+
+        <!-- Tutorial Tab -->
+        <div id="tutorial" class="tab-content glass-effect rounded-xl p-6 mb-4 hidden card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-graduation-cap mr-2 text-blue-300 text-xl"></i>教程
+            </h2>
+            <div class="tutorial space-y-6">
+                <div class="tutorial-section glass-effect rounded-xl p-6">
+                    <h3 class="text-lg font-medium text-white flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-blue-300 text-base"></i>入门指南
+                    </h3>
+                    <ul class="list-disc pl-6 mt-3 space-y-2 text-base text-gray-200">
+                        <li>此控制台允许您管理和执行 MCP 服务</li>
+                        <li>使用 MCP 工具标签页查看和执行单个工具</li>
+                        <li>使用上传并处理标签页上传文件夹并运行整个工作流</li>
+                        <li>使用文件管理标签页管理input和output目录中的文件</li>
+                        <li>在每个部分底部的控制台中监视进度</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section glass-effect rounded-xl p-6">
+                    <h3 class="text-lg font-medium text-white flex items-center">
+                        <i class="fas fa-cogs mr-2 text-blue-300 text-base"></i>执行单个工具
+                    </h3>
+                    <ul class="list-disc pl-6 mt-3 space-y-2 text-base text-gray-200">
+                        <li>导航到 MCP 工具标签页</li>
+                        <li>您将看到所有可用 MCP 工具的列表</li>
+                        <li>点击任何工具上的"执行"按钮单独运行它</li>
+                        <li>在控制台中监视执行日志</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section glass-effect rounded-xl p-6">
+                    <h3 class="text-lg font-medium text-white flex items-center">
+                        <i class="fas fa-file-upload mr-2 text-blue-300 text-base"></i>处理整个文件夹
+                    </h3>
+                    <ul class="list-disc pl-6 mt-3 space-y-2 text-base text-gray-200">
+                        <li>转到上传并处理标签页</li>
+                        <li>拖放文件夹或点击选择一个文件夹</li>
+                        <li>点击"处理上传的文件夹"开始工作流</li>
+                        <li>在控制台中监视进度</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section glass-effect rounded-xl p-6">
+                    <h3 class="text-lg font-medium text-white flex items-center">
+                        <i class="fas fa-folder mr-2 text-purple-300 text-base"></i>文件管理
+                    </h3>
+                    <ul class="list-disc pl-6 mt-3 space-y-2 text-base text-gray-200">
+                        <li>转到文件管理标签页</li>
+                        <li>使用顶部按钮切换到输入(input)或输出(output)目录</li>
+                        <li>点击文件名可预览文本文件内容</li>
+                        <li>点击删除按钮可删除文件或目录</li>
+                        <li>使用上传按钮可上传新文件</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section glass-effect rounded-xl p-6">
+                    <h3 class="text-lg font-medium text-white flex-items-center">
+                        <i class="fas fa-chart-bar mr-2 text-red-300 text-base"></i>监控进度
+                    </h3>
+                    <ul class="list-disc pl-6 mt-3 space-y-2 text-base text-gray-200">
+                        <li>控制台显示来自 MCP 工具的实时日志</li>
+                        <li>绿色文本表示信息消息</li>
+                        <li>亮绿色文本表示成功消息</li>
+                        <li>红色文本表示错误消息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console -->
+        <div class="console-container glass-effect text-blue-300 font-mono rounded-2xl p-8 mb-6 relative z-20">
+            <h3 class="text-xl font-bold mb-4 text-white flex items-center">
+                <i class="fas fa-terminal mr-2 text-blue-300 text-lg"></i>实时日志控制台
+            </h3>
+            <div id="console" class="console h-72 overflow-y-auto p-5 glass-effect rounded-xl text-sm"></div>
+        </div>
+        
+        <!-- Footer with copyright -->
+        <footer class="mt-12 text-center relative z-20">
+            <p class="text-sm text-white">© 2026 小说视频工作流系统. 版权所有.</p>
+            <p class="text-xs text-gray-500 mt-1"></p>
+        </footer>
+    </div>
+
+    <script>
+        // WebSocket连接
+        const socket = new WebSocket('ws://' + window.location.host + '/ws');
+        
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket');
+        };
+        
+        socket.onmessage = function(event) {
+            const logData = JSON.parse(event.data);
+            const consoleDiv = document.getElementById('console');
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'console-line ' + logData.type;
+            lineDiv.innerHTML = '<span class="text-gray-400">[' + timestamp + ']</span> ' +
+                               '<span class="text-blue-300">[' + logData.toolName + ']</span> ' +
+                               '<span class="' + (logData.type === 'error' ? 'text-red-400' : 
+                                  logData.type === 'success' ? 'text-green-400 font-bold' : 
+                                  'text-gray-300') + '">' + logData.message + '</span>';
+            
+            consoleDiv.appendChild(lineDiv);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+        
+        // 文件管理相关函数
+        let currentDirectory = 'input'; // 默认目录
+        
+        // 切换目录
+        function changeDirectory(dir) {
+            // 去掉 ./ 前缀，只保留目录名
+            currentDirectory = dir.startsWith('./') ? dir.substring(2) : dir;
+            loadFileList(currentDirectory);
+        }
+        
+        // 加载文件列表
+        function loadFileList(dir) {
+            // 构建正确的路径格式，确保后端能正确处理
+            var pathToUse = dir;
+            // 如果路径不以 ./ 开头，添加前缀
+            if (!dir.startsWith('./')) {
+                pathToUse = './' + dir;
+            }
+            
+            fetch('/api/files/list?dir=' + encodeURIComponent(pathToUse))
+                .then(response => response.json())
+                .then(data => {
+                    const fileListDiv = document.getElementById('fileList');
+                    fileListDiv.innerHTML = '';
+                    
+                    if (data.files.length === 0) {
+                        fileListDiv.innerHTML = '<div class="text-center py-16 text-2xl text-gray-300"><i class="fas fa-inbox text-6xl mb-6 opacity-50"></i><p>目录为空</p></div>';
+                        return;
+                    }
+                    
+                    // 创建文件表格
+                    const table = document.createElement('table');
+                    table.className = 'min-w-full divide-y divide-gray-600';
+                    table.innerHTML = `
+                        <thead class="bg-black bg-opacity-20">
+                            <tr>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-tl-lg">名称</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">类型</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">大小</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">修改时间</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-tr-lg">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-600"></tbody>
+                    `;
+                    
+                    const tbody = table.querySelector('tbody');
+                    
+                    data.files.forEach(function(file) {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-white hover:bg-opacity-10 transition-colors duration-150';
+                        
+                        var fileTypeDisplay = file.isDir ? '📁' : getFileIconByType(file.type);
+                        var fileSizeDisplay = file.isDir ? '-' : formatFileSize(file.size);
+                        var previewButton = '';
+                        // 扩展预览功能到图片和音频文件
+                        if (!file.isDir && ['text', 'json', 'yaml', 'yml', 'xml', 'csv', 'log', 'md', 'image', 'audio'].includes(file.type)) {
+                            previewButton = '<button onclick="previewFile(\'' + file.name + '\')" class="text-blue-300 hover:text-blue-100 mr-5 text-lg transition-colors duration-150"><i class="fas fa-eye mr-2"></i>预览</button>';
+                        }
+                        var modTime = new Date(file.modTime).toLocaleString();
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-6 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="mr-5 text-2xl opacity-80">${fileTypeDisplay}</div>
+                                    <div class="text-xl font-medium text-gray-200">
+                                        <span onclick="clickFileOrDir('${file.name}', ${file.isDir})" class="cursor-pointer hover:text-blue-300 transition-colors duration-150">${file.name}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-6 whitespace-nowrap text-xl text-gray-300">${file.type}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-xl text-gray-300">${fileSizeDisplay}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-xl text-gray-300">${modTime}</td>
+                            <td class="px-6 py-6 whitespace-nowrap text-xl font-medium">
+                                ${previewButton}
+                                <button onclick="deleteFile('${file.name}', ${file.isDir})" class="text-red-400 hover:text-red-200 transition-colors duration-150"><i class="fas fa-trash mr-2"></i>删除</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    fileListDiv.appendChild(table);
+                })
+                .catch(function(error) {
+                    console.error('Error loading file list:', error);
+                    const fileListDiv = document.getElementById('fileList');
+                    fileListDiv.innerHTML = '<div class="text-red-400 p-8 text-center text-xl"><i class="fas fa-exclamation-triangle mr-3"></i>加载文件列表失败: ' + error.message + '</div>';
+                });
+        }
+        
+        // 根据文件类型获取图标
+        function getFileIconByType(fileType) {
+            switch(fileType) {
+                case 'image':
+                    return '🖼️';
+                case 'video':
+                    return '🎬';
+                case 'audio':
+                    return '🎵';
+                case 'pdf':
+                    return '📄';
+                case 'archive':
+                    return '📦';
+                case 'text':
+                case 'json':
+                case 'yaml':
+                case 'yml':
+                case 'xml':
+                case 'csv':
+                case 'log':
+                case 'md':
+                    return '📝';
+                default:
+                    return '📄';
+            }
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 点击文件或目录
+        function clickFileOrDir(name, isDir) {
+            if (isDir) {
+                // 进入子目录
+                var newPath = currentDirectory;
+                if (newPath.endsWith('/')) {
+                    newPath += name;
+                } else {
+                    newPath += '/' + name;
+                }
+                changeDirectory('./' + newPath);
+            } else {
+                // 对于支持预览的文件类型，打开预览
+                previewFile(name);
+            }
+        }
+        
+        // 预览文件
+        function previewFile(filename) {
+            const fullPath = './' + currentDirectory + '/' + filename;
+            
+            // 根据文件扩展名判断文件类型
+            const ext = filename.split('.').pop().toLowerCase();
+            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+            const audioExtensions = ['mp3', 'wav', 'ogg', 'm4a', 'flac'];
+            const textExtensions = ['txt', 'json', 'yaml', 'yml', 'xml', 'csv', 'log', 'md'];
+            const subtitleExtensions = ['srt', 'ass', 'vtt']; // 字幕文件
+            
+            if(imageExtensions.includes(ext)) {
+                // 图片预览 - 使用正确的静态文件路径
+                const staticPath = convertToStaticPath(fullPath);
+                showImagePreview(staticPath, filename);
+            } else if(audioExtensions.includes(ext)) {
+                // 音频预览 - 使用正确的静态文件路径
+                const staticPath = convertToStaticPath(fullPath);
+                showAudioPreview(staticPath, filename);
+            } else if(subtitleExtensions.includes(ext)) {
+                // 字幕文件预览（通过API获取内容）
+                fetch('/api/files/content?path=' + encodeURIComponent(fullPath))
+                    .then(response => response.text())
+                    .then(content => {
+                        showTextPreview(content, filename);
+                    })
+                    .catch(function(error) {
+                        console.error('Error previewing subtitle file:', error);
+                        alert('无法预览字幕文件: ' + error.message);
+                    });
+            } else if(textExtensions.includes(ext)) {
+                // 文本文件预览（通过API获取内容）
+                fetch('/api/files/content?path=' + encodeURIComponent(fullPath))
+                    .then(response => response.text())
+                    .then(content => {
+                        showTextPreview(content, filename);
+                    })
+                    .catch(function(error) {
+                        console.error('Error previewing text file:', error);
+                        alert('无法预览文件: ' + error.message);
+                    });
+            } else {
+                // 对于其他文件类型，尝试通过API获取内容
+                fetch('/api/files/content?path=' + encodeURIComponent(fullPath))
+                    .then(response => {
+                        if (response.ok) {
+                            // 如果是文本内容则显示为文本，否则提示无法预览
+                            return response.text().then(content => {
+                                showTextPreview(content, filename);
+                            });
+                        } else {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error previewing file:', error);
+                        alert('无法预览文件: ' + error.message);
+                    });
+            }
+        }
+        
+        // 将相对路径转换为静态文件服务路径
+        function convertToStaticPath(relativePath) {
+            // 将 ./input/path 或 ./output/path 转换为 /files/input/path 或 /files/output/path
+            if (relativePath.startsWith('./input/')) {
+                return '/files/input/' + relativePath.substring(9); // 9 = length of './input/'
+            } else if (relativePath.startsWith('./output/')) {
+                return '/files/output/' + relativePath.substring(9); // 9 = length of './output/'
+            }
+            return relativePath; // 如果不是标准路径，返回原始路径
+        }
+        
+        // 显示文本预览
+        function showTextPreview(content, filename) {
+            // 创建模态框显示文件内容
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            overlay.id = 'modalOverlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'glass-effect rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-white border-opacity-30';
+            
+            const header = document.createElement('div');
+            header.className = 'flex justify-between items-center p-6 border-b border-white border-opacity-30 rounded-t-2xl';
+            header.innerHTML = `
+                <h3 class="text-xl font-bold text-white">预览: ${filename}</h3>
+                <button onclick="closeModal()" class="text-gray-300 hover:text-white text-3xl leading-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'p-6 flex-grow overflow-auto';
+            contentDiv.innerHTML = '<pre class="whitespace-pre-wrap break-words font-mono text-lg text-gray-200 bg-black bg-opacity-30 p-6 rounded-xl">' + escapeHtml(content) + '</pre>';
+            
+            modal.appendChild(header);
+            modal.appendChild(contentDiv);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        }
+        
+        // 显示图片预览
+        function showImagePreview(filePath, filename) {
+            // 创建模态框显示图片
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4';
+            overlay.id = 'modalOverlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'w-full max-w-6xl max-h-[90vh] flex flex-col';
+            
+            const header = document.createElement('div');
+            header.className = 'flex justify-between items-center p-4 bg-black bg-opacity-30 rounded-t-2xl';
+            header.innerHTML = `
+                <h3 class="text-xl font-bold text-white">预览: ${filename}</h3>
+                <button onclick="closeModal()" class="text-gray-300 hover:text-white text-3xl leading-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex-grow flex items-center justify-center p-4';
+            contentDiv.innerHTML = `<img src="${filePath}" alt="${filename}" class="max-h-[70vh] max-w-full object-contain rounded-xl">`;
+            
+            modal.appendChild(header);
+            modal.appendChild(contentDiv);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        }
+        
+        // 显示音频预览
+        function showAudioPreview(filePath, filename) {
+            // 创建模态框显示音频播放器
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            overlay.id = 'modalOverlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'glass-effect rounded-2xl w-full max-w-2xl flex flex-col border border-white border-opacity-30';
+            
+            const header = document.createElement('div');
+            header.className = 'flex justify-between items-center p-6 border-b border-white border-opacity-30 rounded-t-2xl';
+            header.innerHTML = `
+                <h3 class="text-xl font-bold text-white">播放: ${filename}</h3>
+                <button onclick="closeModal()" class="text-gray-300 hover:text-white text-3xl leading-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'p-8 flex flex-col items-center';
+            contentDiv.innerHTML = `
+                <div class="w-full max-w-md">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-music text-6xl text-blue-400 mb-4"></i>
+                        <p class="text-xl text-white">${filename}</p>
+                    </div>
+                    <audio controls class="w-full h-12 rounded-lg">
+                        <source src="${filePath}" type="audio/${filename.split('.').pop()}">
+                        您的浏览器不支持音频播放。
+                    </audio>
+                </div>
+            `;
+            
+            modal.appendChild(header);
+            modal.appendChild(contentDiv);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        }
+        
+        // 转义HTML以防止XSS
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+        
+        // 删除文件或目录
+        function deleteFile(filename, isDir) {
+            var confirmMessage = '确定要删除' + (isDir ? '目录' : '文件') + ' "' + filename + '" 吗？此操作不可撤销。';
+            if (confirm(confirmMessage)) {
+                const fullPath = './' + currentDirectory + '/' + filename;
+                fetch('/api/files/delete?path=' + encodeURIComponent(fullPath), {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert((isDir ? '目录' : '文件') + ' 已成功删除');
+                        loadFileList(currentDirectory); // 重新加载文件列表
+                    } else {
+                        alert('删除失败: ' + data.message);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error deleting file:', error);
+                    alert('删除失败: ' + error.message);
+                });
+            }
+        }
+        
+        // 处理文件上传
+        function handleFileUpload(files) {
+            if (files.length === 0) return;
+            
+            // 处理多个文件上传，保持目录结构
+            uploadMultipleFiles(Array.from(files), './' + currentDirectory);
+        }
+        
+        function handleFolderUpload(files) {
+            if (files.length === 0) return;
+            
+            // 上传文件夹中的所有文件，保持目录结构
+            uploadMultipleFiles(Array.from(files), './input');
+        }
+        
+        function uploadMultipleFiles(files, baseDir) {
+            if (files.length === 0) return;
+            
+            // 显示上传进度
+            document.getElementById('uploadStatus').innerHTML = `开始上传 ${files.length} 个文件...`;
+            
+            // 递归上传文件数组中的每个文件
+            const uploadNext = (index) => {
+                if (index >= files.length) {
+                    // 所有文件上传完成后刷新文件列表
+                    loadFileList(currentDirectory);
+                    document.getElementById('uploadStatus').innerHTML = `所有文件上传完成 (${files.length} 个文件)`;
+                    return;
+                }
+                
+                const file = files[index];
+                
+                // 创建FormData对象
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // 处理文件路径，保持目录结构
+                let filePath = file.webkitRelativePath || file.name;
+                if (filePath.startsWith('./')) {
+                    filePath = filePath.substring(2);
+                }
+                
+                // 计算完整的目标路径
+                let fullDestPath = baseDir;
+                if (fullDestPath.endsWith('/')) {
+                    fullDestPath += filePath;
+                } else {
+                    fullDestPath += '/' + filePath;
+                }
+                
+                // 获取目录部分，用于创建目录
+                let destDir = fullDestPath.substring(0, fullDestPath.lastIndexOf('/'));
+                if (destDir === '') {
+                    destDir = baseDir;
+                }
+                
+                formData.append('dir', destDir);
+                
+                // 显示上传状态
+                document.getElementById('uploadStatus').innerHTML = `上传中: ${filePath} (${index + 1}/${files.length})`;
+                
+                fetch('/api/files/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('文件上传成功: ' + data.filename);
+                    } else {
+                        console.error('上传失败: ' + data.message);
+                    }
+                    
+                    // 继续上传下一个文件
+                    uploadNext(index + 1);
+                })
+                .catch(function(error) {
+                    console.error('Error uploading file:', error);
+                    document.getElementById('uploadStatus').innerHTML = `上传失败: ${error.message}`;
+                    
+                    // 即使出错也继续上传下一个文件
+                    uploadNext(index + 1);
+                });
+            };
+            
+            uploadNext(0);
+        }
+        
+        // 添加拖拽上传功能
+        function initDragAndDrop() {
+            const dropArea = document.getElementById('folderUploadArea');
+            
+            if (dropArea) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+                
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, highlight, false);
+                });
+                
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, unhighlight, false);
+                });
+                
+                function highlight() {
+                    dropArea.style.borderColor = '#3b82f6';
+                    dropArea.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+                }
+                
+                function unhighlight() {
+                    dropArea.style.borderColor = '#9ca3af';
+                    dropArea.style.backgroundColor = 'transparent';
+                }
+                
+                dropArea.addEventListener('drop', handleDrop, false);
+                
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    
+                    // 处理拖放的文件夹
+                    handleFolderUpload(files);
+                }
+            }
+        }
+        
+        // 在页面完全加载后初始化拖拽功能
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initDragAndDrop);
+        } else {
+            // 如果文档已经加载完成，则直接初始化
+            initDragAndDrop();
+        }
+        
+        // 当切换到文件管理标签时加载文件列表
+        function loadFileManager() {
+            // 使用input作为默认目录
+            loadFileList('input');
+        }
+
+        function switchTab(tabName) {
+            // 隐藏所有标签内容
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.add('hidden');
+                tabs[i].classList.remove('active');
+            }
+            
+            // 移除所有标签的激活状态
+            const navTabs = document.getElementsByClassName('nav-tab');
+            for (let i = 0; i < navTabs.length; i++) {
+                navTabs[i].classList.remove('bg-blue-600', 'text-white');
+                navTabs[i].classList.add('text-gray-200');
+            }
+            
+            // 显示选中的标签内容
+            document.getElementById(tabName).classList.remove('hidden');
+            document.getElementById(tabName).classList.add('active');
+            
+            // 更新选中的导航标签样式
+            event.currentTarget.classList.remove('text-gray-200');
+            event.currentTarget.classList.add('bg-blue-600', 'text-white');
+            
+            // 如果切换到工具标签，则加载工具列表
+            if (tabName === 'tools') {
+                loadToolsList();
+            }
+            // 如果切换到文件管理标签，则加载文件列表
+            else if (tabName === 'filemanager') {
+                loadFileManager();
+            }
+        }
+        
+        function loadToolsList() {
+            fetch('/api/tools')
+                .then(response => response.json())
+                .then(tools => {
+                    const toolsListDiv = document.getElementById('tools-list');
+                    toolsListDiv.innerHTML = '';
+                    
+                    // 不同工具的图标映射
+                    const toolIcons = {
+                        'generate_indextts2_audio': 'fas fa-microphone-alt',
+                        'generate_subtitles_from_indextts2': 'fas fa-closed-captioning',
+                        'file_split_novel_into_chapters': 'fas fa-file-alt',
+                        'generate_image_from_text': 'fas fa-paint-brush',
+                        'generate_image_from_image': 'fas fa-image',
+                        'generate_images_from_chapter': 'fas fa-images',
+                        'generate_images_from_chapter_with_ai_prompt': 'fas fa-robot',
+                        'default': 'fas fa-cog'
+                    };
+                    
+                    tools.forEach(function(tool) {
+                        const toolCard = document.createElement('div');
+                        toolCard.className = 'glass-effect rounded-2xl p-6 border border-white border-opacity-20 card-hover future-glow';
+                        
+                        // 获取对应工具的图标
+                        const iconClass = toolIcons[tool.name] || toolIcons['default'];
+                        
+                        // 为generate_indextts2_audio工具添加特殊处理
+                        let cardContent = '';
+                        if (tool.name === 'generate_indextts2_audio') {
+                            // 为音频生成工具添加表单
+                            cardContent = `
+                                <div class="tool-header text-center">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-16 h-16 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                                            <i class="${iconClass} text-blue-300 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-xl font-bold text-white mb-2">${tool.name}</h3>
+                                        <p class="text-lg text-gray-300 mb-4">${tool.description}</p>
+                                        <button onclick="toggleAudioForm('${tool.name}')" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 future-glow text-lg">
+                                            执行工具
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="form_${tool.name}" class="audio-tool-form mt-6 p-6 glass-effect rounded-xl border border-white border-opacity-20 hidden">
+                                    <div class="form-group mb-6">
+                                        <label class="block text-lg font-bold text-gray-300 mb-3">输入文本:</label>
+                                        <textarea id="textInput_${tool.name}" placeholder="请输入要转换为语音的文本" rows="3" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"></textarea>
+                                    </div>
+                                    <div class="form-group mb-6">
+                                        <label class="block text-lg font-bold text-gray-300 mb-3">输出目录:</label>
+                                        <input type="text" id="outputDir_${tool.name}" value="./output/" placeholder="请输入输出目录" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                                    </div>
+                                    <div class="flex flex-wrap gap-4">
+                                        <button onclick="executeAudioTool('${tool.name}')" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg transition-all duration-200 future-glow text-lg">
+                                            生成音频
+                                        </button>
+                                        <button onclick="hideAudioForm('${tool.name}')" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-lg transition-all duration-200 future-glow text-lg">
+                                            取消
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (tool.name === 'generate_images_from_chapter_with_ai_prompt') {
+                            // 为图像生成工具添加表单
+                            cardContent = `
+                                <div class="tool-header text-center">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-16 h-16 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                                            <i class="${iconClass} text-blue-300 text-2xl"></i>
+                                        </div>
+                                        <h3 class="text-xl font-bold text-white mb-2 break-words max-w-full">${tool.name}</h3>
+                                        <p class="text-lg text-gray-300 mb-4">${tool.description}</p>
+                                        <button onclick="toggleImageForm('${tool.name}')" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-xl transition-all duration-200 future-glow text-lg">
+                                            执行工具
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="form_${tool.name}" class="audio-tool-form mt-6 p-6 glass-effect rounded-xl border border-white border-opacity-20 hidden">
+                                    <div class="form-group mb-6">
+                                        <label class="block text-lg font-bold text-gray-300 mb-3">章节文本:</label>
+                                        <textarea id="chapterText_${tool.name}" placeholder="请输入要生成图像的章节文本" rows="4" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"></textarea>
+                                    </div>
+                                    <div class="form-group mb-6">
+                                        <label class="block text-lg font-bold text-gray-300 mb-3">输出目录:</label>
+                                        <input type="text" id="outputDir_${tool.name}" value="./output/images_" placeholder="请输入输出目录" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                        <div class="form-group">
+                                            <label class="block text-lg font-bold text-gray-300 mb-3">图像宽度:</label>
+                                            <input type="number" id="imageWidth_${tool.name}" value="512" min="256" max="2048" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="block text-lg font-bold text-gray-300 mb-3">图像高度:</label>
+                                            <input type="number" id="imageHeight_${tool.name}" value="896" min="256" max="2048" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-wrap gap-4">
+                                        <button onclick="executeImageTool('${tool.name}')" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 future-glow text-lg">
+                                            生成图像
+                                        </button>
+                                        <button onclick="hideImageForm('${tool.name}')" class="bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 px-6 py-3 rounded-lg transition-all duration-200 future-glow text-lg">
+                                            取消
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // 其他工具使用普通按钮
+                            cardContent = `
+                                <div class="tool-header text-center">
+                                    <div class="flex flex-col items-center">
+                                        <div class="w-20 h-20 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mb-5">
+                                            <i class="${iconClass} text-blue-300 text-3xl"></i>
+                                        </div>
+                                        <h3 class="text-xl font-bold text-white mb-3">${tool.name}</h3>
+                                        <p class="text-lg text-gray-300 mb-6">${tool.description}</p>
+                                        <button onclick="executeTool('${tool.name}')" class="w-full bg-gradient-to-r from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 text-gray-800 py-3 px-4 rounded-xl transition-all duration-200 future-glow text-lg">
+                                            执行工具
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        toolCard.innerHTML = cardContent;
+                        toolsListDiv.appendChild(toolCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading tools:', error);
+                    // 添加错误提示
+                    const toolsListDiv = document.getElementById('tools-list');
+                    toolsListDiv.innerHTML = '<div class="col-span-full text-red-400 p-8 text-center text-xl"><i class="fas fa-exclamation-triangle mr-3"></i>加载工具列表失败: ' + error.message + '</div>';
+                });
+        }
+        
+        // 显示音频生成表单
+        function toggleAudioForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.toggle('hidden');
+            }
+        }
+        
+        // 隐藏音频生成表单
+        function hideAudioForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // 显示图像生成表单
+        function toggleImageForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.toggle('hidden');
+            }
+        }
+
+        // 隐藏图像生成表单
+        function hideImageForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // 执行音频生成工具
+        function executeAudioTool(toolName) {
+            const textInput = document.getElementById('textInput_' + toolName).value;
+            const outputDir = document.getElementById('outputDir_' + toolName).value;
+            
+            if (!textInput || textInput.trim() === '') {
+                alert('请输入要转换为语音的文本');
+                return;
+            }
+            
+            // 生成输出文件路径
+            const timestamp = new Date().getTime();
+            const outputFile = outputDir + '/audio_' + timestamp + '.wav';
+            
+            const params = {
+                toolName: toolName,
+                text: textInput,
+                output_file: outputFile
+            };
+            
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Audio tool execution initiated:', data);
+                // 隐藏表单
+                hideAudioForm(toolName);
+            })
+            .catch(error => {
+                console.error('Error executing audio tool:', error);
+            });
+        }
+
+        // 执行图像生成工具
+        function executeImageTool(toolName) {
+            const chapterText = document.getElementById('chapterText_' + toolName).value;
+            const outputDir = document.getElementById('outputDir_' + toolName).value;
+            const imageWidth = parseInt(document.getElementById('imageWidth_' + toolName).value);
+            const imageHeight = parseInt(document.getElementById('imageHeight_' + toolName).value);
+            
+            if (!chapterText || chapterText.trim() === '') {
+                alert('请输入要生成图像的章节文本');
+                return;
+            }
+            
+            if (!outputDir || outputDir.trim() === '') {
+                alert('请输入输出目录');
+                return;
+            }
+            
+            // 生成输出目录路径
+            const timestamp = new Date().getTime();
+            const outputDirectory = outputDir + timestamp;
+            
+            const params = {
+                toolName: toolName,
+                chapter_text: chapterText,
+                output_dir: outputDirectory,
+                width: imageWidth,
+                height: imageHeight
+            };
+            
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Image tool execution initiated:', data);
+                // 隐藏表单
+                hideImageForm(toolName);
+            })
+            .catch(error => {
+                console.error('Error executing image tool:', error);
+            });
+        }
+        
+        function executeTool(toolName) {
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({toolName: toolName})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Tool execution initiated:', data);
+            })
+            .catch(error => {
+                console.error('Error executing tool:', error);
+            });
+        }
+        
+        function oneClickFilm() {
+            fetch('/api/one-click-film', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('一键出片工作流已启动:', data);
+            })
+            .catch(error => {
+                console.error('一键出片执行错误:', error);
+            });
+        }
+        
+        function stopExecution() {
+            fetch('/api/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Execution stopped:', data);
+            })
+            .catch(error => {
+                console.error('Error stopping execution:', error);
+            });
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.add('border-blue-400', 'bg-blue-400', 'bg-opacity-10');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.remove('border-blue-400', 'bg-blue-400', 'bg-opacity-10');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // 简单显示上传状态
+                document.getElementById('uploadStatus').innerText = '已放置文件: ' + files.length + ' 个文件';
+            }
+        }
+        
+        function processFolder() {
+            fetch('/api/process-folder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Folder processing initiated:', data);
+            })
+            .catch(error => {
+                console.error('Error processing folder:', error);
+            });
+        }
+        
+        // 初始化 - 加载工具列表
+        window.onload = function() {
+            // 在初始状态下加载工具列表
+            if (document.querySelector('.nav-tab.active').textContent.includes('MCP 工具')) {
+                loadToolsList();
+            }
+        };
+    </script>
+</body>
+</html>

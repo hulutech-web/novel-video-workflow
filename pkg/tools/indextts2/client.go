@@ -15,13 +15,16 @@ import (
 	"time"
 
 	"go.uber.org/zap"
+
+	"novel-video-workflow/pkg/broadcast"
 )
 
 // IndexTTS2Client 封装 IndexTTS2 API 调用
 type IndexTTS2Client struct {
-	BaseURL    string
-	Logger     *zap.Logger
-	HTTPClient *http.Client
+	BaseURL          string
+	Logger           *zap.Logger
+	HTTPClient       *http.Client
+	BroadcastService *broadcast.BroadcastService
 }
 
 // NewIndexTTS2Client 创建新的客户端实例
@@ -36,6 +39,16 @@ func NewIndexTTS2Client(logger *zap.Logger, baseURL string) *IndexTTS2Client {
 		HTTPClient: &http.Client{
 			Timeout: 300 * time.Minute, // TTS生成可能需要较长时间,这里设置为300分钟，因为可能处理的文字很多
 		},
+
+		BroadcastService: broadcast.NewBroadcastService(), // 初始化为nil，稍后可以通过SetBroadcastService设置
+	}
+}
+
+// sendBroadcast 发送广播消息
+func (c *IndexTTS2Client) sendBroadcast(messageType, content string) {
+	if c.BroadcastService != nil {
+		timeStr := time.Now().Format("2006-01-02 15:04:05")
+		c.BroadcastService.SendMessage(messageType, content, timeStr)
 	}
 }
 
@@ -86,7 +99,7 @@ func (c *IndexTTS2Client) UploadAudio(audioPath string) (*UploadResponse, error)
 	if _, err := os.Stat(audioPath); os.IsNotExist(err) {
 		return nil, fmt.Errorf("音频文件不存在: %s", audioPath)
 	}
-
+	c.BroadcastService.SendMessage("上传音频", audioPath, broadcast.GetTimeStr())
 	// 打开音频文件
 	file, err := os.Open(audioPath)
 	if err != nil {
@@ -134,6 +147,8 @@ func (c *IndexTTS2Client) UploadAudio(audioPath string) (*UploadResponse, error)
 		req, err := http.NewRequest("POST", url, body)
 		if err != nil {
 			lastErr = fmt.Errorf("创建请求失败: %v", err)
+			c.BroadcastService.SendMessage("创建请求失败", lastErr.Error(), broadcast.GetTimeStr())
+
 			continue
 		}
 
@@ -185,6 +200,9 @@ func (c *IndexTTS2Client) UploadAudio(audioPath string) (*UploadResponse, error)
 
 		if uploadResp.Success || resp.StatusCode == http.StatusOK {
 			fmt.Printf("上传成功，使用端点: %s\n", endpoint)
+			marshal, _ := json.Marshal(uploadResp)
+			c.BroadcastService.SendMessage("上传成功", string(marshal), broadcast.GetTimeStr())
+
 			return &uploadResp, nil
 		}
 	}
@@ -195,6 +213,9 @@ func (c *IndexTTS2Client) UploadAudio(audioPath string) (*UploadResponse, error)
 
 // GenerateTTS 生成TTS语音 - 适配Gradio API
 func (c *IndexTTS2Client) GenerateTTS(params TTSParams) (*TTSResponse, error) {
+
+	c.BroadcastService.SendMessage("生成TTS语音", "生成TTS语音", broadcast.GetTimeStr())
+
 	// Gradio API需要特定的格式
 	gradioRequest := map[string]interface{}{
 		"data":       params.Data,
@@ -288,6 +309,8 @@ func (c *IndexTTS2Client) GenerateTTS(params TTSParams) (*TTSResponse, error) {
 // DownloadAudio 下载生成的音频文件
 func (c *IndexTTS2Client) DownloadAudio(audioURL, savePath string) error {
 	// 创建请求
+	c.BroadcastService.SendMessage("下载生成的音频文件", "下载生成的音频文件", broadcast.GetTimeStr())
+
 	resp, err := http.Get(audioURL)
 	if err != nil {
 		return fmt.Errorf("下载音频失败: %v", err)
@@ -344,6 +367,8 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 		zap.String("text", fmt.Sprintf("%s-%d", text[:10], len(text))), //text只取前10个字符
 		zap.String("output_path", outputPath))
 
+	c.sendBroadcast("info", fmt.Sprintf("开始TTS生成，音频路径: %s", audioPath))
+
 	// 检查音频文件是否存在
 	if _, err := os.Stat(audioPath); os.IsNotExist(err) {
 		return fmt.Errorf("音频文件不存在: %s", audioPath)
@@ -356,27 +381,34 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 			zap.String("path", audioPath),
 			zap.Int64("size_bytes", size),
 			zap.Float64("size_mb", float64(size)/(1024*1024)))
+		c.sendBroadcast("info", fmt.Sprintf("音频文件大小: %.2f MB", float64(size)/(1024*1024)))
 	} else {
 		c.Logger.Error("无法获取音频文件信息", zap.String("path", audioPath), zap.Error(err))
+		c.sendBroadcast("error", fmt.Sprintf("无法访问音频文件: %v", err))
 		return fmt.Errorf("无法访问音频文件: %v", err)
 	}
 
 	c.Logger.Info("使用音频文件进行TTS生成", zap.String("audio_path", audioPath))
+	c.sendBroadcast("info", "使用音频文件进行TTS生成")
 	c.Logger.Info("正在生成TTS语音", zap.String("text", fmt.Sprintf("%s-%d", text[:10], len(text))))
+	c.sendBroadcast("info", fmt.Sprintf("正在生成TTS语音，文本长度: %d", len(text)))
 
 	// 直接调用带音频文件的TTS生成
 	ttsResp, err := c.GenerateTTSWithFile(audioPath, text)
 	if err != nil {
 		c.Logger.Error("TTS生成失败", zap.Error(err))
+		c.sendBroadcast("error", fmt.Sprintf("TTS生成失败: %v", err))
 		return fmt.Errorf("生成TTS失败: %v", err)
 	}
 
 	// 检查响应中是否有音频数据
 	if len(ttsResp.Data) == 0 {
+		c.sendBroadcast("error", "TTS生成失败: 未收到任何响应数据")
 		return fmt.Errorf("TTS生成失败: 未收到任何响应数据")
 	}
 
 	// 从响应中提取音频信息
+	c.sendBroadcast("info", "正在解析TTS响应数据")
 	audioFound := false
 	for i, item := range ttsResp.Data {
 		// 检查是否是更新类型的数据
@@ -389,13 +421,16 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 						if path, pathExists := valueMap["path"]; pathExists {
 							audioPathFromServer := path.(string)
 							c.Logger.Info("找到音频输出", zap.String("path", audioPathFromServer), zap.Int("index", i))
+							c.sendBroadcast("info", fmt.Sprintf("找到音频输出，路径: %s", audioPathFromServer))
 
 							// 构造完整的音频URL
 							audioURL := c.BaseURL + "/gradio_api/file=" + audioPathFromServer
 							c.Logger.Info("下载音频", zap.String("url", audioURL))
+							c.sendBroadcast("info", "正在下载音频文件")
 
 							err = c.DownloadAudio(audioURL, outputPath)
 							if err != nil {
+								c.sendBroadcast("error", fmt.Sprintf("下载音频失败: %v", err))
 								return fmt.Errorf("下载音频失败: %v", err)
 							}
 
@@ -408,13 +443,16 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 				// 直接是音频路径
 				audioPathFromServer := path.(string)
 				c.Logger.Info("找到音频输出", zap.String("path", audioPathFromServer), zap.Int("index", i))
+				c.sendBroadcast("info", fmt.Sprintf("找到音频输出，路径: %s", audioPathFromServer))
 
 				// 构造完整的音频URL
 				audioURL := c.BaseURL + "/gradio_api/file=" + audioPathFromServer
 				c.Logger.Info("下载音频", zap.String("url", audioURL))
+				c.sendBroadcast("info", "正在下载音频文件")
 
 				err = c.DownloadAudio(audioURL, outputPath)
 				if err != nil {
+					c.sendBroadcast("error", fmt.Sprintf("下载音频失败: %v", err))
 					return fmt.Errorf("下载音频失败: %v", err)
 				}
 
@@ -425,9 +463,11 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 			// 检查是否是音频文件路径
 			audioURL := c.BaseURL + "/gradio_api/file=" + str
 			c.Logger.Info("发现音频路径", zap.String("url", audioURL))
+			c.sendBroadcast("info", fmt.Sprintf("发现音频路径: %s", str))
 
 			err = c.DownloadAudio(audioURL, outputPath)
 			if err != nil {
+				c.sendBroadcast("error", fmt.Sprintf("下载音频失败: %v", err))
 				return fmt.Errorf("下载音频失败: %v", err)
 			}
 
@@ -462,10 +502,12 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 	}
 
 	if !audioFound {
+		c.sendBroadcast("error", fmt.Sprintf("未在响应中找到音频数据: %+v", ttsResp.Data))
 		return fmt.Errorf("未在响应中找到音频数据: %+v", ttsResp.Data)
 	}
 
 	c.Logger.Info("TTS生成完成", zap.String("output", outputPath))
+	c.sendBroadcast("success", fmt.Sprintf("TTS生成完成，输出文件: %s", outputPath))
 	return nil
 }
 
@@ -479,10 +521,12 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	// 上传音频文件到服务器
 	uploadResp, err := c.uploadFileToServer(audioPath)
 	if err != nil {
+		c.sendBroadcast("error", fmt.Sprintf("上传音频文件失败: %v", err))
 		return nil, fmt.Errorf("上传音频文件失败: %v", err)
 	}
 
 	c.Logger.Info("音频文件上传成功", zap.Any("upload_resp", uploadResp))
+	c.sendBroadcast("info", "音频文件上传成功")
 
 	// 准备Gradio API请求数据，按照webui.py中gen_single函数的参数顺序
 	// 根据WebUI的实现，我们需要特别注意参数类型和值
@@ -522,10 +566,12 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 
 	jsonData, err := json.Marshal(requestData)
 	if err != nil {
+		c.sendBroadcast("error", fmt.Sprintf("序列化请求数据失败: %v", err))
 		return nil, fmt.Errorf("序列化请求数据失败: %v", err)
 	}
 
 	c.Logger.Info("准备发送TTS请求", zap.String("text", text[:10]), zap.Any("first_param", requestData["data"].([]interface{})[0]))
+	c.sendBroadcast("info", "准备发送TTS请求")
 
 	// 首先将任务加入队列
 	queueEndpoint := c.BaseURL + "/gradio_api/queue/join"
@@ -569,6 +615,7 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	}
 
 	c.Logger.Info("任务已加入队列", zap.String("event_id", eventID))
+	c.sendBroadcast("info", "任务已加入队列，等待处理")
 
 	// 现在使用session_hash来监听结果
 	resultEndpoint := fmt.Sprintf("%s/gradio_api/queue/data?session_hash=%s&fn_index=%d",
@@ -593,6 +640,7 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	scanner := bufio.NewScanner(resultResp.Body)
 	for scanner.Scan() {
 		line := scanner.Text()
+		c.Logger.Info("接收到SSE结果", zap.String("line", line))
 		if strings.HasPrefix(line, "data: ") {
 			data := strings.TrimPrefix(line, "data: ")
 
@@ -616,16 +664,20 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 					if rank, exists := sseData["rank"]; exists {
 						if queueSize, exists2 := sseData["queue_size"]; exists2 {
 							c.Logger.Info("排队中", zap.Float64("rank", rank.(float64)), zap.Float64("queue_size", queueSize.(float64)))
+							c.sendBroadcast("info", fmt.Sprintf("排队中，当前排名: %.0f/%.0f", rank.(float64), queueSize.(float64)))
 						} else {
 							c.Logger.Info("排队中", zap.Float64("rank", rank.(float64)))
+							c.sendBroadcast("info", fmt.Sprintf("排队中，当前排名: %.0f", rank.(float64)))
 						}
 					}
 				case "process_starts":
 					// 处理开始处理
 					c.Logger.Info("开始处理TTS生成")
+					c.sendBroadcast("info", "开始处理TTS生成")
 				case "process_completed":
 					// 处理完成
 					c.Logger.Info("TTS生成完成")
+					c.sendBroadcast("success", "TTS生成完成")
 					// 检查是否成功
 					if success, ok := sseData["success"]; ok {
 						if success == true || success == "true" {
@@ -683,11 +735,13 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 					// 处理日志信息
 					if data, exists := sseData["data"]; exists {
 						c.Logger.Info("服务器日志", zap.Any("data", data))
+						c.sendBroadcast("log", fmt.Sprintf("服务器日志: %v", data))
 					}
 				case "progress":
 					// 处理进度信息
 					if data, exists := sseData["data"]; exists {
 						c.Logger.Info("进度更新", zap.Any("data", data))
+						c.sendBroadcast("info", fmt.Sprintf("进度更新: %v", data))
 					}
 				case "close_stream":
 					return nil, fmt.Errorf("流已关闭，但未收到结果")

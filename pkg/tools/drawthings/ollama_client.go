@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"novel-video-workflow/pkg/broadcast"
 	"strings"
 	"time"
 
@@ -14,10 +15,11 @@ import (
 
 // OllamaClient 封装 Ollama API 调用
 type OllamaClient struct {
-	BaseURL    string
-	Model      string
-	Logger     *zap.Logger
-	HTTPClient *http.Client
+	BaseURL          string
+	Model            string
+	Logger           *zap.Logger
+	HTTPClient       *http.Client
+	BroadcastService *broadcast.BroadcastService
 }
 
 // NewOllamaClient 创建新的Ollama客户端实例
@@ -36,6 +38,7 @@ func NewOllamaClient(logger *zap.Logger, baseURL string, model string) *OllamaCl
 		HTTPClient: &http.Client{
 			Timeout: 300 * time.Minute, // 请求可能需要较长时间
 		},
+		BroadcastService: broadcast.NewBroadcastService(),
 	}
 }
 
@@ -63,8 +66,18 @@ type OllamaResponse struct {
 	PromptDuration float64 `json:"prompt_duration,omitempty"`
 }
 
+func (c *OllamaClient) SendMsg(text string) {
+	c.BroadcastService.SendMessage("Ollama", text, broadcast.GetTimeStr())
+}
+
 // GenerateImagePrompt 生成图像提示词
 func (c *OllamaClient) GenerateImagePrompt(text, style string) (string, error) {
+	c.Logger.Info("开始使用Ollama生成图像提示词",
+		zap.String("text", text),
+		zap.String("style", style))
+
+	c.SendMsg(fmt.Sprintf("正在生成TTS语音，文本长度: %d", len(text)))
+
 	systemPrompt := `你是一个专业的AI图像生成提示词工程师。你的任务是根据给定的文本内容生成详细、具体的中文图像提示词(prompt)，以指导AI图像生成模型创建高质量的图像。
 
 注意事项：
@@ -117,6 +130,8 @@ func (c *OllamaClient) GenerateImagePrompt(text, style string) (string, error) {
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		c.Logger.Error("发送Ollama请求失败", zap.Error(err))
+		c.SendMsg(fmt.Sprintf("发送Ollama请求失败:%s", err.Error()))
+
 		return "", fmt.Errorf("发送请求失败: %v", err)
 	}
 	defer resp.Body.Close()
@@ -142,6 +157,7 @@ func (c *OllamaClient) GenerateImagePrompt(text, style string) (string, error) {
 	// 清理响应内容
 	prompt := strings.TrimSpace(ollamaResp.Response)
 	c.Logger.Info("成功生成图像提示词", zap.String("prompt", prompt))
+	c.SendMsg(fmt.Sprintf("成功返回提示词:%s", prompt))
 
 	return prompt, nil
 }

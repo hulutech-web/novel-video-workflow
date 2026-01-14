@@ -3,7 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"novel-video-workflow/cmd/web_server"
 	"novel-video-workflow/pkg/mcp"
+	"novel-video-workflow/pkg/tools/aegisub"
+	"novel-video-workflow/pkg/tools/drawthings"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -41,7 +45,15 @@ func main() {
 
 func runMCPModeBackground() {
 	fmt.Println("启动 MCP 服务器模式...")
-	
+	// 检查服务可用性
+	fmt.Println("正在检查服务可用性...")
+	unavailableServices := runSelfCheck()
+	if len(unavailableServices) > 0 {
+		fmt.Printf("⚠️  以下服务不可用: %v\n", unavailableServices)
+		fmt.Println("请确保相应服务已启动后再运行工作流。")
+		return
+	}
+
 	// 1. 初始化日志（第一个操作，用于记录）
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
@@ -96,26 +108,132 @@ func runMCPModeBackground() {
 }
 
 func runWebModeBackground() {
+
 	fmt.Println("启动 Web 服务器模式...")
-	
-	// 等待片刻，确保 MCP 服务器先启动
-	time.Sleep(2 * time.Second)
-	
-	// 直接运行web服务器
-	cmd := exec.Command("go", "run", "cmd/web_server/web_server.go")
-	cmd.Dir = "."
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("Web服务器运行出错: %v\n", err)
+
+	web_server.StartServer()
+}
+
+// runSelfCheck 执行自检程序
+func runSelfCheck() []string {
+	fmt.Println("🔍 执行自检程序...")
+
+	logger, err := zap.NewProduction()
+	if err != nil {
+		fmt.Printf("创建logger失败: %v\n", err)
+		return []string{"logger"}
 	}
+	defer logger.Sync()
+
+	// 检查各项服务
+	serviceChecks := []struct {
+		name string
+		fn   func() error
+	}{
+		{"Ollama", checkOllama},
+		{"DrawThings", func() error { return checkDrawThings(logger) }},
+		{"IndexTTS2", checkIndexTTS2},
+		{"Aegisub脚本", checkAegisub},
+		{"参考音频文件", checkRefAudio},
+	}
+
+	var unavailableServices []string
+	for _, check := range serviceChecks {
+		fmt.Printf("  📋 检查%s...", check.name)
+		if err := check.fn(); err != nil {
+			fmt.Printf(" ❌ (%v)\n", err)
+			unavailableServices = append(unavailableServices, check.name)
+		} else {
+			fmt.Printf(" ✅\n")
+		}
+	}
+
+	if len(unavailableServices) > 0 {
+		fmt.Printf("⚠️  以下服务不可用: %v\n", unavailableServices)
+	} else {
+		fmt.Println("✅ 所有服务均正常")
+	}
+
+	return unavailableServices
+}
+
+// checkOllama 检查Ollama服务
+func checkOllama() error {
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get("http://localhost:11434/api/tags")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("状态码: %d", resp.StatusCode)
+	}
+
+	return nil
+}
+
+// checkDrawThings 检查DrawThings服务
+func checkDrawThings(logger *zap.Logger) error {
+	client := drawthings.NewDrawThingsClient(logger, "http://localhost:7861")
+	if !client.APIAvailable {
+		return fmt.Errorf("DrawThings API不可用")
+	}
+	return nil
+}
+
+// checkIndexTTS2 检查IndexTTS2服务
+func checkIndexTTS2() error {
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get("http://localhost:7860")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("状态码: %d", resp.StatusCode)
+	}
+
+	return nil
+}
+
+// checkAegisub 检查Aegisub脚本
+func checkAegisub() error {
+	gen := aegisub.NewAegisubGenerator()
+	if _, err := os.Stat(gen.ScriptPath); os.IsNotExist(err) {
+		return err
+	}
+	return nil
+}
+
+// checkRefAudio 检查参考音频文件
+func checkRefAudio() error {
+	paths := []string{
+		"./assets/ref_audio/ref.m4a",
+		"./assets/ref_audio/音色.m4a",
+	}
+
+	for _, path := range paths {
+		if _, err := os.Stat(path); err == nil {
+			// 检查文件大小确保不是空文件
+			info, err := os.Stat(path)
+			if err != nil {
+				continue
+			}
+			if info.Size() > 1024 { // 确保文件至少有1KB
+				return nil
+			}
+		}
+	}
+
+	return fmt.Errorf("未找到有效的参考音频文件")
 }
 
 // 旧的函数保留作为备用
 func runMCPMode() {
 	fmt.Println("启动MCP服务器模式...")
-	
+
 	// 1. 初始化日志（第一个操作，用于记录）
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
@@ -184,13 +302,13 @@ func runMCPMode() {
 
 func runWebMode() {
 	fmt.Println("启动Web服务器模式...")
-	
+
 	// 直接运行web服务器
 	cmd := exec.Command("go", "run", "cmd/web_server/web_server.go")
 	cmd.Dir = "."
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	
+
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("启动Web服务器失败: %v\n", err)
 		os.Exit(1)
@@ -199,7 +317,7 @@ func runWebMode() {
 
 func runBatchMode() {
 	fmt.Println("启动批处理模式...")
-	
+
 	// 运行完整的批处理工作流
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
@@ -254,5 +372,3 @@ func runBatchMode() {
 
 	logger.Info("批处理工作流完成")
 }
-
-
