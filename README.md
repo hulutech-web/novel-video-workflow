@@ -259,7 +259,7 @@ input/
 
 ## 成果展示（output目录)
 
-### 章节拆分 chapter_07 | chapter_8 | chapter_9 
+### 章节拆分 chapter_07
 
 ### 各章节内容预览
 #### 章节7
@@ -270,20 +270,5 @@ input/
 ![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_02.png)
 ![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_03.png)
 ![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_04.png)
+![scene_05.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_05.png)
 
-#### 章节8
-台词：[chapter_08.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/chapter_08.srt)
-音频：[chapter_08.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/chapter_08.wav)
-分镜图片：  
-![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_01.png)
-![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_02.png)
-![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_03.png)
-![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_04.png)
-
-#### 章节9
-台词：[chapter_09.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/chapter_09.srt)
-音频：[chapter_09.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/chapter_09.wav)
-分镜图片：
-![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_01.png)
-![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_02.png)
-![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_03.png)

@@ -1,4 +1,4 @@
-package main
+package web_server
 
 import (
 	"encoding/json"
@@ -8,9 +8,14 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"novel-video-workflow/pkg/broadcast"
+	"novel-video-workflow/pkg/tools/aegisub"
+	"novel-video-workflow/pkg/tools/file"
+	"novel-video-workflow/pkg/tools/indextts2"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	mcp_pkg "novel-video-workflow/pkg/mcp"
@@ -31,15 +36,6 @@ var upgrader = websocket.Upgrader{
 
 // 存储WebSocket连接
 var clients = make(map[*websocket.Conn]bool)
-var broadcast = make(chan MCPLog)
-
-// MCPLog 结构存储MCP工具的日志信息
-type MCPLog struct {
-	ToolName  string `json:"toolName"`
-	Message   string `json:"message"`
-	Type      string `json:"type"` // "info", "success", "error"
-	Timestamp string `json:"timestamp"`
-}
 
 // ToolInfo 结构存储MCP工具的信息
 type ToolInfo struct {
@@ -156,20 +152,6 @@ func getToolDescription(toolName string) string {
 	return fmt.Sprintf("MCP工具: %s", toolName)
 }
 
-func handleLogs() {
-	for {
-		logData := <-broadcast
-		for client := range clients {
-			err := client.WriteJSON(logData)
-			if err != nil {
-				log.Printf("Error sending log to client: %v", err)
-				delete(clients, client)
-				client.Close()
-			}
-		}
-	}
-}
-
 // Gin路由处理函数
 func homePage(c *gin.Context) {
 	tmpl := template.Must(template.ParseFiles("./templates/index.html"))
@@ -184,11 +166,23 @@ func wsEndpoint(c *gin.Context) {
 	}
 	defer ws.Close()
 
-	// 添加客户端到映射
-	clients[ws] = true
+	// 添加客户端到全局广播服务
+	clientChan := broadcast.GlobalBroadcastService.RegisterClient(ws)
 	defer func() {
-		// 确保在函数退出时从客户端映射中删除该客户端
-		delete(clients, ws)
+		// 从全局广播服务注销客户端
+		client := &broadcast.Client{Conn: ws, Send: clientChan}
+		broadcast.GlobalBroadcastService.UnregisterClient(client)
+	}()
+
+	// 启动goroutine处理来自广播服务的消息
+	go func() {
+		for message := range clientChan {
+			// 直接发送消息，因为现在BroadcastMessage已经包含了前端期望的字段
+			if err := ws.WriteJSON(message); err != nil {
+				log.Printf("Error sending message to client: %v", err)
+				return
+			}
+		}
 	}()
 
 	for {
@@ -196,7 +190,6 @@ func wsEndpoint(c *gin.Context) {
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			log.Printf("WebSocket read error: %v", err)
-			// 客户端已经断开连接，不需要额外处理，defer会自动删除
 			break
 		}
 		// 可以处理从客户端发送的消息，如果需要的话
@@ -233,22 +226,8 @@ func apiExecuteHandler(c *gin.Context) {
 		}
 
 		if !toolExists {
-			broadcast <- MCPLog{
-				ToolName:  toolName,
-				Message:   "工具不存在: " + toolName,
-				Type:      "error",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
 			return
 		}
-
-		broadcast <- MCPLog{
-			ToolName:  toolName,
-			Message:   "开始执行工具...",
-			Type:      "info",
-			Timestamp: time.Now().Format(time.RFC3339),
-		}
-
 		// 对于generate_indextts2_audio工具，处理文本输入和音频生成
 		if toolName == "generate_indextts2_audio" {
 			text, ok := reqBody["text"].(string)
@@ -269,12 +248,7 @@ func apiExecuteHandler(c *gin.Context) {
 			// 确保输出目录存在
 			outputDir := filepath.Dir(outputFile)
 			if err := os.MkdirAll(outputDir, 0755); err != nil {
-				broadcast <- MCPLog{
-					ToolName:  toolName,
-					Message:   fmt.Sprintf("创建输出目录失败: %v", err),
-					Type:      "error",
-					Timestamp: time.Now().Format(time.RFC3339),
-				}
+				broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 创建输出目录失败: %v", toolName, err), broadcast.GetTimeStr())
 				return
 			}
 
@@ -293,40 +267,18 @@ func apiExecuteHandler(c *gin.Context) {
 					if _, err := os.Stat(path); err == nil {
 						referenceAudio = path
 						found = true
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("找到参考音频: %s", referenceAudio),
-							Type:      "info",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 						break
 					}
 				}
 
 				if !found {
-					broadcast <- MCPLog{
-						ToolName:  toolName,
-						Message:   "找不到参考音频文件，请确保存在默认音频文件",
-						Type:      "error",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
+					broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 找不到参考音频文件，请确保存在默认音频文件", toolName), broadcast.GetTimeStr())
+
 					return
 				}
 			}
-
-			broadcast <- MCPLog{
-				ToolName:  toolName,
-				Message:   fmt.Sprintf("使用参考音频: %s", referenceAudio),
-				Type:      "info",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
-
-			broadcast <- MCPLog{
-				ToolName:  toolName,
-				Message:   fmt.Sprintf("输入文本: %s", text),
-				Type:      "info",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
+			broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 使用参考音频: %s", toolName, referenceAudio), broadcast.GetTimeStr())
+			broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 输入文本: %s", toolName, text), broadcast.GetTimeStr())
 
 			// 检查MCP服务器实例是否存在
 			if mcpServerInstance != nil {
@@ -345,23 +297,11 @@ func apiExecuteHandler(c *gin.Context) {
 					// 调用特定工具处理函数
 					result, err := handler.HandleGenerateIndextts2AudioDirect(mockRequest)
 					if err != nil {
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("工具执行失败: %v", err),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 						return
 					}
 
 					// 检查结果
 					if success, ok := result["success"].(bool); ok && success {
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("音频生成成功，输出文件: %s", outputFile),
-							Type:      "success",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 					} else {
 						errorMsg := "未知错误"
 						if result["error"] != nil {
@@ -369,29 +309,16 @@ func apiExecuteHandler(c *gin.Context) {
 								errorMsg = errStr
 							}
 						}
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("工具执行失败: %s", errorMsg),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
+						broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 工具执行失败: %s", toolName, errorMsg), broadcast.GetTimeStr())
+
 					}
 				} else {
-					broadcast <- MCPLog{
-						ToolName:  toolName,
-						Message:   "错误: MCP处理器未初始化",
-						Type:      "error",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
+					broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 错误: MCP处理器未初始化", toolName), broadcast.GetTimeStr())
+
 				}
 			} else {
 				// 如果没有MCP服务器实例，给出提示
-				broadcast <- MCPLog{
-					ToolName:  toolName,
-					Message:   "错误: MCP服务器未启动。请确保服务已正确初始化。",
-					Type:      "error",
-					Timestamp: time.Now().Format(time.RFC3339),
-				}
+				broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 错误: MCP服务器未启动。请确保服务已正确初始化。", toolName), broadcast.GetTimeStr())
 			}
 		} else {
 			// 其他工具的处理 - 也需要类似处理
@@ -453,20 +380,7 @@ func apiExecuteHandler(c *gin.Context) {
 
 						// 确保输出目录存在
 						if err := os.MkdirAll(outputDir, 0755); err != nil {
-							broadcast <- MCPLog{
-								ToolName:  toolName,
-								Message:   fmt.Sprintf("创建输出目录失败: %v", err),
-								Type:      "error",
-								Timestamp: time.Now().Format(time.RFC3339),
-							}
 							return
-						}
-
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("开始处理章节文本，输出目录: %s", outputDir),
-							Type:      "info",
-							Timestamp: time.Now().Format(time.RFC3339),
 						}
 
 						// 创建一个自定义的日志记录器，将内部日志广播到前端
@@ -485,12 +399,6 @@ func apiExecuteHandler(c *gin.Context) {
 						// 直接调用图像生成方法，而不是通过MCP处理器
 						results, err := generator.GenerateImagesFromChapter(chapterText, outputDir, width, height, true)
 						if err != nil {
-							broadcast <- MCPLog{
-								ToolName:  toolName,
-								Message:   fmt.Sprintf("生成图像失败: %v", err),
-								Type:      "error",
-								Timestamp: time.Now().Format(time.RFC3339),
-							}
 							return
 						}
 
@@ -519,56 +427,21 @@ func apiExecuteHandler(c *gin.Context) {
 							"tool":                  "drawthings_chapter_txt2img_with_ai_prompt",
 						}
 					default:
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("暂不支持直接调用工具: %s", toolName),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 						return
 					}
 
 					if err != nil {
-						broadcast <- MCPLog{
-							ToolName:  toolName,
-							Message:   fmt.Sprintf("工具执行失败: %v", err),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 						return
 					}
 
 					// 记录执行结果
-					broadcast <- MCPLog{
-						ToolName:  toolName,
-						Message:   fmt.Sprintf("工具执行完成，结果: %+v", result),
-						Type:      "info",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
+					broadcast.GlobalBroadcastService.SendLog("indextts2", fmt.Sprintf("[%s] 工具执行完成，结果: %+v", toolName, result), broadcast.GetTimeStr())
 				} else {
-					broadcast <- MCPLog{
-						ToolName:  toolName,
-						Message:   "错误: MCP处理器未初始化",
-						Type:      "error",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
 				}
 			} else {
-				broadcast <- MCPLog{
-					ToolName:  toolName,
-					Message:   "错误: MCP服务器未启动。请确保服务已正确初始化。",
-					Type:      "error",
-					Timestamp: time.Now().Format(time.RFC3339),
-				}
 			}
 		}
 
-		broadcast <- MCPLog{
-			ToolName:  toolName,
-			Message:   "工具执行完成",
-			Type:      "success",
-			Timestamp: time.Now().Format(time.RFC3339),
-		}
 	}()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Tool execution started"})
@@ -578,12 +451,6 @@ func apiExecuteAllHandler(c *gin.Context) {
 	// 执行所有MCP工具
 	go func() {
 		for _, tool := range mcpTools {
-			broadcast <- MCPLog{
-				ToolName:  tool.Name,
-				Message:   "开始执行工具...",
-				Type:      "info",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
 
 			// 检查MCP服务器实例是否存在
 			if mcpServerInstance != nil {
@@ -621,56 +488,27 @@ func apiExecuteAllHandler(c *gin.Context) {
 						mockRequest := &mcp_pkg.MockRequest{Params: defaultParams}
 						result, err = handler.HandleGenerateIndextts2AudioDirect(mockRequest)
 					default:
-						broadcast <- MCPLog{
-							ToolName:  tool.Name,
-							Message:   fmt.Sprintf("暂不支持直接调用工具: %s", tool.Name),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
 						continue
 					}
 
 					if err != nil {
-						broadcast <- MCPLog{
-							ToolName:  tool.Name,
-							Message:   fmt.Sprintf("工具执行失败: %v", err),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
+						broadcast.GlobalBroadcastService.SendLog("indextts2", err.Error(), broadcast.GetTimeStr())
+
 						continue
 					}
+					//map转 json
+					jsonData, _ := json.Marshal(result)
+					broadcast.GlobalBroadcastService.SendLog("indextts2", string(jsonData), broadcast.GetTimeStr())
 
 					// 记录执行结果
-					broadcast <- MCPLog{
-						ToolName:  tool.Name,
-						Message:   fmt.Sprintf("工具执行完成，结果: %+v", result),
-						Type:      "info",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
 				} else {
-					broadcast <- MCPLog{
-						ToolName:  tool.Name,
-						Message:   "错误: MCP处理器未初始化",
-						Type:      "error",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
 				}
+
 			} else {
 				// 如果没有MCP服务器实例，给出提示
-				broadcast <- MCPLog{
-					ToolName:  tool.Name,
-					Message:   "错误: MCP服务器未启动。请确保服务已正确初始化。",
-					Type:      "error",
-					Timestamp: time.Now().Format(time.RFC3339),
-				}
+				broadcast.GlobalBroadcastService.SendLog("indextts2", "[提示] 请先启动MCP服务器！", broadcast.GetTimeStr())
 			}
 
-			broadcast <- MCPLog{
-				ToolName:  tool.Name,
-				Message:   tool.Name + " 执行完成",
-				Type:      "success",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
 		}
 	}()
 
@@ -680,12 +518,7 @@ func apiExecuteAllHandler(c *gin.Context) {
 func apiProcessFolderHandler(c *gin.Context) {
 	// 处理上传的文件夹
 	go func() {
-		broadcast <- MCPLog{
-			ToolName:  "工作流",
-			Message:   "开始文件夹处理工作流...",
-			Type:      "info",
-			Timestamp: time.Now().Format(time.RFC3339),
-		}
+		broadcast.GlobalBroadcastService.SendLog("上传文件夹", "[工作流] 开始文件夹处理工作流...", broadcast.GetTimeStr())
 
 		// 检查MCP服务器实例是否存在
 		if mcpServerInstance != nil {
@@ -694,12 +527,7 @@ func apiProcessFolderHandler(c *gin.Context) {
 			if handler != nil {
 				// 模拟工作流处理
 				for _, tool := range mcpTools {
-					broadcast <- MCPLog{
-						ToolName:  tool.Name,
-						Message:   "使用 " + tool.Name + " 处理...",
-						Type:      "info",
-						Timestamp: time.Now().Format(time.RFC3339),
-					}
+					broadcast.GlobalBroadcastService.SendLog("上传文件夹", fmt.Sprintf("[%s] 使用 %s 处理...", tool.Name, tool.Name), broadcast.GetTimeStr())
 
 					// 根据工具名称调用相应的处理函数
 					var result map[string]interface{}
@@ -732,62 +560,29 @@ func apiProcessFolderHandler(c *gin.Context) {
 						mockRequest := &mcp_pkg.MockRequest{Params: defaultParams}
 						result, err = handler.HandleGenerateIndextts2AudioDirect(mockRequest)
 					default:
-						broadcast <- MCPLog{
-							ToolName:  tool.Name,
-							Message:   fmt.Sprintf("暂不支持直接调用工具: %s", tool.Name),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
+						broadcast.GlobalBroadcastService.SendLog("上传文件夹", fmt.Sprintf("[%s] 暂不支持直接调用工具: %s", tool.Name, tool.Name), broadcast.GetTimeStr())
+
 						continue
 					}
 
 					if err != nil {
-						broadcast <- MCPLog{
-							ToolName:  tool.Name,
-							Message:   fmt.Sprintf("工具执行失败: %v", err),
-							Type:      "error",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
+						broadcast.GlobalBroadcastService.SendLog("上传文件夹", fmt.Sprintf("[%s] 工具执行失败: %v", tool.Name, err), broadcast.GetTimeStr())
+
 					} else {
 						// 记录执行结果
-						broadcast <- MCPLog{
-							ToolName:  tool.Name,
-							Message:   fmt.Sprintf("工具执行完成，结果: %+v", result),
-							Type:      "info",
-							Timestamp: time.Now().Format(time.RFC3339),
-						}
-					}
+						broadcast.GlobalBroadcastService.SendLog("上传完毕", fmt.Sprintf("[%s] 工具执行完成，结果: %+v", tool.Name, result), broadcast.GetTimeStr())
 
-					broadcast <- MCPLog{
-						ToolName:  tool.Name,
-						Message:   tool.Name + " 完成",
-						Type:      "success",
-						Timestamp: time.Now().Format(time.RFC3339),
 					}
 				}
 			} else {
-				broadcast <- MCPLog{
-					ToolName:  "工作流",
-					Message:   "错误: MCP处理器未初始化",
-					Type:      "error",
-					Timestamp: time.Now().Format(time.RFC3339),
-				}
+				broadcast.GlobalBroadcastService.SendLog("[工作流] 错误", "MCP处理器未初始化", broadcast.GetTimeStr())
+
 			}
 		} else {
-			broadcast <- MCPLog{
-				ToolName:  "工作流",
-				Message:   "错误: MCP服务器未启动。请确保服务已正确初始化。",
-				Type:      "error",
-				Timestamp: time.Now().Format(time.RFC3339),
-			}
+			broadcast.GlobalBroadcastService.SendLog("[工作流] 错误", "MCP服务器未启动。请确保服务已正确初始化", broadcast.GetTimeStr())
 		}
+		broadcast.GlobalBroadcastService.SendLog("处理完成", "[工作流] 文件夹处理完成", broadcast.GetTimeStr())
 
-		broadcast <- MCPLog{
-			ToolName:  "工作流",
-			Message:   "文件夹处理完成",
-			Type:      "success",
-			Timestamp: time.Now().Format(time.RFC3339),
-		}
 	}()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Folder processing started"})
@@ -1066,8 +861,43 @@ func fileUploadHandler(c *gin.Context) {
 	}
 
 	// 确保路径安全，防止路径遍历攻击
-	if !strings.HasPrefix(filepath.Clean(dir), "./input") && !strings.HasPrefix(filepath.Clean(dir), "./output") {
-		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied", "status": "error"})
+	cleanDir := filepath.Clean(dir)
+
+	// 获取当前工作目录作为基础路径
+	workDir, err := os.Getwd()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to get working directory", "status": "error"})
+		return
+	}
+
+	// 尝试找到项目根目录
+	projectRoot := workDir
+	// 如果当前在cmd/web_server目录下，向上两级到达项目根目录
+	if strings.HasSuffix(workDir, "/cmd/web_server") {
+		projectRoot = filepath.Dir(filepath.Dir(workDir))
+	}
+
+	// 检查目录是否在允许的范围内 - 只允许input目录
+	allowedInputDir := filepath.Join(projectRoot, "input")
+
+	// 处理相对路径和绝对路径的情况
+	var cleanTargetDir string
+	if strings.HasPrefix(cleanDir, "./") {
+		// 如果是 ./ 开头的相对路径，转换为绝对路径
+		cleanTargetDir = filepath.Clean(filepath.Join(projectRoot, cleanDir[2:]))
+	} else if strings.HasPrefix(cleanDir, "input/") || cleanDir == "input" {
+		// 如果是 input/ 开头的相对路径，转换为绝对路径
+		cleanTargetDir = filepath.Clean(filepath.Join(projectRoot, cleanDir))
+	} else {
+		// 其他情况直接使用 cleanDir
+		cleanTargetDir = filepath.Clean(cleanDir)
+	}
+
+	// 检查路径是否在允许的目录内 - 只允许上传到input目录
+	isInInputDir := strings.HasPrefix(cleanTargetDir, allowedInputDir+string(filepath.Separator)) || cleanTargetDir == allowedInputDir
+
+	if !isInInputDir {
+		c.JSON(http.StatusForbidden, gin.H{"error": "文件上传路径不被允许，只能上传到input目录", "status": "error", "details": "目标路径: " + cleanTargetDir})
 		return
 	}
 
@@ -1165,12 +995,6 @@ func (b *BroadcastLoggerAdapter) Write(entry zapcore.Entry, fields []zapcore.Fie
 	buffer, err2 := encoder.EncodeEntry(entry, fields)
 	if err2 != nil {
 		// 如果编码失败，使用简单消息
-		broadcast <- MCPLog{
-			ToolName:  b.toolName,
-			Message:   fmt.Sprintf("日志编码失败: %v", err2),
-			Type:      "error",
-			Timestamp: entry.Time.Format(time.RFC3339),
-		}
 		return err
 	}
 
@@ -1187,23 +1011,23 @@ func (b *BroadcastLoggerAdapter) Write(entry zapcore.Entry, fields []zapcore.Fie
 		logType = "error"
 	}
 
-	broadcast <- MCPLog{
-		ToolName:  b.toolName,
-		Message:   message,
-		Type:      logType,
-		Timestamp: entry.Time.Format(time.RFC3339),
-	}
+	broadcast.GlobalBroadcastService.SendMessage(logType, fmt.Sprintf("[%s] %s", b.toolName, message), broadcast.GetTimeStr())
 
 	return err
 }
 
-func main() {
+func webServerMain() {
 	loadToolsList()
 
-	go handleLogs()
+	// 初始化全局广播服务
+	broadcast.GlobalBroadcastService = broadcast.NewBroadcastService()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go broadcast.GlobalBroadcastService.Start(&wg)
 
 	// 设置Gin为发布模式以获得更好的性能
 	gin.SetMode(gin.ReleaseMode)
+	//设置gin的超时时间
 	r := gin.Default()
 
 	// 获取项目根目录的绝对路径
@@ -1225,6 +1049,7 @@ func main() {
 	r.POST("/api/execute", apiExecuteHandler)
 	r.POST("/api/execute-all", apiExecuteAllHandler)
 	r.POST("/api/process-folder", apiProcessFolderHandler)
+	r.POST("/api/one-click-film", oneClickFilmHandler)
 	// 添加文件管理API端点
 	r.GET("/api/files/list", fileListHandler)
 	r.GET("/api/files/content", fileContentHandler)
@@ -1235,13 +1060,16 @@ func main() {
 	// 使用项目根路径确保正确访问input和output目录
 	inputPath := filepath.Join(projectRoot, "input")
 	outputPath := filepath.Join(projectRoot, "output")
+	assetsPath := filepath.Join(projectRoot, "assets")
 
 	// 确保目录存在
 	os.MkdirAll(inputPath, 0755)
 	os.MkdirAll(outputPath, 0755)
+	os.MkdirAll(assetsPath, 0755)
 
 	r.Static("/files/input", inputPath)
 	r.Static("/files/output", outputPath)
+	r.Static("assets", assetsPath)
 
 	// 从环境变量获取端口，默认为8080
 	port := os.Getenv("PORT")
@@ -1249,6 +1077,381 @@ func main() {
 		port = "8080"
 	}
 
+	// 一键出片功能 - 完整工作流处理
+	go func() {
+		broadcast.GlobalBroadcastService.SendLog("movie", "[一键出片] 服务器启动完成，准备处理一键出片任务", broadcast.GetTimeStr())
+	}()
+
 	log.Println("服务器启动在 :" + port)
-	r.Run(":" + port)
+	srv := &http.Server{
+		Addr:         fmt.Sprintf(":%s", port),
+		Handler:      r,
+		ReadTimeout:  15 * time.Millisecond, // 读取请求头最大耗时
+		WriteTimeout: 15 * time.Millisecond, // 写响应最大耗时
+		IdleTimeout:  15 * time.Second,      // 空闲连接保持时间
+	}
+	srv.ListenAndServe()
+}
+
+// StartServer 启动Web服务器
+func StartServer() {
+	webServerMain()
+}
+
+// WorkflowProcessor 工作流处理器
+type WorkflowProcessor struct {
+	logger        *zap.Logger
+	fileManager   *file.FileManager
+	ttsClient     *indextts2.IndexTTS2Client
+	aegisubGen    *aegisub.AegisubGenerator
+	drawThingsGen *drawthings.ChapterImageGenerator
+}
+
+// generateImagesWithOllamaPrompts 使用Ollama优化的提示词生成图像
+func (wp *WorkflowProcessor) generateImagesWithOllamaPrompts(content, imagesDir string, chapterNum int, audioDurationSecs int) error {
+	// 使用Ollama分析整个章节内容并生成分镜提示词
+	styleDesc := "悬疑惊悚风格，周围环境模糊成黑影, 空气凝滞,浅景深, 胶片颗粒感, 低饱和度，极致悬疑氛围, 阴沉窒息感, 夏季，环境阴霾，其他部分模糊不可见"
+
+	// 使用实际音频时长，如果未提供则估算
+	estimatedDurationSecs := audioDurationSecs
+	if estimatedDurationSecs <= 0 {
+		// 估算音频时长（假设每分钟300字，即每个字符约0.2秒）
+		estimatedDurationSecs = len(content) * 2 / 10 // 简化估算，大约每个字符0.2秒
+		if estimatedDurationSecs < 60 {               // 最少1分钟
+			estimatedDurationSecs = 60
+		}
+	}
+
+	// 让Ollama分析整个章节并生成分镜
+	wp.logger.Info("开始Ollama分镜分析", zap.Int("chapter_num", chapterNum), zap.Int("content_length", len(content)), zap.Int("estimated_duration_secs", estimatedDurationSecs))
+	sceneDescriptions, err := wp.drawThingsGen.OllamaClient.AnalyzeScenesAndGeneratePrompts(content, styleDesc, estimatedDurationSecs)
+	if err != nil {
+		wp.logger.Warn("使用Ollama分析场景并生成分镜提示词失败",
+			zap.Error(err))
+
+		// 如果Ollama场景分析失败，回退到原来的段落处理方式
+		wp.logger.Info("Ollama分镜分析失败，回退到段落处理方式")
+		paragraphs := wp.splitChapterIntoParagraphsWithMerge(content)
+
+		for idx, paragraph := range paragraphs {
+			if strings.TrimSpace(paragraph) == "" {
+				continue
+			}
+
+			optimizedPrompt, err := wp.drawThingsGen.OllamaClient.GenerateImagePrompt(paragraph, styleDesc)
+			if err != nil {
+				wp.logger.Warn("使用Ollama生成图像提示词失败，使用原始文本",
+					zap.Int("paragraph_index", idx),
+					zap.String("paragraph", paragraph),
+					zap.Error(err))
+				optimizedPrompt = paragraph + ", 周围环境模糊成黑影, 空气凝滞,浅景深, 胶片颗粒感, 低饱和度，极致悬疑氛围, 阴沉窒息感, 夏季，环境阴霾，其他部分模糊不可见"
+			}
+
+			imageFile := filepath.Join(imagesDir, fmt.Sprintf("paragraph_%02d.png", idx+1))
+
+			err = wp.drawThingsGen.Client.GenerateImageFromText(
+				optimizedPrompt,
+				imageFile,
+				512,   // 缩小宽度
+				896,   // 缩小高度
+				false, // 风格已在提示词中处理
+			)
+			if err != nil {
+				wp.logger.Warn("生成图像失败", zap.String("paragraph", paragraph[:min(len(paragraph), 50)]), zap.Error(err))
+				fmt.Printf("⚠️  段落图像生成失败: %v\n", err)
+			} else {
+				fmt.Printf("✅ 段落图像生成完成: %s\n", imageFile)
+			}
+		}
+
+		return nil
+	}
+
+	// 如果Ollama分镜分析成功，使用生成的分镜描述生成图像
+	wp.logger.Info("Ollama分镜分析成功", zap.Int("scene_count", len(sceneDescriptions)))
+	for idx, sceneDesc := range sceneDescriptions {
+		imageFile := filepath.Join(imagesDir, fmt.Sprintf("scene_%02d.png", idx+1))
+
+		// 使用分镜描述生成图像
+		err = wp.drawThingsGen.Client.GenerateImageFromText(
+			sceneDesc,
+			imageFile,
+			512,   // 缩小宽度
+			896,   // 缩小高度
+			false, // 风格已在提示词中处理
+		)
+		if err != nil {
+			wp.logger.Warn("生成分镜图像失败", zap.String("scene", sceneDesc[:min(len(sceneDesc), 50)]), zap.Error(err))
+			fmt.Printf("⚠️  分镜图像生成失败: %v\n", err)
+		} else {
+			fmt.Printf("✅ 分镜图像生成完成: %s\n", imageFile)
+		}
+	}
+
+	return nil
+}
+
+// splitChapterIntoParagraphsWithMerge 将章节文本分割为段落，并对短段落进行合并
+func (wp *WorkflowProcessor) splitChapterIntoParagraphsWithMerge(text string) []string {
+	// 按换行符分割文本
+	lines := strings.Split(text, "\n")
+
+	var rawParagraphs []string
+	var currentParagraph strings.Builder
+
+	for _, line := range lines {
+		trimmedLine := strings.TrimSpace(line)
+
+		if trimmedLine == "" {
+			// 遇到空行，结束当前段落
+			if currentParagraph.Len() > 0 {
+				rawParagraphs = append(rawParagraphs, strings.TrimSpace(currentParagraph.String()))
+				currentParagraph.Reset()
+			}
+		} else {
+			// 添加到当前段落
+			if currentParagraph.Len() > 0 {
+				currentParagraph.WriteString(" ")
+			}
+			currentParagraph.WriteString(trimmedLine)
+		}
+	}
+
+	// 处理最后一个段落
+	if currentParagraph.Len() > 0 {
+		rawParagraphs = append(rawParagraphs, strings.TrimSpace(currentParagraph.String()))
+	}
+
+	// 合并短段落
+	var mergedParagraphs []string
+	minLength := 50 // 设定最小长度阈值，低于此值的段落将与相邻段落合并
+
+	for i := 0; i < len(rawParagraphs); i++ {
+		currentPara := rawParagraphs[i]
+
+		// 如果当前段落太短，考虑与下一个段落合并
+		if len(currentPara) < minLength && i < len(rawParagraphs)-1 {
+			// 与下一个段落合并
+			merged := currentPara + " " + rawParagraphs[i+1]
+			mergedParagraphs = append(mergedParagraphs, merged)
+			i++ // 跳过下一个段落，因为它已经被合并了
+		} else {
+			// 检查是否当前段落太短但已经是最后一段
+			if len(currentPara) < minLength && len(mergedParagraphs) > 0 {
+				// 将其与前一段落合并
+				lastIdx := len(mergedParagraphs) - 1
+				mergedParagraphs[lastIdx] = mergedParagraphs[lastIdx] + " " + currentPara
+			} else {
+				// 添加正常段落
+				mergedParagraphs = append(mergedParagraphs, currentPara)
+			}
+		}
+	}
+
+	// 过滤掉过短的段落（比如只有标点符号）
+	var filtered []string
+	for _, para := range mergedParagraphs {
+		// 只保留非空且有一定长度的段落
+		if len(strings.TrimSpace(para)) > 3 { // 至少3个字符
+			filtered = append(filtered, para)
+		}
+	}
+
+	return filtered
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// 一键出片功能 - 完整工作流处理
+func oneClickFilmHandler(c *gin.Context) {
+	// 直接执行完整工作流处理，不使用goroutine以便调试
+	broadcast.GlobalBroadcastService.SendLog("movie", "开始执行一键出片完整工作流...", broadcast.GetTimeStr())
+
+	// 获取项目根目录
+	wd, err := os.Getwd()
+	if err != nil {
+		broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] 获取工作目录失败: %v", err), broadcast.GetTimeStr())
+		c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("获取工作目录失败: %v", err)})
+		return
+	}
+
+	projectRoot := wd
+	if strings.HasSuffix(wd, "/cmd/web_server") {
+		projectRoot = filepath.Dir(filepath.Dir(wd)) // 回退两级到项目根目录
+	}
+
+	inputDir := filepath.Join(projectRoot, "input")
+	items, err := os.ReadDir(inputDir)
+	if err != nil {
+		broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 无法读取input目录: %v", err), broadcast.GetTimeStr())
+
+		c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("无法读取input目录: %v", err)})
+		return
+	}
+
+	if len(items) == 0 {
+		broadcast.GlobalBroadcastService.SendLog("movie", "[一键出片] ❌ input目录为空，请在input目录下放置小说文本文件", broadcast.GetTimeStr())
+		c.JSON(http.StatusOK, gin.H{"status": "error", "message": "input目录为空，请在input目录下放置小说文本文件"})
+		return
+	}
+
+	// 遍历input目录寻找小说目录
+	for _, item := range items {
+		if item.IsDir() { // 只处理目录
+			novelDir := filepath.Join(inputDir, item.Name())
+
+			// 在小说目录中寻找对应的小说文件
+			novelFiles, err := os.ReadDir(novelDir)
+			if err != nil {
+				broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 无法读取小说目录 %s: %v", item.Name(), err), broadcast.GetTimeStr())
+				continue
+			}
+
+			// 寻找与目录名匹配的.txt文件（例如 幽灵客栈/幽灵客栈.txt）
+			for _, novelFile := range novelFiles {
+				expectedFileName := item.Name() + ".txt"
+				if !novelFile.IsDir() && strings.EqualFold(novelFile.Name(), expectedFileName) {
+					absPath := filepath.Join(novelDir, novelFile.Name())
+					broadcast.GlobalBroadcastService.SendLog("movie", "[一键出片] 🧪 开始测试章节编号解析功能...", broadcast.GetTimeStr())
+
+					// 创建FileManager实例
+					fm := file.NewFileManager()
+					broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] 📖 处理小说文件: %s", novelFile.Name()), broadcast.GetTimeStr())
+
+					// 读取输入目录中的小说
+					_, err = fm.CreateInputChapterStructure(absPath)
+					if err != nil {
+						broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 处理小说文件失败: %v", err), broadcast.GetTimeStr())
+
+						c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("处理小说文件失败: %v", err)})
+						return
+					}
+
+					// 创建输出目录结构
+					fm.CreateOutputChapterStructure(inputDir)
+					broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[输出目录的名字] 📖 输出目录的名字: %v", inputDir), broadcast.GetTimeStr())
+
+					// 创建logger
+					logger, err := zap.NewProduction()
+					if err != nil {
+						broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 创建logger失败: %v", err), broadcast.GetTimeStr())
+
+						c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("创建logger失败: %v", err)})
+						return
+					}
+					defer logger.Sync()
+
+					// 初始化各组件
+					wp := &WorkflowProcessor{
+						logger:        logger,
+						fileManager:   file.NewFileManager(),
+						ttsClient:     indextts2.NewIndexTTS2Client(logger, "http://localhost:7860"),
+						aegisubGen:    aegisub.NewAegisubGenerator(),
+						drawThingsGen: drawthings.NewChapterImageGenerator(logger),
+					}
+
+					// 广播开始生成音频
+					broadcast.GlobalBroadcastService.SendLog("voice", "[一键出片] 🔊 步骤2 - 开始生成音频...", broadcast.GetTimeStr())
+
+					// 遍历章节处理
+					for key, val := range file.ChapterMap {
+						outputDir := filepath.Join(projectRoot, "output", item.Name())
+
+						audioFile := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key), fmt.Sprintf("chapter_%02d.wav", key))
+
+						// 使用参考音频文件
+						refAudioPath := filepath.Join(projectRoot, "assets", "ref_audio", "ref.m4a")
+						if _, err := os.Stat(refAudioPath); os.IsNotExist(err) {
+							broadcast.GlobalBroadcastService.SendLog("voice", "[一键出片] ⚠️  未找到参考音频文件，跳过音频生成", broadcast.GetTimeStr())
+						} else {
+							err = wp.ttsClient.GenerateTTSWithAudio(refAudioPath, val, audioFile)
+							if err != nil {
+								broadcast.GlobalBroadcastService.SendLog("voice", fmt.Sprintf("[一键出片] ⚠️  音频生成失败: %v", err), broadcast.GetTimeStr())
+
+								wp.ttsClient.HTTPClient.CloseIdleConnections()
+								c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("音频生成失败: %v", err)})
+								return
+							} else {
+								broadcast.GlobalBroadcastService.SendLog("voice", fmt.Sprintf("[一键出片] ✅ 音频生成完成: %s", audioFile), broadcast.GetTimeStr())
+
+								// 显式关闭IndexTTS2客户端连接
+								if wp.ttsClient.HTTPClient != nil {
+									wp.ttsClient.HTTPClient.CloseIdleConnections()
+								}
+							}
+						}
+
+						// 步骤3: 生成台词/字幕
+						broadcast.GlobalBroadcastService.SendLog("aegisub", "[一键出片] 📜 步骤3 - 生成台词/字幕...", broadcast.GetTimeStr())
+
+						subtitleFile := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key), fmt.Sprintf("chapter_%02d.srt", key))
+
+						if _, err := os.Stat(audioFile); err == nil {
+							// 如果音频文件存在，生成字幕
+							err = wp.aegisubGen.GenerateSubtitleFromIndextts2Audio(audioFile, val, subtitleFile)
+							if err != nil {
+								broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ⚠️  字幕生成失败: %v", err), broadcast.GetTimeStr())
+
+							} else {
+								broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ✅ 字幕生成完成: %s", subtitleFile), broadcast.GetTimeStr())
+
+							}
+						} else {
+							broadcast.GlobalBroadcastService.SendLog("aegisub", "[一键出片] ⚠️  由于音频文件不存在，跳过字幕生成", broadcast.GetTimeStr())
+
+						}
+						broadcast.GlobalBroadcastService.SendLog("image", "[一键出片] 🎨 步骤4 - 生成图像...", broadcast.GetTimeStr())
+
+						// 步骤4: 生成图像
+						imagesDir := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key))
+						if err := os.MkdirAll(imagesDir, 0755); err != nil {
+							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ❌ 创建图像目录失败: %v", err), broadcast.GetTimeStr())
+							c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("创建图像目录失败: %v", err)})
+							return
+						}
+
+						// 估算音频时长用于分镜生成
+						estimatedAudioDuration := 0
+						if _, statErr := os.Stat(audioFile); statErr == nil {
+							// 基于音频文件大小估算时长
+							if fileInfo, err := os.Stat(audioFile); err == nil {
+								fileSizeMB := float64(fileInfo.Size()) / (1024 * 1024)
+								// 假设平均 1MB ≈ 10秒音频
+								estimatedAudioDuration = int(fileSizeMB * 10)
+								if estimatedAudioDuration < 30 { // 最少30秒
+									estimatedAudioDuration = 30
+								}
+							}
+						} else {
+							// 如果没有音频文件，基于文本长度估算
+							estimatedAudioDuration = len(val) * 2 / 10 // 每个字符约0.2秒
+							if estimatedAudioDuration < 60 {           // 最少1分钟
+								estimatedAudioDuration = 60
+							}
+						}
+
+						// 使用Ollama优化的提示词生成图像
+						err = wp.generateImagesWithOllamaPrompts(val, imagesDir, key, estimatedAudioDuration)
+						if err != nil {
+							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ⚠️  图像生成失败: %v", err), broadcast.GetTimeStr())
+
+						} else {
+							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ✅ 图像生成完成，保存在: %s", imagesDir), broadcast.GetTimeStr())
+
+						}
+					}
+					broadcast.GlobalBroadcastService.SendLog("image", "[一键出片] ✅ 一键出片完整工作流执行完成！", broadcast.GetTimeStr())
+
+					return // 处理完一个小说就返回
+				}
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "一键出片工作流已执行完成"})
 }

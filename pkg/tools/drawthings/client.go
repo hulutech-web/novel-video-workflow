@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"novel-video-workflow/pkg/broadcast"
 	"os"
 	"path/filepath"
 	"time"
@@ -16,10 +17,11 @@ import (
 
 // DrawThingsClient 封装 DrawThings API 调用
 type DrawThingsClient struct {
-	BaseURL      string
-	Logger       *zap.Logger
-	HTTPClient   *http.Client
-	APIAvailable bool // 记录API是否可用
+	BaseURL          string
+	Logger           *zap.Logger
+	HTTPClient       *http.Client
+	APIAvailable     bool // 记录API是否可用
+	BroadcastService *broadcast.BroadcastService
 }
 
 // NewDrawThingsClient 创建新的客户端实例
@@ -34,7 +36,8 @@ func NewDrawThingsClient(logger *zap.Logger, baseURL string) *DrawThingsClient {
 		HTTPClient: &http.Client{
 			Timeout: 300 * time.Second, // 图像生成可能需要较长时间
 		},
-		APIAvailable: false, // 初始状态假设API不可用
+		APIAvailable:     false, // 初始状态假设API不可用
+		BroadcastService: broadcast.NewBroadcastService(),
 	}
 
 	// 检查API可用性
@@ -125,10 +128,11 @@ func (c *DrawThingsClient) Txt2Img(params Txt2ImgRequest) (*Txt2ImgResponse, err
 			return nil, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.BaseURL)
 		}
 	}
-
 	endpoint := c.BaseURL + "/sdapi/v1/txt2img"
 
 	payload, err := json.Marshal(params)
+	c.BroadcastService.SendMessage("Txt2Img正在生成图像...payload", string(payload), broadcast.GetTimeStr())
+
 	if err != nil {
 		c.Logger.Error("序列化请求参数失败", zap.Error(err))
 		return nil, fmt.Errorf("序列化请求参数失败: %v", err)
@@ -172,6 +176,7 @@ func (c *DrawThingsClient) Txt2Img(params Txt2ImgRequest) (*Txt2ImgResponse, err
 		c.Logger.Error("解析响应失败", zap.Error(err))
 		return nil, fmt.Errorf("解析响应失败: %v", err)
 	}
+	c.BroadcastService.SendMessage("Txt2Img请求成功", fmt.Sprintf("数量：%d", len(result.Images)), broadcast.GetTimeStr())
 
 	c.Logger.Info("文生图请求成功", zap.Int("images_count", len(result.Images)))
 
@@ -186,6 +191,7 @@ func (c *DrawThingsClient) Img2Img(params Img2ImgRequest) (*Img2ImgResponse, err
 			return nil, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.BaseURL)
 		}
 	}
+	c.BroadcastService.SendMessage("Img2Img请求", fmt.Sprintf("图片数,%d", len(params.InitImages)), broadcast.GetTimeStr())
 
 	endpoint := c.BaseURL + "/sdapi/v1/img2img"
 
@@ -232,12 +238,16 @@ func (c *DrawThingsClient) Img2Img(params Img2ImgRequest) (*Img2ImgResponse, err
 	}
 
 	c.Logger.Info("图生图请求成功", zap.Int("images_count", len(result.Images)))
+	resultJson, _ := json.Marshal(result)
+	c.BroadcastService.SendMessage("Img2Img请求成功", string(resultJson), broadcast.GetTimeStr())
 
 	return &result, nil
 }
 
 // SaveImageFromBase64 将Base64编码的图像数据保存到文件
 func (c *DrawThingsClient) SaveImageFromBase64(base64Data, filePath string) error {
+	c.BroadcastService.SendMessage("SaveImageFromBase64转图片", fmt.Sprintf("长度%d", len(base64Data)), broadcast.GetTimeStr())
+
 	// 移除Base64数据前缀（如果有）
 	if len(base64Data) > 22 && base64Data[:22] == "data:image/png;base64," {
 		base64Data = base64Data[22:]
@@ -271,6 +281,8 @@ func (c *DrawThingsClient) SaveImageFromBase64(base64Data, filePath string) erro
 // GenerateImageFromText 根据文本生成图像
 func (c *DrawThingsClient) GenerateImageFromText(text, outputFile string, width, height int, isSuspense bool) error {
 	// 先检查API是否可用
+	c.BroadcastService.SendMessage("ollama整合后的提示词", fmt.Sprintf("内容：%s", text), broadcast.GetTimeStr())
+
 	if !c.APIAvailable {
 		if !c.CheckAPIAvailability() {
 			return fmt.Errorf("无法连接到DrawThings API，请确保Stable Diffusion WebUI正在运行在 %s 并且可以通过该地址访问", c.BaseURL)

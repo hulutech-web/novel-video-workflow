@@ -4,18 +4,24 @@ import (
 	"bufio"
 	"fmt"
 	"log"
+	"novel-video-workflow/pkg/broadcast"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
-type FileManager struct{}
+type FileManager struct {
+	BroadcastService *broadcast.BroadcastService
+}
 
 func NewFileManager() *FileManager {
-	return &FileManager{}
+	return &FileManager{
+		BroadcastService: broadcast.NewBroadcastService(),
+	}
 }
 
 type ChapterStructure struct {
@@ -49,12 +55,18 @@ type CommentsCollection struct {
 type ChapterContentMap map[int]string
 
 var ChapterMap ChapterContentMap
+var chapterMapMutex sync.Mutex // 保护ChapterMap的互斥锁
 
 // 这里需要传递一个.txt的绝对路径
 func (fm *FileManager) CreateInputChapterStructure(absDir string) (*ChapterStructure, error) {
 	if c_map, err := fm.ExtractChapterTxt(absDir); err != nil {
 		return nil, err
 	} else {
+		// 使用互斥锁保护ChapterMap的写入
+		chapterMapMutex.Lock()
+		ChapterMap = c_map
+		chapterMapMutex.Unlock()
+
 		// 循环c_map并创建文件夹，创建新的txt文本放到文件夹下
 		for chapterNum, content := range c_map {
 			fm.CreateChapterStructure(chapterNum, content, absDir)
@@ -161,8 +173,6 @@ func (fm *FileManager) ExtractChapterTxt(fileDir string) (ChapterContentMap, err
 		return nil, err
 	}
 
-	// 赋值
-	ChapterMap = chapterMap
 	return chapterMap, nil
 }
 
@@ -247,6 +257,10 @@ func (fm *FileManager) CreateOutputChapterStructure(inpDir string) {
 	os.Mkdir(filepath.Join(dir, "output", fold_name), os.ModePerm)
 
 	// 创建子文件夹
+	// 使用互斥锁保护ChapterMap的读取
+	chapterMapMutex.Lock()
+	defer chapterMapMutex.Unlock()
+
 	for key, _ := range ChapterMap {
 		f_name := fmt.Sprintf("chapter_%02d", key)
 		//创建文件夹
