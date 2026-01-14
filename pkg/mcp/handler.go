@@ -1274,7 +1274,47 @@ func (h *Handler) HandleGenerateImagesFromChapterWithAIPromptDirect(request *Moc
 	return response, nil
 }
 
-// MockRequest 类型定义（在末尾添加，满足Go语法要求）
+// MockRequest 模拟MCP请求
 type MockRequest struct {
 	Params map[string]interface{}
+}
+
+func (r *MockRequest) RequireString(key string) (string, error) {
+	if val, exists := r.Params[key]; exists {
+		if str, ok := val.(string); ok {
+			return str, nil
+		}
+		return "", fmt.Errorf("parameter %s is not a string", key)
+	}
+	return "", fmt.Errorf("parameter %s not found", key)
+}
+
+func (r *MockRequest) GetString(key string, defaultValue string) string {
+	if val, exists := r.Params[key]; exists {
+		if str, ok := val.(string); ok {
+			return str
+		}
+	}
+	return defaultValue
+}
+
+func (r *MockRequest) GetInt(key string, defaultValue int) int {
+	if val, exists := r.Params[key]; exists {
+		if num, ok := val.(float64); ok {
+			return int(num)
+		}
+		if num, ok := val.(int); ok {
+			return num
+		}
+	}
+	return defaultValue
+}
+
+func (r *MockRequest) GetBool(key string, defaultValue bool) bool {
+	if val, exists := r.Params[key]; exists {
+		if b, ok := val.(bool); ok {
+			return b
+		}
+	}
+	return defaultValue
 }

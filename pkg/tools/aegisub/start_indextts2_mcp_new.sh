@@ -26,7 +26,7 @@ echo "🔍 检查 IndexTTS2 服务: $TTS_URL"
 if ! curl -s --connect-timeout 5 $TTS_URL >/dev/null 2>&1; then
     echo "⚠️  IndexTTS2 服务未运行或不可访问"
     echo "💡 提示: 如果您还没有启动IndexTTS2服务，请在另一个终端运行:"
-    echo "   cd /Users/mac/code/ai/tts/index-tts && python app.py"
+    echo "   cd <YOUR_INDEX_TTS_PATH> && python app.py"
 else
     echo "✅ IndexTTS2 服务可访问"
 fi

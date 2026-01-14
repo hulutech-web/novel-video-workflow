@@ -18,7 +18,7 @@ func ExampleIntegration() {
 
 	// 示例文本和参考音频
 	text := "这是一个示例文本，用于生成语音和字幕。"
-	referenceAudio := "/Users/mac/code/ai/novel-video-workflow/ref.m4a" // 替换为实际的参考音频路径
+	referenceAudio := "./ref.m4a" // 替换为实际的参考音频路径
 	outputAudio := "output/example_audio.wav"                        // 输出音频路径
 
 	// 1. 使用Indextts2生成音频

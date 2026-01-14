@@ -81,15 +81,6 @@ func (s *Server) GetToolNames() []string {
 	return s.handler.GetToolNames()
 }
 
-// StartWithTransport 允许使用自定义传输层启动服务器
-func (s *Server) StartWithTransport(ctx context.Context, transport mcp_server.Transport) error {
-	if err := s.server.Listen(ctx, transport); err != nil {
-		s.logger.Error("Failed to start MCP server with transport", zap.Error(err))
-		return err
-	}
-	return nil
-}
-
 // GetHandler 返回处理器，用于直接调用工具（用于测试和内部调用）
 func (s *Server) GetHandler() *Handler {
 	return s.handler
