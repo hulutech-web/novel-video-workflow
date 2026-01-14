@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小说视频工作流控制台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        dark: '#1f2937',
+                        light: '#f9fafb'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
+                <i class="fas fa-project-diagram mr-2"></i>
+                小说视频工作流控制台
+            </h1>
+            <p class="text-center text-gray-600">管理您的AI工具和文件</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="mb-8 bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="flex flex-wrap border-b">
+                <button class="nav-tab active px-6 py-4 font-medium text-sm md:text-base bg-blue-500 text-white hover:bg-blue-600 transition-colors" onclick="switchTab('dashboard')">
+                    <i class="fas fa-tachometer-alt mr-2"></i>仪表板
+                </button>
+                <button class="nav-tab px-6 py-4 font-medium text-sm md:text-base text-gray-600 hover:bg-gray-100 transition-colors" onclick="switchTab('tools')">
+                    <i class="fas fa-tools mr-2"></i>MCP 工具
+                </button>
+                <button class="nav-tab px-6 py-4 font-medium text-sm md:text-base text-gray-600 hover:bg-gray-100 transition-colors" onclick="switchTab('upload')">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i>上传并处理
+                </button>
+                <button class="nav-tab px-6 py-4 font-medium text-sm md:text-base text-gray-600 hover:bg-gray-100 transition-colors" onclick="switchTab('filemanager')">
+                    <i class="fas fa-folder-open mr-2"></i>文件管理
+                </button>
+                <button class="nav-tab px-6 py-4 font-medium text-sm md:text-base text-gray-600 hover:bg-gray-100 transition-colors" onclick="switchTab('tutorial')">
+                    <i class="fas fa-book mr-2"></i>教程
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-tachometer-alt mr-2 text-blue-500"></i>工作流仪表板
+            </h2>
+            <div class="mb-4">
+                <p class="mb-2">当前状态: <span id="current-status" class="font-medium text-green-600">空闲</span></p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="executeAll()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors flex items-center">
+                        <i class="fas fa-play-circle mr-2"></i>执行所有工具
+                    </button>
+                    <button onclick="stopExecution()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors flex items-center">
+                        <i class="fas fa-stop-circle mr-2"></i>停止执行
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Tab -->
+        <div id="tools" class="tab-content bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-tools mr-2 text-blue-500"></i>MCP 工具
+            </h2>
+            <div id="tools-list" class="space-y-4"></div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="upload" class="tab-content bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-cloud-upload-alt mr-2 text-blue-500"></i>上传文件夹并处理
+            </h2>
+            <div class="upload-area border-2 border-dashed border-blue-300 rounded-lg p-8 text-center mb-4 bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer" id="uploadArea" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+                <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-3"></i>
+                <p class="text-lg text-gray-700 mb-2">拖放文件夹到此处或点击选择</p>
+                <p class="text-sm text-gray-500">支持文件夹上传，标准格式为'小说名/小说名.txt'</p>
+                <input type="file" id="folderInput" webkitdirectory directory multiple class="hidden" />
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="document.getElementById('folderInput').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                    <i class="fas fa-folder-open mr-2"></i>选择文件夹
+                </button>
+                <button onclick="processFolder()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+                    <i class="fas fa-cogs mr-2"></i>处理上传的文件夹
+                </button>
+            </div>
+            <p id="uploadStatus" class="mt-3 text-gray-600"></p>
+        </div>
+
+        <!-- File Manager Tab -->
+        <div id="filemanager" class="tab-content bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-folder-open mr-2 text-blue-500"></i>文件管理
+            </h2>
+            <div class="file-manager-container">
+                <div class="file-nav mb-4 flex flex-wrap gap-3">
+                    <button onclick="changeDirectory('./input')" class="btn-dir bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors flex items-center">
+                        <i class="fas fa-folder mr-2"></i>输入目录 (./input)
+                    </button>
+                    <button onclick="changeDirectory('./output')" class="btn-dir bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md transition-colors flex items-center">
+                        <i class="fas fa-folder mr-2"></i>输出目录 (./output)
+                    </button>
+                </div>
+                <div class="file-actions mb-4">
+                    <div class="upload-section inline-block">
+                        <input type="file" id="fileUpload" onchange="handleFileUpload(this.files)" class="hidden" />
+                        <button onclick="document.getElementById('fileUpload').click()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors flex items-center">
+                            <i class="fas fa-upload mr-2"></i>上传文件
+                        </button>
+                    </div>
+                </div>
+                <div id="fileList" class="file-list bg-gray-50 rounded-lg p-4"></div>
+            </div>
+        </div>
+
+        <!-- Tutorial Tab -->
+        <div id="tutorial" class="tab-content bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+                <i class="fas fa-book mr-2 text-blue-500"></i>教程
+            </h2>
+            <div class="tutorial space-y-4">
+                <div class="tutorial-section">
+                    <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-blue-500"></i>入门指南
+                    </h3>
+                    <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                        <li>此控制台允许您管理和执行 MCP 服务</li>
+                        <li>使用 MCP 工具标签页查看和执行单个工具</li>
+                        <li>使用上传并处理标签页上传文件夹并运行整个工作流</li>
+                        <li>使用文件管理标签页管理input和output目录中的文件</li>
+                        <li>在每个部分底部的控制台中监视进度</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                        <i class="fas fa-cogs mr-2 text-blue-500"></i>执行单个工具
+                    </h3>
+                    <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                        <li>导航到 MCP 工具标签页</li>
+                        <li>您将看到所有可用 MCP 工具的列表</li>
+                        <li>点击任何工具上的"执行"按钮单独运行它</li>
+                        <li>在控制台中监视执行日志</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                        <i class="fas fa-file-upload mr-2 text-blue-500"></i>处理整个文件夹
+                    </h3>
+                    <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                        <li>转到上传并处理标签页</li>
+                        <li>拖放文件夹或点击选择一个文件夹</li>
+                        <li>点击"处理上传的文件夹"开始工作流</li>
+                        <li>在控制台中监视进度</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                        <i class="fas fa-folder mr-2 text-blue-500"></i>文件管理
+                    </h3>
+                    <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                        <li>转到文件管理标签页</li>
+                        <li>使用顶部按钮切换到输入(input)或输出(output)目录</li>
+                        <li>点击文件名可预览文本文件内容</li>
+                        <li>点击删除按钮可删除文件或目录</li>
+                        <li>使用上传按钮可上传新文件</li>
+                    </ul>
+                </div>
+                
+                <div class="tutorial-section">
+                    <h3 class="text-lg font-medium text-gray-800 flex items-center">
+                        <i class="fas fa-chart-bar mr-2 text-blue-500"></i>监控进度
+                    </h3>
+                    <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                        <li>控制台显示来自 MCP 工具的实时日志</li>
+                        <li>绿色文本表示信息消息</li>
+                        <li>亮绿色文本表示成功消息</li>
+                        <li>红色文本表示错误消息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console -->
+        <div class="console-container bg-black text-green-400 font-mono rounded-lg shadow-md p-4 mb-6">
+            <h3 class="text-lg font-semibold mb-2 text-white flex items-center">
+                <i class="fas fa-terminal mr-2"></i>实时日志控制台
+            </h3>
+            <div id="console" class="console h-64 overflow-y-auto p-2 bg-gray-900 rounded"></div>
+        </div>
+    </div>
+
+    <script>
+        // WebSocket连接
+        const socket = new WebSocket('ws://' + window.location.host + '/ws');
+        
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket');
+        };
+        
+        socket.onmessage = function(event) {
+            const logData = JSON.parse(event.data);
+            const consoleDiv = document.getElementById('console');
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const lineDiv = document.createElement('div');
+            lineDiv.className = 'console-line ' + logData.type;
+            lineDiv.innerHTML = '<span class="text-gray-400">[' + timestamp + ']</span> ' +
+                               '<span class="text-yellow-300">[' + logData.toolName + ']</span> ' +
+                               '<span class="' + (logData.type === 'error' ? 'text-red-400' : 
+                                  logData.type === 'success' ? 'text-green-400 font-bold' : 
+                                  'text-green-300') + '">' + logData.message + '</span>';
+            
+            consoleDiv.appendChild(lineDiv);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+        
+        // 文件管理相关函数
+        let currentDirectory = 'input'; // 默认目录
+        
+        // 切换目录
+        function changeDirectory(dir) {
+            // 去掉 ./ 前缀，只保留目录名
+            currentDirectory = dir.startsWith('./') ? dir.substring(2) : dir;
+            loadFileList(currentDirectory);
+        }
+        
+        // 加载文件列表
+        function loadFileList(dir) {
+            // 构建正确的路径格式，确保后端能正确处理
+            var pathToUse = dir;
+            // 如果路径不以 ./ 开头，添加前缀
+            if (!dir.startsWith('./')) {
+                pathToUse = './' + dir;
+            }
+            
+            fetch('/api/files/list?dir=' + encodeURIComponent(pathToUse))
+                .then(response => response.json())
+                .then(data => {
+                    const fileListDiv = document.getElementById('fileList');
+                    fileListDiv.innerHTML = '';
+                    
+                    if (data.files.length === 0) {
+                        fileListDiv.innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fas fa-inbox text-4xl mb-3"></i><p>目录为空</p></div>';
+                        return;
+                    }
+                    
+                    // 创建文件表格
+                    const table = document.createElement('table');
+                    table.className = 'min-w-full divide-y divide-gray-200';
+                    table.innerHTML = `
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">大小</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">修改时间</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200"></tbody>
+                    `;
+                    
+                    const tbody = table.querySelector('tbody');
+                    
+                    data.files.forEach(function(file) {
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-gray-50';
+                        
+                        var fileTypeDisplay = file.isDir ? '📁' : getFileIconByType(file.type);
+                        var fileSizeDisplay = file.isDir ? '-' : formatFileSize(file.size);
+                        var previewButton = '';
+                        if (!file.isDir && ['text', 'json', 'yaml', 'yml', 'xml', 'csv', 'log', 'md'].includes(file.type)) {
+                            previewButton = '<button onclick="previewFile(\'' + file.name + '\')" class="text-blue-600 hover:text-blue-900 mr-2"><i class="fas fa-eye mr-1"></i>预览</button>';
+                        }
+                        var modTime = new Date(file.modTime).toLocaleString();
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="mr-3">${fileTypeDisplay}</div>
+                                    <div class="text-sm font-medium text-gray-900">
+                                        <span onclick="clickFileOrDir('${file.name}', ${file.isDir})" class="cursor-pointer hover:underline">${file.name}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${file.type}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${fileSizeDisplay}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${modTime}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                ${previewButton}
+                                <button onclick="deleteFile('${file.name}', ${file.isDir})" class="text-red-600 hover:text-red-900"><i class="fas fa-trash mr-1"></i>删除</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                    
+                    fileListDiv.appendChild(table);
+                })
+                .catch(function(error) {
+                    console.error('Error loading file list:', error);
+                    const fileListDiv = document.getElementById('fileList');
+                    fileListDiv.innerHTML = '<div class="text-red-500 p-4"><i class="fas fa-exclamation-triangle mr-2"></i>加载文件列表失败: ' + error.message + '</div>';
+                });
+        }
+        
+        // 根据文件类型获取图标
+        function getFileIconByType(fileType) {
+            switch(fileType) {
+                case 'image':
+                    return '🖼️';
+                case 'video':
+                    return '🎬';
+                case 'audio':
+                    return '🎵';
+                case 'pdf':
+                    return '📄';
+                case 'archive':
+                    return '📦';
+                case 'text':
+                case 'json':
+                case 'yaml':
+                case 'yml':
+                case 'xml':
+                case 'csv':
+                case 'log':
+                case 'md':
+                    return '📝';
+                default:
+                    return '📄';
+            }
+        }
+        
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 点击文件或目录
+        function clickFileOrDir(name, isDir) {
+            if (isDir) {
+                // 进入子目录
+                var newPath = currentDirectory;
+                if (newPath.endsWith('/')) {
+                    newPath += name;
+                } else {
+                    newPath += '/' + name;
+                }
+                changeDirectory('./' + newPath);
+            } else {
+                // 对于文本文件，打开预览
+                previewFile(name);
+            }
+        }
+        
+        // 预览文件
+        function previewFile(filename) {
+            const fullPath = './' + currentDirectory + '/' + filename;
+            fetch('/api/files/content?path=' + encodeURIComponent(fullPath))
+                .then(response => response.text())
+                .then(content => {
+                    // 创建模态框显示文件内容
+                    const overlay = document.createElement('div');
+                    overlay.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+                    overlay.id = 'modalOverlay';
+                    
+                    const modal = document.createElement('div');
+                    modal.className = 'bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col';
+                    
+                    const header = document.createElement('div');
+                    header.className = 'flex justify-between items-center p-4 border-b';
+                    header.innerHTML = `
+                        <h3 class="text-lg font-semibold">预览: ${filename}</h3>
+                        <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    `;
+                    
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'p-4 flex-grow overflow-auto';
+                    contentDiv.innerHTML = '<pre class="whitespace-pre-wrap break-words font-sans text-sm">' + escapeHtml(content) + '</pre>';
+                    
+                    modal.appendChild(header);
+                    modal.appendChild(contentDiv);
+                    overlay.appendChild(modal);
+                    document.body.appendChild(overlay);
+                })
+                .catch(function(error) {
+                    console.error('Error previewing file:', error);
+                    alert('无法预览文件: ' + error.message);
+                });
+        }
+        
+        // 转义HTML以防止XSS
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            if (overlay) {
+                overlay.remove();
+            }
+        }
+        
+        // 删除文件或目录
+        function deleteFile(filename, isDir) {
+            var confirmMessage = '确定要删除' + (isDir ? '目录' : '文件') + ' "' + filename + '" 吗？此操作不可撤销。';
+            if (confirm(confirmMessage)) {
+                const fullPath = './' + currentDirectory + '/' + filename;
+                fetch('/api/files/delete?path=' + encodeURIComponent(fullPath), {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert((isDir ? '目录' : '文件') + ' 已成功删除');
+                        loadFileList(currentDirectory); // 重新加载文件列表
+                    } else {
+                        alert('删除失败: ' + data.message);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error deleting file:', error);
+                    alert('删除失败: ' + error.message);
+                });
+            }
+        }
+        
+        // 处理文件上传
+        function handleFileUpload(files) {
+            if (files.length === 0) return;
+            
+            const formData = new FormData();
+            formData.append('file', files[0]);
+            formData.append('dir', './' + currentDirectory); // 上传到当前目录
+            
+            fetch('/api/files/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('文件上传成功: ' + data.filename);
+                    loadFileList(currentDirectory); // 重新加载文件列表
+                } else {
+                    alert('上传失败: ' + data.message);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error uploading file:', error);
+                alert('上传失败: ' + error.message);
+            });
+        }
+        
+        // 当切换到文件管理标签时加载文件列表
+        function loadFileManager() {
+            // 使用input作为默认目录
+            loadFileList('input');
+        }
+
+        function switchTab(tabName) {
+            // 隐藏所有标签内容
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.add('hidden');
+                tabs[i].classList.remove('active');
+            }
+            
+            // 移除所有标签的激活状态
+            const navTabs = document.getElementsByClassName('nav-tab');
+            for (let i = 0; i < navTabs.length; i++) {
+                navTabs[i].classList.remove('bg-blue-500', 'text-white');
+                navTabs[i].classList.add('text-gray-600');
+            }
+            
+            // 显示选中的标签内容
+            document.getElementById(tabName).classList.remove('hidden');
+            document.getElementById(tabName).classList.add('active');
+            
+            // 更新选中的导航标签样式
+            event.currentTarget.classList.remove('text-gray-600');
+            event.currentTarget.classList.add('bg-blue-500', 'text-white');
+            
+            // 如果切换到工具标签，则加载工具列表
+            if (tabName === 'tools') {
+                loadToolsList();
+            }
+            // 如果切换到文件管理标签，则加载文件列表
+            else if (tabName === 'filemanager') {
+                loadFileManager();
+            }
+        }
+        
+        function loadToolsList() {
+            fetch('/api/tools')
+                .then(response => response.json())
+                .then(tools => {
+                    const toolsListDiv = document.getElementById('tools-list');
+                    toolsListDiv.innerHTML = '';
+                    
+                    tools.forEach(function(tool) {
+                        const toolCard = document.createElement('div');
+                        toolCard.className = 'bg-gray-50 rounded-lg p-4 mb-4 border border-gray-200';
+                        
+                        // 为generate_indextts2_audio工具添加特殊处理
+                        let buttonHtml = '';
+                        if (tool.name === 'generate_indextts2_audio') {
+                            // 为音频生成工具添加表单
+                            buttonHtml = `
+                                <div class="tool-header flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">${tool.name}</h3>
+                                        <p class="text-sm text-gray-600">${tool.description}</p>
+                                    </div>
+                                    <button onclick="toggleAudioForm('${tool.name}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                                        执行工具
+                                    </button>
+                                </div>
+                                <div id="form_${tool.name}" class="audio-tool-form mt-4 p-4 bg-white rounded border border-gray-200 hidden">
+                                    <div class="form-group mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">输入文本:</label>
+                                        <textarea id="textInput_${tool.name}" placeholder="请输入要转换为语音的文本" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">输出目录:</label>
+                                        <input type="text" id="outputDir_${tool.name}" value="./output/" placeholder="请输入输出目录" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button onclick="executeAudioTool('${tool.name}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+                                            生成音频
+                                        </button>
+                                        <button onclick="hideAudioForm('${tool.name}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors">
+                                            取消
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (tool.name === 'generate_images_from_chapter_with_ai_prompt') {
+                            // 为图像生成工具添加表单
+                            buttonHtml = `
+                                <div class="tool-header flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">${tool.name}</h3>
+                                        <p class="text-sm text-gray-600">${tool.description}</p>
+                                    </div>
+                                    <button onclick="toggleImageForm('${tool.name}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                                        执行工具
+                                    </button>
+                                </div>
+                                <div id="form_${tool.name}" class="audio-tool-form mt-4 p-4 bg-white rounded border border-gray-200 hidden">
+                                    <div class="form-group mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">章节文本:</label>
+                                        <textarea id="chapterText_${tool.name}" placeholder="请输入要生成图像的章节文本" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">输出目录:</label>
+                                        <input type="text" id="outputDir_${tool.name}" value="./output/images_" placeholder="请输入输出目录" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                        <div class="form-group">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">图像宽度:</label>
+                                            <input type="number" id="imageWidth_${tool.name}" value="512" min="256" max="2048" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">图像高度:</label>
+                                            <input type="number" id="imageHeight_${tool.name}" value="896" min="256" max="2048" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-wrap gap-3">
+                                        <button onclick="executeImageTool('${tool.name}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors">
+                                            生成图像
+                                        </button>
+                                        <button onclick="hideImageForm('${tool.name}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md transition-colors">
+                                            取消
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // 其他工具使用普通按钮
+                            buttonHtml = `
+                                <div class="tool-header flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">${tool.name}</h3>
+                                        <p class="text-sm text-gray-600">${tool.description}</p>
+                                    </div>
+                                    <button onclick="executeTool('${tool.name}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                                        执行工具
+                                    </button>
+                                </div>
+                            `;
+                        }
+                        
+                        toolCard.innerHTML = buttonHtml;
+                        toolsListDiv.appendChild(toolCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading tools:', error);
+                    // 添加错误提示
+                    const toolsListDiv = document.getElementById('tools-list');
+                    toolsListDiv.innerHTML = '<div class="text-red-500 p-4"><i class="fas fa-exclamation-triangle mr-2"></i>加载工具列表失败: ' + error.message + '</div>';
+                });
+        }
+        
+        // 显示音频生成表单
+        function toggleAudioForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.toggle('hidden');
+            }
+        }
+        
+        // 隐藏音频生成表单
+        function hideAudioForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // 显示图像生成表单
+        function toggleImageForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.toggle('hidden');
+            }
+        }
+
+        // 隐藏图像生成表单
+        function hideImageForm(toolName) {
+            const form = document.getElementById('form_' + toolName);
+            if (form) {
+                form.classList.add('hidden');
+            }
+        }
+
+        // 执行音频生成工具
+        function executeAudioTool(toolName) {
+            const textInput = document.getElementById('textInput_' + toolName).value;
+            const outputDir = document.getElementById('outputDir_' + toolName).value;
+            
+            if (!textInput || textInput.trim() === '') {
+                alert('请输入要转换为语音的文本');
+                return;
+            }
+            
+            // 生成输出文件路径
+            const timestamp = new Date().getTime();
+            const outputFile = outputDir + '/audio_' + timestamp + '.wav';
+            
+            const params = {
+                toolName: toolName,
+                text: textInput,
+                output_file: outputFile
+            };
+            
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Audio tool execution initiated:', data);
+                // 隐藏表单
+                hideAudioForm(toolName);
+            })
+            .catch(error => {
+                console.error('Error executing audio tool:', error);
+            });
+        }
+
+        // 执行图像生成工具
+        function executeImageTool(toolName) {
+            const chapterText = document.getElementById('chapterText_' + toolName).value;
+            const outputDir = document.getElementById('outputDir_' + toolName).value;
+            const imageWidth = parseInt(document.getElementById('imageWidth_' + toolName).value);
+            const imageHeight = parseInt(document.getElementById('imageHeight_' + toolName).value);
+            
+            if (!chapterText || chapterText.trim() === '') {
+                alert('请输入要生成图像的章节文本');
+                return;
+            }
+            
+            if (!outputDir || outputDir.trim() === '') {
+                alert('请输入输出目录');
+                return;
+            }
+            
+            // 生成输出目录路径
+            const timestamp = new Date().getTime();
+            const outputDirectory = outputDir + timestamp;
+            
+            const params = {
+                toolName: toolName,
+                chapter_text: chapterText,
+                output_dir: outputDirectory,
+                width: imageWidth,
+                height: imageHeight
+            };
+            
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Image tool execution initiated:', data);
+                // 隐藏表单
+                hideImageForm(toolName);
+            })
+            .catch(error => {
+                console.error('Error executing image tool:', error);
+            });
+        }
+        
+        function executeTool(toolName) {
+            fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({toolName: toolName})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Tool execution initiated:', data);
+            })
+            .catch(error => {
+                console.error('Error executing tool:', error);
+            });
+        }
+        
+        function executeAll() {
+            fetch('/api/execute-all', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('All tools execution initiated:', data);
+            })
+            .catch(error => {
+                console.error('Error executing all tools:', error);
+            });
+        }
+        
+        function stopExecution() {
+            fetch('/api/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Execution stopped:', data);
+            })
+            .catch(error => {
+                console.error('Error stopping execution:', error);
+            });
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.add('border-blue-500', 'bg-blue-100');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('uploadArea').classList.remove('border-blue-500', 'bg-blue-100');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                // 简单显示上传状态
+                document.getElementById('uploadStatus').innerText = '已放置文件: ' + files.length + ' 个文件';
+            }
+        }
+        
+        function processFolder() {
+            fetch('/api/process-folder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Folder processing initiated:', data);
+            })
+            .catch(error => {
+                console.error('Error processing folder:', error);
+            });
+        }
+        
+        // 初始化 - 加载工具列表
+        window.onload = function() {
+            // 在初始状态下加载工具列表
+            if (document.querySelector('.nav-tab.active').textContent.includes('MCP 工具')) {
+                loadToolsList();
+            }
+        };
+    </script>
+</body>
+</html>
