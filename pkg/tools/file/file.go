@@ -1,13 +1,15 @@
 package file
 
 import (
-	"encoding/json"
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type FileManager struct{}
@@ -25,169 +27,147 @@ type ChapterStructure struct {
 	SceneDir    string
 }
 
-func (fm *FileManager) CreateChapterStructure(chapterNum int, text string, baseDir string) (*ChapterStructure, error) {
+// Comment 表示一个注释
+type Comment struct {
+	ID        string    `json:"id"`         // 注释唯一标识
+	Content   string    `json:"content"`    // 注释内容
+	Line      int       `json:"line"`       // 注释所在行号
+	StartPos  int       `json:"start_pos"`  // 在行内的起始位置
+	EndPos    int       `json:"end_pos"`    // 在行内的结束位置
+	Type      string    `json:"type"`       // 注释类型 (info, warning, error, highlight等)
+	CreatedAt time.Time `json:"created_at"` // 创建时间
+	Author    string    `json:"author"`     // 注释作者
+}
+
+// CommentsCollection 存储文本的注释集合
+type CommentsCollection struct {
+	Filepath string    `json:"filepath"` // 关联的文件路径
+	Comments []Comment `json:"comments"` // 注释列表
+}
+
+// ChapterContentMap 章节内容映射，键为章节号，值为章节内容
+type ChapterContentMap map[int]string
+
+var ChapterMap ChapterContentMap
+
+// 这里需要传递一个.txt的绝对路径
+func (fm *FileManager) CreateInputChapterStructure(absDir string) (*ChapterStructure, error) {
+	if c_map, err := fm.ExtractChapterTxt(absDir); err != nil {
+		return nil, err
+	} else {
+		// 循环c_map并创建文件夹，创建新的txt文本放到文件夹下
+		for chapterNum, content := range c_map {
+			fm.CreateChapterStructure(chapterNum, content, absDir)
+		}
+	}
+	//构建input文件夹
+	return nil, nil
+}
+
+// CreateChapterStructure 创建章节目录结构，格式为 chapter_XX/chapter_XX.txt
+func (fm *FileManager) CreateChapterStructure(chapterNum int, content string, absDir string) error {
+	// 获取基础目录路径
+	basePath := filepath.Dir(absDir)
+
+	// 格式化章节号，确保两位数格式（如 01, 02, ...）
+	chapterFolderName := fmt.Sprintf("chapter_%02d", chapterNum)
+	chapterFileName := fmt.Sprintf("chapter_%02d.txt", chapterNum)
+
 	// 创建章节目录
-	chapterDir := filepath.Join(baseDir, fmt.Sprintf("chapter_%02d", chapterNum))
-	if err := os.MkdirAll(chapterDir, 0755); err != nil {
-		return nil, fmt.Errorf("创建章节目录失败: %w", err)
-	}
-
-	// 创建子目录
-	subdirs := []string{"audio", "subtitles", "images", "scenes"}
-	dirPaths := make(map[string]string)
-
-	for _, subdir := range subdirs {
-		dirPath := filepath.Join(chapterDir, subdir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			return nil, fmt.Errorf("创建子目录 %s 失败: %w", subdir, err)
-		}
-		dirPaths[subdir] = dirPath
-	}
-
-	// 保存文本文件
-	textFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
-	if err := os.WriteFile(textFile, []byte(text), 0644); err != nil {
-		return nil, fmt.Errorf("保存文本文件失败: %w", err)
-	}
-
-	return &ChapterStructure{
-		ChapterDir:  chapterDir,
-		TextFile:    textFile,
-		AudioDir:    dirPaths["audio"],
-		SubtitleDir: dirPaths["subtitles"],
-		ImageDir:    dirPaths["images"],
-		SceneDir:    dirPaths["scenes"],
-	}, nil
-}
-
-func (fm *FileManager) SaveJSON(filepath string, data interface{}) error {
-	jsonData, err := json.MarshalIndent(data, "", "  ")
+	chapterDir := filepath.Join(basePath, chapterFolderName)
+	err := os.MkdirAll(chapterDir, 0755)
 	if err != nil {
-		return fmt.Errorf("序列化JSON失败: %w", err)
+		return fmt.Errorf("创建章节目录失败: %v", err)
 	}
 
-	if err := os.WriteFile(filepath, jsonData, 0644); err != nil {
-		return fmt.Errorf("写入JSON文件失败: %w", err)
+	// 创建章节文件
+	filePath := filepath.Join(chapterDir, chapterFileName)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return fmt.Errorf("创建章节文件失败: %v", err)
+	}
+	defer file.Close()
+
+	// 写入内容
+	_, err = file.WriteString(content)
+	if err != nil {
+		return fmt.Errorf("写入章节内容失败: %v", err)
 	}
 
 	return nil
 }
 
-// CreateNovelInputStructure 创建小说输入目录结构
-func (fm *FileManager) CreateNovelInputStructure(novelName, novelText string) error {
-	// 获取当前工作目录
-	wd, err := os.Getwd()
+// ExtractChapterTxt 提取章节编号和对应的内容，返回章节编号到内容的映射
+func (fm *FileManager) ExtractChapterTxt(fileDir string) (ChapterContentMap, error) {
+	fileHandle, err := os.OpenFile(fileDir, os.O_RDONLY, 0666)
 	if err != nil {
-		return fmt.Errorf("获取当前工作目录失败: %w", err)
+		return nil, err
 	}
-	// 创建小说主目录
-	novelDir := filepath.Join(wd, "input", novelName)
-	if err := os.MkdirAll(novelDir, 0755); err != nil {
-		return fmt.Errorf("创建小说目录失败: %w", err)
-	}
+	defer fileHandle.Close()
 
-	// 拆分章节
-	chapters := fm.SplitNovelIntoChapters(novelText)
+	chapterMap := make(ChapterContentMap)
+	var currentContent strings.Builder
+	currentChapterFound := false
+	var currentChapterNum int
 
-	// 为每个章节创建目录和文件
-	for i, chapterText := range chapters {
-		// 从章节文本中提取章节号
-		chapterNum := fm.ExtractChapterNumber(chapterText)
-		if chapterNum == 0 { // 如果无法提取章节号，使用顺序号
-			chapterNum = i + 1
-		}
-		chapterDir := filepath.Join(novelDir, fmt.Sprintf("chapter_%02d", chapterNum))
-		
-		// 检查章节文件是否已存在以及内容是否相同
-		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
-		if existingContent, err := os.ReadFile(chapterFile); err == nil {
-			// 文件已存在，检查内容是否相同
-			if string(existingContent) == chapterText {
-				fmt.Printf("⚠️  章节 %d 内容已存在且相同，跳过处理\n", chapterNum)
-				continue // 跳过相同内容的章节
-			} else {
-				fmt.Printf("📝 章节 %d 内容已存在但不同，更新内容\n", chapterNum)
-			}
-		}
-		
-		if err := os.MkdirAll(chapterDir, 0755); err != nil {
-			return fmt.Errorf("创建章节目录失败: %w", err)
-		}
-
-		// 创建章节文本文件
-		if err := os.WriteFile(chapterFile, []byte(chapterText), 0644); err != nil {
-			return fmt.Errorf("保存章节文件失败: %w", err)
-		}
-	}
-
-	return nil
-}
-
-// SplitNovelIntoChapters 将小说文本按章节拆分
-func (fm *FileManager) SplitNovelIntoChapters(novelText string) []string {
+	scanner := bufio.NewScanner(fileHandle)
 	// 使用正则表达式匹配章节标记
-	// 匹配以“第x章”、“第xx章”、“第xxx章”等开头的行
+	// 匹配以"第x章"、"第xx章"、"第xxx章"等开头的行
 	re := regexp.MustCompile(`(?m)^\s*第[\p{N}\p{L}]+[章节][^\r\n]*$`)
-	matches := re.FindAllStringIndex(novelText, -1)
 
-	var chapters []string
+	for scanner.Scan() {
+		text := scanner.Text()
 
-	// 如果没有找到章节标记，则将整个文本作为一个章节
-	if len(matches) == 0 {
-		trimmed := strings.TrimSpace(novelText)
-		if trimmed != "" {
-			chapters = append(chapters, trimmed)
-		}
-		return chapters
-	}
-
-	for i, match := range matches {
-		var chapterStart, chapterEnd int
-		
-		// 当前章节的开始位置是章节标记的开始
-		chapterStart = match[0]
-		
-		// 当前章节的结束位置是下一个章节标记的开始，或者是文本的结尾
-		if i+1 < len(matches) {
-			chapterEnd = matches[i+1][0]
-		} else {
-			chapterEnd = len(novelText)
-		}
-		
-		// 提取包含章节标题的完整章节内容
-		chapterContent := strings.TrimSpace(novelText[chapterStart:chapterEnd])
-		if chapterContent != "" {
-			chapters = append(chapters, chapterContent)
-		}
-	}
-
-	return chapters
-}
-
-// ExtractChapterNumber 从章节文本中提取章节号
-func (fm *FileManager) ExtractChapterNumber(chapterText string) int {
-	// 查找章节标题行
-	lines := strings.Split(chapterText, "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		// 使用正则表达式匹配章节标记
-		re := regexp.MustCompile(`^\s*第([\p{N}\p{L}]+)[章节]`)
-		matches := re.FindStringSubmatch(line)
-		if len(matches) > 1 {
-			chapterNumStr := matches[1]
-			// 尝试解析数字
-			if num, err := strconv.Atoi(chapterNumStr); err == nil {
-				return num
+		// 检查当前行是否为章节标记
+		if match := re.FindString(text); match != "" {
+			// 如果已经找到了上一个章节的内容，保存它
+			if currentChapterFound {
+				chapterMap[currentChapterNum] = strings.TrimSpace(currentContent.String())
+				currentContent.Reset()
 			}
-			// 如果是汉字数字，转换为阿拉伯数字
-			return fm.ConvertChineseNumberToArabic(chapterNumStr)
+
+			// 提取章节数字
+			numStr := strings.TrimPrefix(match, "第")
+			numStr = strings.TrimSuffix(numStr, "章")
+			numStr = strings.TrimSpace(numStr)
+
+			// 转换为阿拉伯数字
+			if atoi, err := strconv.Atoi(numStr); err != nil {
+				currentChapterNum = fm.convertChineseNumberToArabic(numStr)
+			} else {
+				currentChapterNum = atoi
+			}
+
+			currentChapterFound = true
+
+			// 将章节标题也加入内容中
+			currentContent.WriteString(text)
+			currentContent.WriteString("\n")
+		} else {
+			// 如果当前行不是章节标记，将其添加到当前内容中
+			if currentChapterFound {
+				currentContent.WriteString(text)
+				currentContent.WriteString("\n")
+			}
 		}
 	}
-	return 0 // 无法提取章节号时返回0
+
+	// 处理最后一个章节的内容
+	if currentChapterFound {
+		chapterMap[currentChapterNum] = strings.TrimSpace(currentContent.String())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	// 赋值
+	ChapterMap = chapterMap
+	return chapterMap, nil
 }
 
 // ConvertChineseNumberToArabic 将中文数字转换为阿拉伯数字
-func (fm *FileManager) ConvertChineseNumberToArabic(chineseNum string) int {
+func (fm *FileManager) convertChineseNumberToArabic(chineseNum string) int {
 	chineseToArabic := map[string]int{
 		// 基础数字
 		"零": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
@@ -226,121 +206,51 @@ func (fm *FileManager) ConvertChineseNumberToArabic(chineseNum string) int {
 	return 0
 }
 
-// CreateNovelOutputStructure 创建小说输出目录结构
-func (fm *FileManager) CreateNovelOutputStructure(novelName string) error {
-	// 获取当前工作目录
-	wd, err := os.Getwd()
+// output则参考input的结构生成目录结构，分出章节，每个章节内参考如下即可
+/*
+```
+output/
+└── 小说名称/
+    └── chapter_01/
+        ├── chapter_01.wav      # 音频文件
+        ├── chapter_01.srt      # 字幕文件
+        └── images/             # 图像目录
+            ├── scene_01.png
+            ├── scene_02.png
+            └── ...
+    └── chapter_02/
+        ├── chapter_02.wav      # 音频文件
+        ├── chapter_02.srt      # 字幕文件
+        └── images/             # 图像目录
+            ├── scene_01.png
+            ├── scene_02.png
+            └── ...
+```
+*/
+func (fm *FileManager) CreateOutputChapterStructure(inpDir string) {
+	dir, err := os.Getwd()
 	if err != nil {
-		return fmt.Errorf("获取当前工作目录失败: %w", err)
+		log.Fatal(err)
 	}
-	// 创建小说输出主目录
-	novelOutputDir := filepath.Join(wd, "output", novelName)
-	if err := os.MkdirAll(novelOutputDir, 0755); err != nil {
-		return fmt.Errorf("创建小说输出目录失败: %w", err)
+	//inpDir下的文件夹名字
+	fold_name := ""
+	items, err := os.ReadDir(inpDir)
+	for _, item := range items {
+		if item.IsDir() {
+			fold_name = item.Name()
+		}
 	}
-
-	// 获取输入目录中的章节数量
-	inputDir := filepath.Join(wd, "input", novelName)
-	entries, err := os.ReadDir(inputDir)
 	if err != nil {
-		return fmt.Errorf("读取输入目录失败: %w", err)
+		log.Fatal(err)
 	}
+	// 1、创建这个文件夹
+	os.Mkdir(filepath.Join(dir, "output", fold_name), os.ModePerm)
 
-	// 为每个章节创建输出目录
-	for _, entry := range entries {
-		if entry.IsDir() && strings.HasPrefix(entry.Name(), "chapter_") {
-			chapterOutputDir := filepath.Join(novelOutputDir, entry.Name())
-			if err := os.MkdirAll(chapterOutputDir, 0755); err != nil {
-				return fmt.Errorf("创建章节输出目录失败: %w", err)
-			}
-		}
+	// 创建子文件夹
+	for key, _ := range ChapterMap {
+		f_name := fmt.Sprintf("chapter_%02d", key)
+		//创建文件夹
+		os.Mkdir(filepath.Join(dir, "output", fold_name, f_name), os.ModePerm)
 	}
-
-	return nil
-}
-
-// GetNovelChaptersFromInput 获取输入目录中的所有章节文件
-func (fm *FileManager) GetNovelChaptersFromInput(novelName string) ([]string, error) {
-	inputDir := filepath.Join("input", novelName)
-	entries, err := os.ReadDir(inputDir)
-	if err != nil {
-		return nil, fmt.Errorf("读取输入目录失败: %w", err)
-	}
-
-	var chapterFiles []string
-	for _, entry := range entries {
-		if entry.IsDir() && strings.HasPrefix(entry.Name(), "chapter_") {
-			chapterFile := filepath.Join(inputDir, entry.Name(), entry.Name()+".txt")
-			if _, err := os.Stat(chapterFile); err == nil { // 检查章节文件是否存在
-				chapterFiles = append(chapterFiles, chapterFile)
-			}
-		}
-	}
-
-	// 按名称排序以保证章节顺序
-	for i := 0; i < len(chapterFiles)-1; i++ {
-		for j := i + 1; j < len(chapterFiles); j++ {
-			if filepath.Base(chapterFiles[i]) > filepath.Base(chapterFiles[j]) {
-				chapterFiles[i], chapterFiles[j] = chapterFiles[j], chapterFiles[i]
-			}
-		}
-	}
-
-	return chapterFiles, nil
-}
-
-// SplitNovelFileIntoChapters 从文件读取小说并将其拆分为多个章节文件
-func (fm *FileManager) SplitNovelFileIntoChapters(novelFilePath string) ([]string, error) {
-	// 读取小说文件
-	content, err := os.ReadFile(novelFilePath)
-	if err != nil {
-		return nil, fmt.Errorf("无法读取小说文件: %v", err)
-	}
-
-	novelText := string(content)
-
-	// 拆分章节
-	chapters := fm.SplitNovelIntoChapters(novelText)
-
-	if len(chapters) == 0 {
-		return nil, fmt.Errorf("在文件中未找到任何章节")
-	}
-
-	// 确定输出目录
-	dir := filepath.Dir(novelFilePath)
-
-	// 为每个章节创建目录和文件
-	var createdFiles []string
-	for i, chapterText := range chapters {
-		// 从章节文本中提取章节号
-		chapterNum := fm.ExtractChapterNumber(chapterText)
-		if chapterNum == 0 { // 如果无法提取章节号，使用顺序号
-			chapterNum = i + 1
-		}
-		chapterDir := filepath.Join(dir, fmt.Sprintf("chapter_%02d", chapterNum))
-		
-		// 检查章节文件是否已存在以及内容是否相同
-		chapterFile := filepath.Join(chapterDir, fmt.Sprintf("chapter_%02d.txt", chapterNum))
-		if existingContent, err := os.ReadFile(chapterFile); err == nil {
-			// 文件已存在，检查内容是否相同
-			if string(existingContent) == chapterText {
-				fmt.Printf("⚠️  章节 %d 内容已存在且相同，跳过处理\n", chapterNum)
-				continue // 跳过相同内容的章节
-			} else {
-				fmt.Printf("📝 章节 %d 内容已存在但不同，更新内容\n", chapterNum)
-			}
-		}
-		
-		if err := os.MkdirAll(chapterDir, 0755); err != nil {
-			return nil, fmt.Errorf("创建章节目录失败: %w", err)
-		}
-
-		// 创建章节文本文件
-		if err := os.WriteFile(chapterFile, []byte(chapterText), 0644); err != nil {
-			return nil, fmt.Errorf("保存章节文件失败: %w", err)
-		}
-		createdFiles = append(createdFiles, chapterFile)
-	}
-
-	return createdFiles, nil
+	fmt.Println(dir)
 }

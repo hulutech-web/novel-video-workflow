@@ -341,7 +341,7 @@ func (c *IndexTTS2Client) DownloadAudio(audioURL, savePath string) error {
 func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath string) error {
 	c.Logger.Info("开始TTS生成",
 		zap.String("audio_path", audioPath),
-		zap.String("text", text[:10]), //text只取前10个字符
+		zap.String("text", fmt.Sprintf("%s-%d", text[:10], len(text))), //text只取前10个字符
 		zap.String("output_path", outputPath))
 
 	// 检查音频文件是否存在
@@ -362,7 +362,7 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 	}
 
 	c.Logger.Info("使用音频文件进行TTS生成", zap.String("audio_path", audioPath))
-	c.Logger.Info("正在生成TTS语音", zap.String("text", text[:10]))
+	c.Logger.Info("正在生成TTS语音", zap.String("text", fmt.Sprintf("%s-%d", text[:10], len(text))))
 
 	// 直接调用带音频文件的TTS生成
 	ttsResp, err := c.GenerateTTSWithFile(audioPath, text)

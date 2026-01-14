@@ -33,7 +33,12 @@ type MCPServer struct {
 
 // NewMCPServer 创建新的MCP服务器实例
 func NewMCPServer() (*MCPServer, error) {
-	cmd := exec.Command("go", "run", ".", "mcp")
+	cmd := exec.Command("go", "run", "main.go")
+	cmd.Dir = "."
+
+	// 设置环境变量，让主程序知道它是作为MCP服务器运行
+	cmd.Env = append(os.Environ(), "MCP_STDIO_MODE=true")
+
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
@@ -48,7 +53,7 @@ func NewMCPServer() (*MCPServer, error) {
 	}
 
 	// 等待服务器初始化
-	time.Sleep(2 * time.Second)
+	time.Sleep(3 * time.Second)
 
 	return &MCPServer{
 		cmd:    cmd,
@@ -74,48 +79,93 @@ func (s *MCPServer) CallTool(toolName string, arguments interface{}) (map[string
 		return nil, err
 	}
 
+	// 发送请求
 	_, err = s.stdin.Write(append(jsonData, '\n'))
 	if err != nil {
 		return nil, err
 	}
 
-	// 读取响应
-	reader := bufio.NewReader(s.stdout)
-	responseStr, err := reader.ReadString('\n')
-	if err != nil {
-		return nil, err
-	}
+	// 设置读取超时
+	done := make(chan struct{})
+	responseChan := make(chan string, 1)
+	errChan := make(chan error, 1)
 
-	var response map[string]interface{}
-	err = json.Unmarshal([]byte(strings.TrimSpace(responseStr)), &response)
-	if err != nil {
-		return nil, err
-	}
+	go func() {
+		defer close(done)
+		reader := bufio.NewReader(s.stdout)
+		responseStr, err := reader.ReadString('\n')
+		if err != nil {
+			errChan <- err
+			return
+		}
+		responseChan <- responseStr
+	}()
 
-	return response, nil
+	select {
+	case responseStr := <-responseChan:
+		var response map[string]interface{}
+		err = json.Unmarshal([]byte(strings.TrimSpace(responseStr)), &response)
+		if err != nil {
+			return nil, err
+		}
+		return response, nil
+	case err := <-errChan:
+		return nil, err
+	case <-time.After(30 * time.Second): // 30秒超时
+		return nil, fmt.Errorf("timeout waiting for response")
+	}
 }
 
 // Close 关闭MCP服务器
 func (s *MCPServer) Close() error {
-	s.stdin.Close()
-	s.stdout.Close()
-	return s.cmd.Wait()
+	if s.stdin != nil {
+		s.stdin.Close()
+	}
+	if s.stdout != nil {
+		s.stdout.Close()
+	}
+
+	// 等待命令完成，但设置超时
+	done := make(chan error, 1)
+	go func() {
+		done <- s.cmd.Wait()
+	}()
+
+	select {
+	case <-done:
+		// 正常完成
+	case <-time.After(5 * time.Second):
+		// 超时，强制终止进程
+		if s.cmd.Process != nil {
+			s.cmd.Process.Kill()
+		}
+	}
+
+	return nil
 }
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println(`{"error": "Usage: go run ollama_tool_processor.go <tool-call-json>"}`)
+		response := map[string]interface{}{
+			"error": "Usage: go run ollama_tool_processor.go <tool-call-json>",
+		}
+		responseBytes, _ := json.Marshal(response)
+		fmt.Println(string(responseBytes))
 		return
 	}
 
 	// 解析工具调用参数
 	var toolCall ToolCall
 	if err := json.Unmarshal([]byte(os.Args[1]), &toolCall); err != nil {
-		fmt.Printf(`{"error": "Failed to parse tool call: %s"}`, err.Error())
+		response := map[string]interface{}{
+			"error": fmt.Sprintf("Failed to parse tool call: %s", err.Error()),
+		}
+		responseBytes, _ := json.Marshal(response)
+		fmt.Println(string(responseBytes))
 		return
 	}
 
-	// 映射工具名称
+	// 映射工具名称 - 为Ollama Desktop提供友好的工具名
 	actualToolName := toolCall.Name
 	switch toolCall.Name {
 	case "novel_video_workflow_generate_audio":
@@ -127,24 +177,47 @@ func main() {
 		if _, exists := toolCall.Arguments["output_file"]; !exists {
 			toolCall.Arguments["output_file"] = fmt.Sprintf("./output/ollama_output_%d.wav", time.Now().Unix())
 		}
-	case "process_chapter":
+	case "novel_video_workflow_process_chapter":
 		actualToolName = "process_chapter"
+	case "novel_video_workflow_generate_image":
+		actualToolName = "generate_image_from_text"
+		if _, exists := toolCall.Arguments["output_file"]; !exists {
+			toolCall.Arguments["output_file"] = fmt.Sprintf("./output/image_%d.png", time.Now().Unix())
+		}
+	case "novel_video_workflow_generate_chapter_images":
+		actualToolName = "generate_images_from_chapter"
+		if _, exists := toolCall.Arguments["width"]; !exists {
+			toolCall.Arguments["width"] = 512
+		}
+		if _, exists := toolCall.Arguments["height"]; !exists {
+			toolCall.Arguments["height"] = 896
+		}
+	case "novel_video_workflow_split_novel":
+		actualToolName = "file_split_novel_into_chapters"
 	default:
-		fmt.Printf(`{"error": "Unknown tool: %s"}`, toolCall.Name)
-		return
+		// 如果工具名不匹配映射，使用原始工具名
+		actualToolName = toolCall.Name
 	}
 
 	// 启动MCP服务器并调用工具
 	mcpServer, err := NewMCPServer()
 	if err != nil {
-		fmt.Printf(`{"error": "Failed to start MCP server: %s"}`, err.Error())
+		response := map[string]interface{}{
+			"error": fmt.Sprintf("Failed to start MCP server: %s", err.Error()),
+		}
+		responseBytes, _ := json.Marshal(response)
+		fmt.Println(string(responseBytes))
 		return
 	}
 	defer mcpServer.Close()
 
 	result, err := mcpServer.CallTool(actualToolName, toolCall.Arguments)
 	if err != nil {
-		fmt.Printf(`{"error": "Tool call failed: %s"}`, err.Error())
+		response := map[string]interface{}{
+			"error": fmt.Sprintf("Tool call failed: %s", err.Error()),
+		}
+		responseBytes, _ := json.Marshal(response)
+		fmt.Println(string(responseBytes))
 		return
 	}
 
@@ -156,7 +229,11 @@ func main() {
 
 	responseBytes, err := json.Marshal(response)
 	if err != nil {
-		fmt.Printf(`{"error": "Failed to format response: %s"}`, err.Error())
+		response := map[string]interface{}{
+			"error": fmt.Sprintf("Failed to format response: %s", err.Error()),
+		}
+		responseBytes, _ := json.Marshal(response)
+		fmt.Println(string(responseBytes))
 		return
 	}
 

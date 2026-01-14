@@ -1,5 +1,6 @@
 <p align="center">
- <img src="https://github.com/hulutech-web/novel-video-workflow/blob/master/logo.png?raw=true" width="300" />
+ <img src="https://github.com/hulutech-web/novel-video-workflow/blob
+/master/logo.png?raw=true" width="300" />
 </p>
 
 
@@ -82,6 +83,13 @@ graph TB
     class P1,P2,P3 componentClass
     class OUT1,OUT2,OUT3,OUT4 outputClass
 ```
+## 快速上手 
+1.文件夹上传，小说名字/小说名字.txt放入input目录  
+2.运行测试工作流
+```
+go run cmd/full_workflow/main.go
+```
+bingo 运行成功，查看output目录，导入剪映出片  
 
 ## 功能特性
 
@@ -91,6 +99,7 @@ graph TB
 - AI图像生成
 - 自动化工作流程管理
 - MCP（Model Context Protocol）服务集成
+- 与第三方工具（如Ollama Desktop）集成
 
 ## 工作流程
 
@@ -112,6 +121,13 @@ output/
     └── chapter_01/
         ├── chapter_01.wav      # 音频文件
         ├── chapter_01.srt      # 字幕文件
+        └── images/             # 图像目录
+            ├── scene_01.png
+            ├── scene_02.png
+            └── ...
+    └── chapter_02/
+        ├── chapter_02.wav      # 音频文件
+        ├── chapter_02.srt      # 字幕文件
         └── images/             # 图像目录
             ├── scene_01.png
             ├── scene_02.png
@@ -149,7 +165,18 @@ input/
 - **功能**: 字幕生成与时间轴匹配
 - **依赖**: Aegisub应用及脚本
 
+## 与第三方工具集成
 
+本项目支持与Ollama Desktop等第三方MCP兼容工具集成。集成方式包括：
+
+### 1. 工具处理器
+使用 [ollama_tool_processor.go](pkg/utils/ollama_tool_processor.go) 作为代理，将外部工具调用转发到本地MCP服务。
+
+### 2. MCP桥接器
+通过 [cmd/ollama_mcp_bridge/main.go](cmd/ollama_mcp_bridge/main.go) 提供额外的集成选项，支持多种运行模式。
+
+### 3. 标准MCP服务
+通过设置环境变量 `MCP_STDIO_MODE=true` 启动标准MCP服务。
 
 ## 依赖项
 
@@ -193,6 +220,18 @@ input/
    go run cmd/test_workflow/main.go
    ```
 
+4. 与Ollama Desktop集成：
+   ```bash
+   # 启动MCP服务
+   MCP_STDIO_MODE=true go run main.go
+   
+   # 或使用桥接器
+   go run cmd/ollama_mcp_bridge/main.go -mode server
+   
+   # 测试工具调用
+   go run pkg/utils/ollama_tool_processor.go '{"name":"novel_video_workflow_generate_audio","arguments":{"text":"测试","reference_audio":"./ref.m4a","output_file":"./test.wav"}}'
+   ```
+
 ## 服务自检
 
 程序启动时会自动检查所有必需服务的可用性：
@@ -216,35 +255,35 @@ input/
 - [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md) - 完整项目说明文档
 - [MCP_ARCHITECTURE.md](MCP_ARCHITECTURE.md) - MCP服务架构详解
 - [FULL_USER_GUIDE.md](FULL_USER_GUIDE.md) - 完整用户指南
-
+- [Ollama_Desktop_Integration.md](Ollama_Desktop_Integration.md) - Ollama Desktop集成指南
 
 ## 成果展示（output目录)
 
-### 智能分镜 
+### 章节拆分 chapter_07 | chapter_8 | chapter_9 
 
-![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_01.png)
+### 各章节内容预览
+#### 章节7
+台词：[chapter_07.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.srt)
+音频：[chapter_07.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.wav)
+分镜图片：  
+![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_01.png)
+![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_02.png)
+![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_03.png)
+![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/scene_04.png)
 
-![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_02.png)
+#### 章节8
+台词：[chapter_08.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/chapter_08.srt)
+音频：[chapter_08.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/chapter_08.wav)
+分镜图片：  
+![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_01.png)
+![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_02.png)
+![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_03.png)
+![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_08/scene_04.png)
 
-![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_03.png)
-
-![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_04.png)
-
-![scene_05.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_05.png)
-
-![scene_06.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_06.png)
-
-![scene_07.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_07.png)
-
-![scene_08.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/images/scene_08.png)
-
-### 音频文件  
-
-[chapter_07.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.wav)
-
-### 台词文件  
-
-[chapter_07.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_07/chapter_07.srt)
-
-
-最后，祝君 事业成功！
+#### 章节9
+台词：[chapter_09.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/chapter_09.srt)
+音频：[chapter_09.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/chapter_09.wav)
+分镜图片：
+![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_01.png)
+![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_02.png)
+![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_09/scene_03.png)
