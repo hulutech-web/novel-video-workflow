@@ -6,6 +6,7 @@ import (
 	"novel-video-workflow/pkg/tools/file"
 	image "novel-video-workflow/pkg/tools/image"
 	"novel-video-workflow/pkg/tools/indextts2"
+	"novel-video-workflow/pkg/capcut"
 
 	"go.uber.org/zap"
 )
@@ -36,6 +37,7 @@ type Processor struct {
 	aegisubTool    *aegisub.AegisubIntegration
 	imageTool      *image.ImageGenerator
 	drawThingsTool *drawthings.ChapterImageGenerator
+	capcutTool     *capcut.CapcutGenerator
 	logger         *zap.Logger
 }
 
@@ -46,6 +48,7 @@ func NewProcessor(logger *zap.Logger) (*Processor, error) {
 	aegisubTool := aegisub.NewAegisubIntegration()
 	imageTool := image.NewImageGenerator(logger)
 	drawThingsTool := drawthings.NewChapterImageGenerator(logger)
+	capcutTool := capcut.NewCapcutGenerator(logger)
 
 	return &Processor{
 		fileTool:       fileTool,
@@ -53,6 +56,7 @@ func NewProcessor(logger *zap.Logger) (*Processor, error) {
 		aegisubTool:    aegisubTool,
 		imageTool:      imageTool,
 		drawThingsTool: drawThingsTool,
+		capcutTool:     capcutTool,
 		logger:         logger,
 	}, nil
 }
@@ -75,6 +79,11 @@ func (p *Processor) generateEditList(chapterDir string, chapterNum int,
 			},
 		},
 	}
+}
+
+func (p *Processor) GenerateCapcutProject(chapterDir string) error {
+	// 使用 CapCut 生成器生成剪映项目
+	return p.capcutTool.GenerateProject(chapterDir)
 }
 
 func (p *Processor) GetProgress() any {

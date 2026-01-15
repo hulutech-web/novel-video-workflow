@@ -1,0 +1,716 @@
+package capcut
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"novel-video-workflow/pkg/capcut/internal/material"
+	"novel-video-workflow/pkg/capcut/internal/script"
+	"novel-video-workflow/pkg/capcut/internal/segment"
+	"novel-video-workflow/pkg/capcut/internal/srt"
+	"novel-video-workflow/pkg/capcut/internal/track"
+	"novel-video-workflow/pkg/capcut/internal/types"
+
+	"github.com/google/uuid"
+)
+
+// CapcutGenerator 剪映项目生成器
+// 从output目录读取其他MCP工具生成的音频、图片和字幕文件，生成剪映项目
+type CapcutGenerator struct {
+	Logger interface{} // 可以传入zap.Logger或其他日志记录器
+}
+
+// NewCapcutGenerator 创建新的剪映项目生成器
+func NewCapcutGenerator(logger interface{}) *CapcutGenerator {
+	return &CapcutGenerator{
+		Logger: logger,
+	}
+}
+
+// GenerateProject 生成剪映项目
+// 输入目录应该是output/小说名称/chapter_XX，包含音频、图片和字幕文件
+func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
+	// 获取输入目录的绝对路径
+	inputDir, err := filepath.Abs(inputDir)
+	if err != nil {
+		return fmt.Errorf("获取输入目录绝对路径失败: %v", err)
+	}
+
+	// 检查必要的文件
+	audioFile := ""
+	imageFiles := []string{}
+	srtFile := ""
+
+	files, err := ioutil.ReadDir(inputDir)
+	if err != nil {
+		return fmt.Errorf("读取输入目录失败: %v", err)
+	}
+
+	for _, file := range files {
+		filename := strings.ToLower(file.Name())
+		if strings.HasSuffix(filename, ".wav") || strings.HasSuffix(filename, ".mp3") {
+			audioFile = filepath.Join(inputDir, file.Name())
+		} else if strings.HasSuffix(filename, ".png") || strings.HasSuffix(filename, ".jpg") || strings.HasSuffix(filename, ".jpeg") {
+			imageFiles = append(imageFiles, filepath.Join(inputDir, file.Name()))
+		} else if strings.HasSuffix(filename, ".srt") {
+			srtFile = filepath.Join(inputDir, file.Name())
+		}
+	}
+
+	if audioFile == "" {
+		return fmt.Errorf("未找到音频文件")
+	}
+
+	if len(imageFiles) == 0 {
+		return fmt.Errorf("未找到图片文件")
+	}
+
+	// 获取音频文件时长（这里简化处理，使用一个估算值）
+	audioDuration := int64(30000000) // 30秒，实际应用中应该读取音频文件获取准确时长
+
+	// 创建草稿文件 (1080x1920 竖屏视频)
+	sf, err := script.NewScriptFile(1080, 1920, 30) // 宽度、高度、帧率
+	if err != nil {
+		return fmt.Errorf("创建草稿文件失败: %v", err)
+	}
+
+	// 设置草稿的基本信息
+	sf.Duration = audioDuration
+
+	// 计算每个图片的显示时间（平均分配音频总时长）
+	numScenes := len(imageFiles)
+	sceneDuration := audioDuration / int64(numScenes)
+
+	// 添加图片素材到草稿
+	for i, imageFile := range imageFiles {
+		relPath := imageFile // 使用原始路径，NewVideoMaterial会自动转换为绝对路径
+		imageName := filepath.Base(imageFile)
+		videoMaterial, err := material.NewVideoMaterial(
+			material.MaterialTypePhoto, // 静态图片
+			&relPath,                   // 文件路径 (NewVideoMaterial会自动转换为绝对路径)
+			nil,                        // 替换路径 (不需要，使用原始路径)
+			&imageName,                 // 素材名称
+			nil,                        // 远程URL
+			nil,                        // 裁剪设置
+			nil,                        // 时长
+			nil,                        // 宽度
+			nil,                        // 高度
+		)
+		if err != nil {
+			fmt.Printf("创建视频素材失败: %v\n", err)
+			continue
+		}
+		sf.AddMaterial(videoMaterial)
+
+		// 添加到视频轨道
+		videoTrack, err := sf.GetTrack("video", nil)
+		if err != nil {
+			videoTrackName := stringPtr(fmt.Sprintf("视频轨道_%d", i))
+			sf.AddTrack(track.TrackTypeVideo, videoTrackName)
+			videoTrack, _ = sf.GetTrack("video", videoTrackName)
+		}
+
+		startTime := int64(i) * sceneDuration
+		endTime := startTime + sceneDuration
+
+		// 确保最后一张图片精确结束于音频末尾
+		if i == numScenes-1 {
+			endTime = audioDuration
+		}
+
+		sourceTimeRange := types.NewTimerange(startTime, endTime-startTime)
+		targetTimeRange := types.NewTimerange(startTime, endTime-startTime)
+
+		videoSegment := segment.NewVideoSegment(
+			videoMaterial.MaterialID, // materialID
+			sourceTimeRange,          // sourceTimerange
+			targetTimeRange,          // targetTimerange
+			1.0,                      // speed
+			1.0,                      // volume
+			nil,                      // clipSettings
+		)
+
+		videoTrack.AddSegment(videoSegment)
+	}
+
+	// 添加音频素材到草稿
+	audioFileName := filepath.Base(audioFile)
+	audioMaterial, err := material.NewAudioMaterial(
+		&audioFile,                             // 文件路径 (NewAudioMaterial会自动转换为绝对路径)
+		nil,                                    // 替换路径 (不需要，使用原始路径)
+		&audioFileName,                         // 素材名称
+		nil,                                    // 远程URL
+		float64Ptr(float64(audioDuration)/1e6), // 时长（秒）
+	)
+	if err != nil {
+		return fmt.Errorf("创建音频素材失败: %v", err)
+	} else {
+		sf.AddMaterial(audioMaterial)
+
+		// 添加到音频轨道
+		audioTrackName := stringPtr("音频轨道")
+		sf.AddTrack(track.TrackTypeAudio, audioTrackName)
+
+		// 获取刚刚添加的音频轨道
+		audioTrack, err := sf.GetTrack("audio", audioTrackName)
+		if err != nil {
+			return fmt.Errorf("获取音频轨道失败: %v", err)
+		}
+
+		audioSegment := segment.NewAudioSegment(
+			audioMaterial.MaterialID,             // materialID
+			types.NewTimerange(0, audioDuration), // targetTimerange - 整个音频时长
+			nil,                                  // sourceTimerange
+			1.0,                                  // speed
+			1.0,                                  // volume
+		)
+
+		err = audioTrack.AddSegment(audioSegment)
+		if err != nil {
+			return fmt.Errorf("向音频轨道添加片段失败: %v", err)
+		}
+	}
+
+	// 如果有SRT字幕文件，则添加字幕
+	if srtFile != "" {
+		srtEntries, err := srt.ParseSrtFile(srtFile)
+		if err != nil {
+			fmt.Printf("解析字幕文件失败: %v\n", err)
+		} else {
+			// 添加文本轨道和字幕
+			textTrackName := stringPtr("字幕轨道")
+			sf.AddTrack(track.TrackTypeText, textTrackName)
+
+			// 获取文本轨道并添加字幕片段
+			textTrack, err := sf.GetTrack("text", textTrackName)
+			if err != nil {
+				fmt.Printf("获取文本轨道失败: %v\n", err)
+			} else {
+				for _, entry := range srtEntries {
+					// 创建文本样式
+					textStyle := segment.NewTextStyle()
+					textStyle.Size = 24.0
+					textStyle.Color = [3]float64{1.0, 1.0, 1.0} // 白色
+					textStyle.Bold = true
+					textStyle.Align = 1 // 居中对齐
+
+					// 创建ClipSettings来设置字幕位置，使其显示在画面下方
+					clipSettings := segment.NewClipSettingsWithParams(
+						1.0,   // alpha
+						0.0,   // rotation
+						1.0,   // scaleX
+						1.0,   // scaleY
+						0.0,   // transformX
+						-0.8,  // transformY - 负值使字幕靠下显示
+						false, // flipH
+						false, // flipV
+					)
+
+					// 创建文本素材并添加到素材库
+					textMaterial := map[string]interface{}{
+						"add_type":                     2,
+						"alignment":                    1,
+						"background_alpha":             1.0,
+						"background_color":             "",
+						"background_height":            1.0,
+						"background_horizontal_offset": 0.0,
+						"background_round_radius":      0.0,
+						"background_vertical_offset":   0.0,
+						"background_width":             1.0,
+						"bold_width":                   0.0,
+						"border_color":                 "",
+						"border_width":                 0.08,
+						"check_flag":                   7,
+						"content":                      fmt.Sprintf("<font id=\"%s\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"><color=(1.000000, 1.000000, 1.000000, 1.000000)><size=5.000000>%s</size></color></font>", uuid.New().String(), strings.ReplaceAll(entry.Text, "\n", "\u0001")),
+						"font_category_id":             "",
+						"font_category_name":           "",
+						"font_id":                      "",
+						"font_name":                    "",
+						"font_path":                    "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+						"font_resource_id":             "",
+						"font_size":                    5.0,
+						"font_title":                   "none",
+						"font_url":                     "",
+						"fonts":                        []interface{}{},
+						"global_alpha":                 1.0,
+						"has_shadow":                   false,
+						"id":                           uuid.New().String(), // 生成唯一ID
+						"initial_scale":                1.0,
+						"is_rich_text":                 false,
+						"italic_degree":                0,
+						"ktv_color":                    "",
+						"layer_weight":                 1,
+						"letter_spacing":               0.0,
+						"line_spacing":                 0.02,
+						"recognize_type":               0,
+						"shadow_alpha":                 0.8,
+						"shadow_angle":                 -45.0,
+						"shadow_color":                 "",
+						"shadow_distance":              8.0,
+						"shadow_point":                 map[string]interface{}{"x": 1.0182337649086284, "y": -1.0182337649086284},
+						"shadow_smoothing":             1.0,
+						"shape_clip_x":                 false,
+						"shape_clip_y":                 false,
+						"style_name":                   "",
+						"sub_type":                     0,
+						"text_alpha":                   1.0,
+						"text_color":                   "#FFFFFF",
+						"text_size":                    30,
+						"text_to_audio_ids":            []interface{}{},
+						"type":                         "subtitle",
+						"typesetting":                  0,
+						"underline":                    false,
+						"underline_offset":             0.22,
+						"underline_width":              0.05,
+						"use_effect_default_color":     true,
+					}
+					// 将文本素材添加到素材库
+					sf.Materials.Texts = append(sf.Materials.Texts, textMaterial)
+
+					// 创建文本片段，使用刚添加的文本素材ID
+					textSegment := segment.NewTextSegment(
+						entry.Text, // text
+						types.NewTimerange(entry.Start, entry.End-entry.Start), // targetTimerange
+						"",           // font (空字符串使用默认字体)
+						textStyle,    // style
+						clipSettings, // clipSettings - 添加位置设置
+					)
+					// 设置正确的MaterialID（使用刚添加的文本素材ID）
+					textSegment.MaterialID = textMaterial["id"].(string)
+
+					textTrack.AddSegment(textSegment)
+				}
+			}
+		}
+	}
+
+	// 生成项目ID
+	projectID := uuid.New().String()
+
+	// 获取当前工作目录作为基础路径
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("获取当前工作目录失败: %v", err)
+	}
+
+	// 将草稿内容写入项目输出目录，使用绝对路径
+	outputPath := filepath.Join(wd, "output", projectID+".json")
+	err = os.MkdirAll(filepath.Join(wd, "output"), 0755)
+	if err != nil {
+		return fmt.Errorf("创建输出目录失败: %v", err)
+	}
+
+	err = sf.Dump(outputPath)
+	if err != nil {
+		return fmt.Errorf("保存草稿文件失败: %v", err)
+	}
+
+	fmt.Printf("剪映草稿文件已生成: %s\n", outputPath)
+
+	// 返回生成的项目文件路径
+	return nil
+}
+
+// GenerateProjectWithOutputDir 生成剪映项目，支持指定输出目录
+func (cg *CapcutGenerator) GenerateProjectWithOutputDir(inputDir, outputDir string) error {
+	// 获取输入目录的绝对路径
+	inputDir, err := filepath.Abs(inputDir)
+	if err != nil {
+		return fmt.Errorf("获取输入目录绝对路径失败: %v", err)
+	}
+
+	// 检查必要的文件
+	audioFile := ""
+	imageFiles := []string{}
+	srtFile := ""
+
+	files, err := ioutil.ReadDir(inputDir)
+	if err != nil {
+		return fmt.Errorf("读取输入目录失败: %v", err)
+	}
+
+	for _, file := range files {
+		filename := strings.ToLower(file.Name())
+		if strings.HasSuffix(filename, ".wav") || strings.HasSuffix(filename, ".mp3") {
+			audioFile = filepath.Join(inputDir, file.Name())
+		} else if strings.HasSuffix(filename, ".png") || strings.HasSuffix(filename, ".jpg") || strings.HasSuffix(filename, ".jpeg") {
+			imageFiles = append(imageFiles, filepath.Join(inputDir, file.Name()))
+		} else if strings.HasSuffix(filename, ".srt") {
+			srtFile = filepath.Join(inputDir, file.Name())
+		}
+	}
+
+	if audioFile == "" {
+		return fmt.Errorf("未找到音频文件")
+	}
+
+	if len(imageFiles) == 0 {
+		return fmt.Errorf("未找到图片文件")
+	}
+
+	// 获取音频文件时长（这里简化处理，使用一个估算值）
+	audioDuration := int64(30000000) // 30秒，实际应用中应该读取音频文件获取准确时长
+
+	// 创建草稿文件 (1080x1920 竖屏视频)
+	sf, err := script.NewScriptFile(1080, 1920, 30) // 宽度、高度、帧率
+	if err != nil {
+		return fmt.Errorf("创建草稿文件失败: %v", err)
+	}
+
+	// 设置草稿的基本信息
+	sf.Duration = audioDuration
+
+	// 计算每个图片的显示时间（平均分配音频总时长）
+	numScenes := len(imageFiles)
+	sceneDuration := audioDuration / int64(numScenes)
+
+	// 添加图片素材到草稿
+	for i, imageFile := range imageFiles {
+		relPath := imageFile // 使用原始路径，NewVideoMaterial会自动转换为绝对路径
+		imageName := filepath.Base(imageFile)
+		videoMaterial, err := material.NewVideoMaterial(
+			material.MaterialTypePhoto, // 静态图片
+			&relPath,                   // 文件路径 (NewVideoMaterial会自动转换为绝对路径)
+			nil,                        // 替换路径 (不需要，使用原始路径)
+			&imageName,                 // 素材名称
+			nil,                        // 远程URL
+			nil,                        // 裁剪设置
+			nil,                        // 时长
+			nil,                        // 宽度
+			nil,                        // 高度
+		)
+		if err != nil {
+			fmt.Printf("创建视频素材失败: %v\n", err)
+			continue
+		}
+		sf.AddMaterial(videoMaterial)
+
+		// 添加到视频轨道
+		videoTrack, err := sf.GetTrack("video", nil)
+		if err != nil {
+			videoTrackName := stringPtr(fmt.Sprintf("视频轨道_%d", i))
+			sf.AddTrack(track.TrackTypeVideo, videoTrackName)
+			videoTrack, _ = sf.GetTrack("video", videoTrackName)
+		}
+
+		startTime := int64(i) * sceneDuration
+		endTime := startTime + sceneDuration
+
+		// 确保最后一张图片精确结束于音频末尾
+		if i == numScenes-1 {
+			endTime = audioDuration
+		}
+
+		sourceTimeRange := types.NewTimerange(startTime, endTime-startTime)
+		targetTimeRange := types.NewTimerange(startTime, endTime-startTime)
+
+		videoSegment := segment.NewVideoSegment(
+			videoMaterial.MaterialID, // materialID
+			sourceTimeRange,          // sourceTimerange
+			targetTimeRange,          // targetTimerange
+			1.0,                      // speed
+			1.0,                      // volume
+			nil,                      // clipSettings
+		)
+
+		videoTrack.AddSegment(videoSegment)
+	}
+
+	// 添加音频素材到草稿
+	audioFileName := filepath.Base(audioFile)
+	audioMaterial, err := material.NewAudioMaterial(
+		&audioFile,                             // 文件路径 (NewAudioMaterial会自动转换为绝对路径)
+		nil,                                    // 替换路径 (不需要，使用原始路径)
+		&audioFileName,                         // 素材名称
+		nil,                                    // 远程URL
+		float64Ptr(float64(audioDuration)/1e6), // 时长（秒）
+	)
+	if err != nil {
+		return fmt.Errorf("创建音频素材失败: %v", err)
+	} else {
+		sf.AddMaterial(audioMaterial)
+
+		// 添加到音频轨道
+		audioTrackName := stringPtr("音频轨道")
+		sf.AddTrack(track.TrackTypeAudio, audioTrackName)
+
+		// 获取刚刚添加的音频轨道
+		audioTrack, err := sf.GetTrack("audio", audioTrackName)
+		if err != nil {
+			return fmt.Errorf("获取音频轨道失败: %v", err)
+		}
+
+		audioSegment := segment.NewAudioSegment(
+			audioMaterial.MaterialID,             // materialID
+			types.NewTimerange(0, audioDuration), // targetTimerange - 整个音频时长
+			nil,                                  // sourceTimerange
+			1.0,                                  // speed
+			1.0,                                  // volume
+		)
+
+		err = audioTrack.AddSegment(audioSegment)
+		if err != nil {
+			return fmt.Errorf("向音频轨道添加片段失败: %v", err)
+		}
+	}
+
+	// 如果有SRT字幕文件，则添加字幕
+	if srtFile != "" {
+		srtEntries, err := srt.ParseSrtFile(srtFile)
+		if err != nil {
+			fmt.Printf("解析字幕文件失败: %v\n", err)
+		} else {
+			// 添加文本轨道和字幕
+			textTrackName := stringPtr("字幕轨道")
+			sf.AddTrack(track.TrackTypeText, textTrackName)
+
+			// 获取文本轨道并添加字幕片段
+			textTrack, err := sf.GetTrack("text", textTrackName)
+			if err != nil {
+				fmt.Printf("获取文本轨道失败: %v\n", err)
+			} else {
+				for _, entry := range srtEntries {
+					// 创建文本样式
+					textStyle := segment.NewTextStyle()
+					textStyle.Size = 24.0
+					textStyle.Color = [3]float64{1.0, 1.0, 1.0} // 白色
+					textStyle.Bold = true
+					textStyle.Align = 1 // 居中对齐
+
+					// 创建ClipSettings来设置字幕位置，使其显示在画面下方
+					clipSettings := segment.NewClipSettingsWithParams(
+						1.0,   // alpha
+						0.0,   // rotation
+						1.0,   // scaleX
+						1.0,   // scaleY
+						0.0,   // transformX
+						-0.8,  // transformY - 负值使字幕靠下显示
+						false, // flipH
+						false, // flipV
+					)
+
+					// 创建文本素材并添加到素材库
+					textMaterial := map[string]interface{}{
+						"add_type":                     2,
+						"alignment":                    1,
+						"background_alpha":             1.0,
+						"background_color":             "",
+						"background_height":            1.0,
+						"background_horizontal_offset": 0.0,
+						"background_round_radius":      0.0,
+						"background_vertical_offset":   0.0,
+						"background_width":             1.0,
+						"bold_width":                   0.0,
+						"border_color":                 "",
+						"border_width":                 0.08,
+						"check_flag":                   7,
+						"content":                      fmt.Sprintf("<font id=\"%s\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"><color=(1.000000, 1.000000, 1.000000, 1.000000)><size=5.000000>%s</size></color></font>", uuid.New().String(), strings.ReplaceAll(entry.Text, "\n", "\u0001")),
+						"font_category_id":             "",
+						"font_category_name":           "",
+						"font_id":                      "",
+						"font_name":                    "",
+						"font_path":                    "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+						"font_resource_id":             "",
+						"font_size":                    5.0,
+						"font_title":                   "none",
+						"font_url":                     "",
+						"fonts":                        []interface{}{},
+						"global_alpha":                 1.0,
+						"has_shadow":                   false,
+						"id":                           uuid.New().String(), // 生成唯一ID
+						"initial_scale":                1.0,
+						"is_rich_text":                 false,
+						"italic_degree":                0,
+						"ktv_color":                    "",
+						"layer_weight":                 1,
+						"letter_spacing":               0.0,
+						"line_spacing":                 0.02,
+						"recognize_type":               0,
+						"shadow_alpha":                 0.8,
+						"shadow_angle":                 -45.0,
+						"shadow_color":                 "",
+						"shadow_distance":              8.0,
+						"shadow_point":                 map[string]interface{}{"x": 1.0182337649086284, "y": -1.0182337649086284},
+						"shadow_smoothing":             1.0,
+						"shape_clip_x":                 false,
+						"shape_clip_y":                 false,
+						"style_name":                   "",
+						"sub_type":                     0,
+						"text_alpha":                   1.0,
+						"text_color":                   "#FFFFFF",
+						"text_size":                    30,
+						"text_to_audio_ids":            []interface{}{},
+						"type":                         "subtitle",
+						"typesetting":                  0,
+						"underline":                    false,
+						"underline_offset":             0.22,
+						"underline_width":              0.05,
+						"use_effect_default_color":     true,
+					}
+					// 将文本素材添加到素材库
+					sf.Materials.Texts = append(sf.Materials.Texts, textMaterial)
+
+					// 创建文本片段，使用刚添加的文本素材ID
+					textSegment := segment.NewTextSegment(
+						entry.Text, // text
+						types.NewTimerange(entry.Start, entry.End-entry.Start), // targetTimerange
+						"",           // font (空字符串使用默认字体)
+						textStyle,    // style
+						clipSettings, // clipSettings - 添加位置设置
+					)
+					// 设置正确的MaterialID（使用刚添加的文本素材ID）
+					textSegment.MaterialID = textMaterial["id"].(string)
+
+					textTrack.AddSegment(textSegment)
+				}
+			}
+		}
+	}
+
+	// 生成项目ID
+	projectID := uuid.New().String()
+
+	// 使用绝对路径创建输出文件
+	absOutputDir, err := filepath.Abs(outputDir)
+	if err != nil {
+		return fmt.Errorf("获取输出目录绝对路径失败: %v", err)
+	}
+
+	outputPath := filepath.Join(absOutputDir, projectID+".json")
+	err = os.MkdirAll(absOutputDir, 0755)
+	if err != nil {
+		return fmt.Errorf("创建输出目录失败: %v", err)
+	}
+
+	err = sf.Dump(outputPath)
+	if err != nil {
+		return fmt.Errorf("保存草稿文件失败: %v", err)
+	}
+
+	fmt.Printf("剪映草稿文件已生成: %s\n", outputPath)
+
+	// 返回生成的项目文件路径
+	return nil
+}
+
+// ImportToCapcutApp 将生成的项目导入到剪映应用程序
+func (cg *CapcutGenerator) ImportToCapcutApp(projectFilePath, projectName string) error {
+	// 获取用户家目录
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf("获取用户家目录失败: %v", err)
+	}
+
+	// 剪映项目目录路径
+	capcutProjectsPath := filepath.Join(homeDir, "Movies", "JianyingPro", "User Data", "Projects", "com.lveditor.draft")
+
+	// 检查目录是否存在，如果不存在则尝试创建
+	if _, err := os.Stat(capcutProjectsPath); os.IsNotExist(err) {
+		if err := os.MkdirAll(capcutProjectsPath, 0755); err != nil {
+			return fmt.Errorf("无法创建剪映项目目录: %v", err)
+		}
+	} else if err != nil {
+		return fmt.Errorf("检查剪映项目目录时出错: %v", err)
+	}
+
+	// 为项目创建新目录
+	projectDirName := fmt.Sprintf("%s_%s", projectName, time.Now().Format("20060102_150405"))
+	projectDirPath := filepath.Join(capcutProjectsPath, projectDirName)
+
+	// 创建项目目录
+	if err := os.MkdirAll(projectDirPath, 0755); err != nil {
+		return fmt.Errorf("创建项目目录失败: %v", err)
+	}
+
+	// 读取生成的项目文件
+	projectData, err := ioutil.ReadFile(projectFilePath)
+	if err != nil {
+		return fmt.Errorf("读取项目文件失败: %v", err)
+	}
+
+	// 写入到剪映项目目录
+	outputFilePath := filepath.Join(projectDirPath, "draft_info.json")
+	if err := ioutil.WriteFile(outputFilePath, projectData, 0644); err != nil {
+		return fmt.Errorf("写入剪映项目文件失败: %v", err)
+	}
+
+	// 创建必要的项目结构文件
+	metaData := map[string]interface{}{
+		"draft_id":    uuid.New().String(),
+		"name":        projectName,
+		"create_time": time.Now().Unix(),
+		"update_time": time.Now().Unix(),
+	}
+
+	metaBytes, _ := json.MarshalIndent(metaData, "", "  ")
+	metaPath := filepath.Join(projectDirPath, "meta.json")
+	if err := ioutil.WriteFile(metaPath, metaBytes, 0644); err != nil {
+		return fmt.Errorf("创建元数据文件失败: %v", err)
+	}
+
+	fmt.Printf("项目已成功导入到剪映: %s\n", projectDirPath)
+	return nil
+}
+
+// GenerateAndImportProject 生成剪映项目并直接导入到剪映应用程序
+func (cg *CapcutGenerator) GenerateAndImportProject(inputDir, projectName string) error {
+	// 获取当前工作目录
+	wd, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("获取当前工作目录失败: %v", err)
+	}
+
+	// 创建临时输出目录
+	tempOutputDir := filepath.Join(wd, "output", "temp_capcut_export")
+	if err := os.MkdirAll(tempOutputDir, 0755); err != nil {
+		return fmt.Errorf("创建临时输出目录失败: %v", err)
+	}
+
+	// 使用 GenerateProjectWithOutputDir 生成项目到临时目录
+	if err := cg.GenerateProjectWithOutputDir(inputDir, tempOutputDir); err != nil {
+		return fmt.Errorf("生成剪映项目失败: %v", err)
+	}
+
+	// 查找生成的项目文件
+	files, err := ioutil.ReadDir(tempOutputDir)
+	if err != nil {
+		return fmt.Errorf("读取输出目录失败: %v", err)
+	}
+
+	var projectFile string
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".json") {
+			projectFile = filepath.Join(tempOutputDir, file.Name())
+			break
+		}
+	}
+
+	if projectFile == "" {
+		return fmt.Errorf("未找到生成的项目文件")
+	}
+
+	// 导入到剪映应用程序
+	if err := cg.ImportToCapcutApp(projectFile, projectName); err != nil {
+		return fmt.Errorf("导入项目到剪映失败: %v", err)
+	}
+
+	// 清理临时文件
+	os.RemoveAll(tempOutputDir)
+
+	return nil
+}
+
+// 辅助函数：字符串指针
+func stringPtr(s string) *string {
+	return &s
+}
+
+// 辅助函数：浮点数指针
+func float64Ptr(f float64) *float64 {
+	return &f
+}

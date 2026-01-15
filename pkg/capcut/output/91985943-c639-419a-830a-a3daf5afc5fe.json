@@ -1,0 +1,905 @@
+{
+    "canvas_config": {
+        "height": 1920,
+        "ratio": "original",
+        "width": 1080
+    },
+    "color_space": 0,
+    "config": {
+        "adjust_max_index": 1,
+        "attachment_info": [],
+        "combination_max_index": 1,
+        "export_range": null,
+        "extract_audio_last_index": 1,
+        "lyrics_recognition_id": "",
+        "lyrics_sync": true,
+        "lyrics_taskinfo": [],
+        "maintrack_adsorb": true,
+        "material_save_mode": 0,
+        "original_sound_last_index": 1,
+        "record_audio_last_index": 1,
+        "sticker_max_index": 1,
+        "subtitle_recognition_id": "",
+        "subtitle_sync": true,
+        "subtitle_taskinfo": [],
+        "video_mute": false,
+        "zoom_info_params": null
+    },
+    "cover": null,
+    "create_time": 0,
+    "duration": 30000000,
+    "extra_info": null,
+    "fps": 30,
+    "group_container": null,
+    "id": "998d3614fb1846bfa8fb5ae20f0898df",
+    "keyframes": {
+        "adjusts": [],
+        "audios": [],
+        "filters": [],
+        "handwrites": [],
+        "stickers": [],
+        "texts": [],
+        "videos": []
+    },
+    "last_modified_platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "materials": {
+        "ai_translates": [],
+        "audio_balances": [],
+        "audio_effects": [],
+        "audio_fades": [],
+        "audio_track_indexes": [],
+        "audios": [
+            {
+                "app_id": 0,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 1,
+                "copyright_limit_type": "none",
+                "duration": 30000000,
+                "effect_id": "",
+                "formula_id": "",
+                "id": "75cae248fa8c33678749b83a220decff",
+                "intensifies_path": "",
+                "is_ai_clone_tone": false,
+                "is_text_edit_overdub": false,
+                "is_ugc": false,
+                "local_material_id": "75cae248fa8c33678749b83a220decff",
+                "music_id": "75cae248fa8c33678749b83a220decff",
+                "name": "chapter_07.wav",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/chapter_07.wav",
+                "query": "",
+                "remote_url": null,
+                "request_id": "",
+                "resource_id": "",
+                "search_id": "",
+                "source_from": "",
+                "source_platform": 0,
+                "team_id": "",
+                "text_id": "",
+                "tone_category_id": "",
+                "tone_category_name": "",
+                "tone_effect_id": "",
+                "tone_effect_name": "",
+                "tone_platform": "",
+                "tone_second_category_id": "",
+                "tone_second_category_name": "",
+                "tone_speaker": "",
+                "tone_type": "",
+                "type": "extract_music",
+                "video_id": "",
+                "wave_points": []
+            }
+        ],
+        "beats": [],
+        "canvases": [],
+        "chromas": [],
+        "color_curves": [],
+        "digital_humans": [],
+        "drafts": [],
+        "effects": [],
+        "flowers": [],
+        "green_screens": [],
+        "handwrites": [],
+        "hsl": [],
+        "images": [],
+        "log_color_wheels": [],
+        "loudnesses": [],
+        "manual_deformations": [],
+        "masks": [],
+        "material_animations": [],
+        "material_colors": [],
+        "multi_language_refs": [],
+        "placeholders": [],
+        "plugin_effects": [],
+        "primary_color_wheels": [],
+        "realtime_denoises": [],
+        "shapes": [],
+        "smart_crops": [],
+        "smart_relights": [],
+        "sound_channel_mappings": [],
+        "speeds": [],
+        "stickers": [],
+        "tail_leaders": [],
+        "text_templates": [],
+        "texts": [
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"988435b3-705c-491c-8e1e-ae9828eb78ea\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第7章\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "9256c5ca-a5c2-4e04-af20-44de155d5839",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"624f4ae2-29b3-42df-b02e-2d1ce06fd5b4\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e连着下了几天几夜的雨，整个城市都仿佛在雨水中泡酥了。尽管市图书馆里明亮而整洁，但叶萧依然闻到一股阴郁潮湿的气息。他呆呆地坐在一间资料阅览室里，周围不断地响起奇怪的脚步声，抬起头就看到一些人影晃动在高高的书架后，感觉就像是在博尔赫斯的世界里。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "84890655-d0d8-4e45-b430-6d3696da6bc6",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            }
+        ],
+        "time_marks": [],
+        "transitions": [],
+        "video_effects": [],
+        "video_trackings": [],
+        "videos": [
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                "local_material_id": "",
+                "material_id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                "material_name": "scene_01.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/scene_01.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                "local_material_id": "",
+                "material_id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                "material_name": "scene_02.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/scene_02.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "960399d591ba3e04b4e626065a9d152a",
+                "local_material_id": "",
+                "material_id": "960399d591ba3e04b4e626065a9d152a",
+                "material_name": "scene_03.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/scene_03.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                "local_material_id": "",
+                "material_id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                "material_name": "scene_04.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/scene_04.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "dabe44855b3d3a52a185c14ed0c56fad",
+                "local_material_id": "",
+                "material_id": "dabe44855b3d3a52a185c14ed0c56fad",
+                "material_name": "scene_05.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_07/scene_05.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            }
+        ],
+        "vocal_beautifys": [],
+        "vocal_separations": []
+    },
+    "mutable_config": null,
+    "name": "",
+    "new_version": "57.0.0",
+    "platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "relationships": [],
+    "render_index_track_mode_on": true,
+    "retouch_cover": null,
+    "source": "default",
+    "static_cover_image_path": "",
+    "tracks": [
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "e91816a2-a0e8-4c12-825a-0039c8cec187",
+            "is_default_name": false,
+            "name": "视频轨道_0",
+            "render_index": 0,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "61c9770e-4e18-4037-b36e-5aa4dcfb30c9"
+                    ],
+                    "filters": [],
+                    "id": "2232cc83-2235-4b3b-aa95-ea1ed1bfd74c",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 6000000,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 6000000,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "0240e898-ddca-4ee7-ae62-2e0de0a18bfc"
+                    ],
+                    "filters": [],
+                    "id": "339d943c-d198-4fc6-b7c6-7923c6db98b1",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 6000000,
+                        "start": 6000000
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 6000000,
+                        "start": 6000000
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "69418794-3d5c-4d69-a4c2-d7cc13d4c35e"
+                    ],
+                    "filters": [],
+                    "id": "36a8f596-b41d-4b5c-a10e-11cd07930651",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "960399d591ba3e04b4e626065a9d152a",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 6000000,
+                        "start": 12000000
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 6000000,
+                        "start": 12000000
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "5ef5f68f-a423-4d4f-a64c-be32296f2f31"
+                    ],
+                    "filters": [],
+                    "id": "a5758a86-d7d4-4b3b-a261-49e07f89073c",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 6000000,
+                        "start": 18000000
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 6000000,
+                        "start": 18000000
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "85a48d19-36fb-4c5e-838b-fa52dca7bb08"
+                    ],
+                    "filters": [],
+                    "id": "a5269dba-7c6b-403e-b067-e49337a90810",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "dabe44855b3d3a52a185c14ed0c56fad",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 6000000,
+                        "start": 24000000
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 6000000,
+                        "start": 24000000
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "video"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "d87b7894-7bcc-488e-9e94-f49375935569",
+            "is_default_name": false,
+            "name": "音频轨道",
+            "render_index": 0,
+            "segments": [
+                {
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "9c033c7d-7904-4253-89ee-28bfa064b576"
+                    ],
+                    "id": "c312959e-a4da-407d-835b-1c240ae38166",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "75cae248fa8c33678749b83a220decff",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "audio",
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "audio"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "2683356d-9a49-45d8-8883-e83059534d2f",
+            "is_default_name": false,
+            "name": "字幕轨道",
+            "render_index": 15000,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "d0641afe-9a9e-4371-b7dc-e4b40a39577c"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "de7753b2-25ca-4c59-a549-880745410108",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "9256c5ca-a5c2-4e04-af20-44de155d5839",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 733000,
+                        "start": 0
+                    },
+                    "text": "第7章",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "3fb74e02-8210-4b91-966e-2d39d7d3a505"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "3a27bf40-c19f-4cfe-b0ca-9d592c1f98ec",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "84890655-d0d8-4e45-b430-6d3696da6bc6",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 29329000,
+                        "start": 733000
+                    },
+                    "text": "连着下了几天几夜的雨，整个城市都仿佛在雨水中泡酥了。尽管市图书馆里明亮而整洁，但叶萧依然闻到一股阴郁潮湿的气息。他呆呆地坐在一间资料阅览室里，周围不断地响起奇怪的脚步声，抬起头就看到一些人影晃动在高高的书架后，感觉就像是在博尔赫斯的世界里。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "text"
+        }
+    ],
+    "update_time": 0,
+    "version": "360000"
+}

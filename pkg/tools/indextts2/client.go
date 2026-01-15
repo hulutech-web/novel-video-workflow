@@ -381,7 +381,7 @@ func (c *IndexTTS2Client) GenerateTTSWithAudio(audioPath, text, outputPath strin
 			zap.String("path", audioPath),
 			zap.Int64("size_bytes", size),
 			zap.Float64("size_mb", float64(size)/(1024*1024)))
-		c.sendBroadcast("info", fmt.Sprintf("音频文件大小: %.2f MB", float64(size)/(1024*1024)))
+		c.sendBroadcast("info", fmt.Sprintf("参考音频文件大小: %.2f MB", float64(size)/(1024*1024)))
 	} else {
 		c.Logger.Error("无法获取音频文件信息", zap.String("path", audioPath), zap.Error(err))
 		c.sendBroadcast("error", fmt.Sprintf("无法访问音频文件: %v", err))
@@ -640,7 +640,9 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	scanner := bufio.NewScanner(resultResp.Body)
 	for scanner.Scan() {
 		line := scanner.Text()
-		c.Logger.Info("接收到SSE结果", zap.String("line", line))
+		c.Logger.Info("接收到SSE结果....", zap.String("line", line))
+		//发送广播
+		c.sendBroadcast("接收到SSE结果....", line)
 		if strings.HasPrefix(line, "data: ") {
 			data := strings.TrimPrefix(line, "data: ")
 
@@ -739,11 +741,14 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 					}
 				case "progress":
 					// 处理进度信息
-					if data, exists := sseData["data"]; exists {
-						c.Logger.Info("进度更新", zap.Any("data", data))
-						c.sendBroadcast("info", fmt.Sprintf("进度更新: %v", data))
+					if data, exists := sseData["process_data"]; exists {
+						//data里面的第0个里面的process数据
+						process_rate := data.([]interface{})[0].(map[string]interface{})["process"]
+						c.Logger.Info("进度更新", zap.Any("data", process_rate))
+						c.sendBroadcast("解析进度", fmt.Sprintf("进度更新: %v", process_rate))
 					}
 				case "close_stream":
+					c.sendBroadcast("log", fmt.Sprintf("异常: %s", "流已关闭，但未收到结果"))
 					return nil, fmt.Errorf("流已关闭，但未收到结果")
 				}
 			}
