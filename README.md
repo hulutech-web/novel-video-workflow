@@ -5,7 +5,7 @@
 <p align="center">
 特别说明  
 剪映客户端版本 3.4.1 其他版本可自行尝试 
-下载链接：https://www.alipan.com/s/PDnHQbukWjj
+下载链接：https://www.alipan.com/t/CIutUpJWmLVW81ZOGAfY
 </p>
 
 # 小说视频工作流 (Novel Video Workflow)
