@@ -1,0 +1,569 @@
+{
+    "canvas_config": {
+        "height": 1920,
+        "ratio": "original",
+        "width": 1080
+    },
+    "color_space": 0,
+    "config": {
+        "adjust_max_index": 1,
+        "attachment_info": [],
+        "combination_max_index": 1,
+        "export_range": null,
+        "extract_audio_last_index": 1,
+        "lyrics_recognition_id": "",
+        "lyrics_sync": true,
+        "lyrics_taskinfo": [],
+        "maintrack_adsorb": true,
+        "material_save_mode": 0,
+        "original_sound_last_index": 1,
+        "record_audio_last_index": 1,
+        "sticker_max_index": 1,
+        "subtitle_recognition_id": "",
+        "subtitle_sync": true,
+        "subtitle_taskinfo": [],
+        "video_mute": false,
+        "zoom_info_params": null
+    },
+    "cover": null,
+    "create_time": 0,
+    "duration": 30000000,
+    "extra_info": null,
+    "fps": 30,
+    "group_container": null,
+    "id": "2b8614bebbd14459ac25d9ef4d3632c8",
+    "keyframes": {
+        "adjusts": [],
+        "audios": [],
+        "filters": [],
+        "handwrites": [],
+        "stickers": [],
+        "texts": [],
+        "videos": []
+    },
+    "last_modified_platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "materials": {
+        "ai_translates": [],
+        "audio_balances": [],
+        "audio_effects": [],
+        "audio_fades": [],
+        "audio_track_indexes": [],
+        "audios": [
+            {
+                "app_id": 0,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 1,
+                "copyright_limit_type": "none",
+                "duration": 30000000,
+                "effect_id": "",
+                "formula_id": "",
+                "id": "4413811479fb351a84462e5a0940fa81",
+                "intensifies_path": "",
+                "is_ai_clone_tone": false,
+                "is_text_edit_overdub": false,
+                "is_ugc": false,
+                "local_material_id": "4413811479fb351a84462e5a0940fa81",
+                "music_id": "4413811479fb351a84462e5a0940fa81",
+                "name": "test.mp3",
+                "path": "/var/folders/3_/x2n_7gtj6998zmvxlmdrgsp00000gn/T/TestCapcutGeneratorBasic3580851691/001/input/test.mp3",
+                "query": "",
+                "remote_url": null,
+                "request_id": "",
+                "resource_id": "",
+                "search_id": "",
+                "source_from": "",
+                "source_platform": 0,
+                "team_id": "",
+                "text_id": "",
+                "tone_category_id": "",
+                "tone_category_name": "",
+                "tone_effect_id": "",
+                "tone_effect_name": "",
+                "tone_platform": "",
+                "tone_second_category_id": "",
+                "tone_second_category_name": "",
+                "tone_speaker": "",
+                "tone_type": "",
+                "type": "extract_music",
+                "video_id": "",
+                "wave_points": []
+            }
+        ],
+        "beats": [],
+        "canvases": [],
+        "chromas": [],
+        "color_curves": [],
+        "digital_humans": [],
+        "drafts": [],
+        "effects": [],
+        "flowers": [],
+        "green_screens": [],
+        "handwrites": [],
+        "hsl": [],
+        "images": [],
+        "log_color_wheels": [],
+        "loudnesses": [],
+        "manual_deformations": [],
+        "masks": [],
+        "material_animations": [],
+        "material_colors": [],
+        "multi_language_refs": [],
+        "placeholders": [],
+        "plugin_effects": [],
+        "primary_color_wheels": [],
+        "realtime_denoises": [],
+        "shapes": [],
+        "smart_crops": [],
+        "smart_relights": [],
+        "sound_channel_mappings": [],
+        "speeds": [],
+        "stickers": [],
+        "tail_leaders": [],
+        "text_templates": [],
+        "texts": [
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"4fbf7dbd-3ba0-4ef2-af88-7bbc79d6bb6c\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e这是第一行字幕\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "662b68ad-cd7e-4eba-b82a-ea60f54774b0",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"57369134-e725-4858-ac9c-30fce74839cb\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e这是第二行字幕\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "9241070a-f955-4cd6-b3e0-021d6d72cc42",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            }
+        ],
+        "time_marks": [],
+        "transitions": [],
+        "video_effects": [],
+        "video_trackings": [],
+        "videos": [
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "491d8c89f41839eb9f38e0cf94eb4e73",
+                "local_material_id": "",
+                "material_id": "491d8c89f41839eb9f38e0cf94eb4e73",
+                "material_name": "test.jpg",
+                "media_path": "",
+                "path": "/var/folders/3_/x2n_7gtj6998zmvxlmdrgsp00000gn/T/TestCapcutGeneratorBasic3580851691/001/input/test.jpg",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            }
+        ],
+        "vocal_beautifys": [],
+        "vocal_separations": []
+    },
+    "mutable_config": null,
+    "name": "",
+    "new_version": "57.0.0",
+    "platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "relationships": [],
+    "render_index_track_mode_on": true,
+    "retouch_cover": null,
+    "source": "default",
+    "static_cover_image_path": "",
+    "tracks": [
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "b383d97b-bc3b-4333-974d-2f1a9c8b06d1",
+            "is_default_name": false,
+            "name": "视频轨道_0",
+            "render_index": 0,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "90de5ff4-596c-441b-8353-6f5332b315cf"
+                    ],
+                    "filters": [],
+                    "id": "82bd0eaa-f276-4caa-9108-9a31d3c26f20",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "491d8c89f41839eb9f38e0cf94eb4e73",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "video"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "7279cfbb-7329-4df8-bbad-75be9af95b95",
+            "is_default_name": false,
+            "name": "音频轨道",
+            "render_index": 0,
+            "segments": [
+                {
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "98b9c3d3-ac36-496b-98ab-227f3f87e4fb"
+                    ],
+                    "id": "6951c385-7067-4bc2-884e-d3bd61df1043",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "4413811479fb351a84462e5a0940fa81",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 30000000,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "audio",
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "audio"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "b3687afe-dff5-4db2-bab0-cfed949dccda",
+            "is_default_name": false,
+            "name": "字幕轨道",
+            "render_index": 15000,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "a77e5585-631d-4eb3-b517-80b603481a2d"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "1f45109f-6ebf-4240-af47-e5763c09251e",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "662b68ad-cd7e-4eba-b82a-ea60f54774b0",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 2000000,
+                        "start": 1000000
+                    },
+                    "text": "这是第一行字幕",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "75214dae-1baa-49b3-aa66-393d23e6b345"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "edf7327e-9a5c-482a-bc1f-daf43faecf24",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "9241070a-f955-4cd6-b3e0-021d6d72cc42",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 2000000,
+                        "start": 4000000
+                    },
+                    "text": "这是第二行字幕",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "text"
+        }
+    ],
+    "update_time": 0,
+    "version": "360000"
+}

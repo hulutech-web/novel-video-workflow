@@ -590,6 +590,7 @@
                             <td class="px-6 py-6 whitespace-nowrap text-xl text-gray-300">${modTime}</td>
                             <td class="px-6 py-6 whitespace-nowrap text-xl font-medium">
                                 ${previewButton}
+                                ${file.isDir && file.name.match(/^chapter_\d+$/) && (currentDirectory.includes('/output/') || currentDirectory.includes('output')) ? '<button onclick="sendToCapcut(\'' + file.name + '\')" class="text-green-400 hover:text-green-200 mr-5 text-lg transition-colors duration-150"><i class="fas fa-share mr-2"></i>一键到剪映</button>' : ''}
                                 <button onclick="deleteFile('${file.name}', ${file.isDir})" class="text-red-400 hover:text-red-200 transition-colors duration-150"><i class="fas fa-trash mr-2"></i>删除</button>
                             </td>
                         `;
@@ -864,6 +865,33 @@
                     console.error('Error deleting file:', error);
                     alert('删除失败: ' + error.message);
                 });
+            }
+        }
+        
+        // 发送到剪映功能
+        function sendToCapcut(folderName) {
+            if (!folderName.match(/^chapter_\d+$/)) {
+                alert('请选择正确的章节目录（格式为chapter_XX）');
+                return;
+            }
+            
+            // 构建完整的路径
+            const fullPath = './' + currentDirectory + '/' + folderName;
+            
+            if (confirm('确定要将 ' + folderName + ' 导入到剪映吗？')) {
+                fetch('/api/capcut-project?chapter_path=' + encodeURIComponent(fullPath))
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('已开始生成剪映项目，请查看控制台进度');
+                        } else {
+                            alert('操作失败: ' + (data.error || '未知错误'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('操作失败: ' + error.message);
+                    });
             }
         }
         

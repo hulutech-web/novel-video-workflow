@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"novel-video-workflow/pkg/broadcast"
+	"novel-video-workflow/pkg/capcut"
 	"novel-video-workflow/pkg/tools/aegisub"
 	"novel-video-workflow/pkg/tools/file"
 	"novel-video-workflow/pkg/tools/indextts2"
@@ -1050,6 +1051,8 @@ func webServerMain() {
 	r.POST("/api/execute-all", apiExecuteAllHandler)
 	r.POST("/api/process-folder", apiProcessFolderHandler)
 	r.POST("/api/one-click-film", oneClickFilmHandler)
+	// 添加CapCut项目生成API端点
+	r.GET("/api/capcut-project", capcutProjectHandler)
 	// 添加文件管理API端点
 	r.GET("/api/files/list", fileListHandler)
 	r.GET("/api/files/content", fileContentHandler)
@@ -1439,13 +1442,35 @@ func oneClickFilmHandler(c *gin.Context) {
 						err = wp.generateImagesWithOllamaPrompts(val, imagesDir, key, estimatedAudioDuration)
 						if err != nil {
 							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ⚠️  图像生成失败: %v", err), broadcast.GetTimeStr())
-
 						} else {
 							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ✅ 图像生成完成，保存在: %s", imagesDir), broadcast.GetTimeStr())
+						}
 
+						// 一键出片流程至此完成，所有资源（音频、字幕、图像）已保存到output目录
+						// 剪映项目生成留给用户手动操作
+
+						// 步骤5: 生成剪映项目 (CapCut)
+						broadcast.GlobalBroadcastService.SendLog("capcut", "[一键出片] 🎬 步骤5 - 生成剪映项目...", broadcast.GetTimeStr())
+
+						// 遵循用户的要求，将input文件夹改为当前项目目录的input
+						chapterDir := filepath.Join(projectRoot, "input", item.Name(), fmt.Sprintf("chapter_%02d", key))
+
+						// 检查章节目录是否存在
+						if _, err := os.Stat(chapterDir); err == nil {
+							// 使用CapCut生成器创建项目
+							capcutGenerator := capcut.NewCapcutGenerator(nil) // 传递logger或nil
+							err = capcutGenerator.GenerateProject(chapterDir)
+							if err != nil {
+								//broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ⚠️  剪映项目生成失败: %v", err), broadcast.GetTimeStr())
+							} else {
+								broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ✅ 剪映项目生成完成，章节: %d", key), broadcast.GetTimeStr())
+							}
+						} else {
+							broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ⚠️  章节目录不存在: %s", chapterDir), broadcast.GetTimeStr())
 						}
 					}
-					broadcast.GlobalBroadcastService.SendLog("image", "[一键出片] ✅ 一键出片完整工作流执行完成！", broadcast.GetTimeStr())
+
+					broadcast.GlobalBroadcastService.SendLog("workflow", "[一键出片] ✅ 一键出片完整工作流执行完成！", broadcast.GetTimeStr())
 
 					return // 处理完一个小说就返回
 				}
@@ -1453,5 +1478,96 @@ func oneClickFilmHandler(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "一键出片工作流已执行完成"})
+	broadcast.GlobalBroadcastService.SendLog("workflow", "[一键出片] ✅ 一键出片完整工作流执行完成！", broadcast.GetTimeStr())
+
+	return // 处理完一个小说就返回
+}
+
+// capcutProjectHandler 生成剪映项目
+func capcutProjectHandler(c *gin.Context) {
+	chapterPath := c.Query("chapter_path")
+
+	if chapterPath == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing chapter_path parameter", "status": "error"})
+		return
+	}
+
+	// 获取项目根目录
+	wd, err := os.Getwd()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法获取当前工作目录", "status": "error"})
+		return
+	}
+
+	projectRoot := wd
+	if strings.HasSuffix(wd, "/cmd/web_server") {
+		projectRoot = filepath.Dir(filepath.Dir(wd)) // 回退两级到项目根目录
+	}
+
+	// 构建实际路径
+	var actualPath string
+	if strings.HasPrefix(chapterPath, "./") {
+		actualPath = filepath.Join(projectRoot, chapterPath[2:]) // 移除开头的"./"
+	} else {
+		actualPath = filepath.Join(projectRoot, chapterPath)
+	}
+
+	// 确保路径安全，防止路径遍历攻击
+	cleanPath := filepath.Clean(actualPath)
+
+	// 构建允许的路径前缀
+	allowedInputPrefix := filepath.Join(projectRoot, "input")
+	allowedOutputPrefix := filepath.Join(projectRoot, "output")
+
+	// 检查路径是否在允许的范围内
+	isValidPath := strings.HasPrefix(cleanPath, allowedInputPrefix+"/") ||
+		strings.HasPrefix(cleanPath, allowedOutputPrefix+"/") ||
+		cleanPath == allowedInputPrefix ||
+		cleanPath == allowedOutputPrefix
+
+	if !isValidPath {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Access denied", "status": "error"})
+		return
+	}
+
+	// 检查目录是否存在
+	if _, err := os.Stat(cleanPath); os.IsNotExist(err) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Chapter directory does not exist", "status": "error"})
+		return
+	}
+
+	// 提取项目名称（从路径中提取小说名和章节号）
+	// 例如: /path/to/output/小说名/chapter_01 -> 小说名_第01章
+	relativePath, err := filepath.Rel(projectRoot, cleanPath)
+	if err != nil {
+		broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[CapCut] 解析相对路径失败: %v", err), broadcast.GetTimeStr())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法解析路径", "status": "error"})
+		return
+	}
+
+	// 从路径中提取小说名和章节号
+	pathParts := strings.Split(relativePath, string(filepath.Separator))
+	var projectName string
+	if len(pathParts) >= 2 {
+		novelName := pathParts[len(pathParts)-2]   // 倒数第二部分是小说名
+		chapterName := pathParts[len(pathParts)-1] // 最后一部分是章节名
+		projectName = fmt.Sprintf("%s_%s", novelName, chapterName)
+	} else {
+		projectName = filepath.Base(cleanPath)
+	}
+
+	// 启动 goroutine 生成 CapCut 项目
+	go func() {
+		broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[CapCut] 开始生成剪映项目，路径: %s, 项目名: %s", cleanPath, projectName), broadcast.GetTimeStr())
+
+		capcutGenerator := capcut.NewCapcutGenerator(nil) // 传递logger或nil
+		err := capcutGenerator.GenerateAndImportProject(cleanPath, projectName)
+		if err != nil {
+			broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[CapCut] 生成失败: %v", err), broadcast.GetTimeStr())
+		} else {
+			broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[CapCut] 项目生成并导入完成: %s", projectName), broadcast.GetTimeStr())
+		}
+	}()
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "CapCut project generation started"})
 }
