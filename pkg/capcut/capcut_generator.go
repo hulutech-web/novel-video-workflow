@@ -8,7 +8,9 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"novel-video-workflow/pkg/capcut/internal/material"
@@ -40,12 +42,46 @@ func cleanPath(path string) string {
 	
 	// 遍历每个字符，过滤掉控制字符，但保留中文等Unicode字符
 	for _, r := range path {
-		// 只过滤掉真正的控制字符（0-31），保留可打印ASCII、Unicode字符（包括中文）和一些必要的控制字符（如换行符、回车符）
+		// 只过滤掉真正的控制字符（0-31），保留可打印ASCII、Unicode字符（如中文）
 		if r >= 32 || r == 10 || r == 13 || r == 9 { // 32以上包括可打印ASCII和Unicode字符（如中文）
 			cleaned.WriteRune(r)
 		}
 	}
 	return cleaned.String()
+}
+
+// getAudioDuration 获取音频文件的实际时长（微秒）
+func getAudioDuration(audioFilePath string) (int64, error) {
+	// 检查文件是否存在
+	if _, err := os.Stat(audioFilePath); os.IsNotExist(err) {
+		return 0, fmt.Errorf("音频文件不存在: %s", audioFilePath)
+	}
+
+	// 使用 ffprobe 获取音频时长
+	cmd := exec.Command("ffprobe", "-v", "quiet", "-show_entries", "format=duration", "-of", "csv=p=0", audioFilePath)
+	output, err := cmd.Output()
+	if err != nil {
+		// 尝试检查ffprobe是否可用
+		if _, err := exec.LookPath("ffprobe"); err != nil {
+			return 0, fmt.Errorf("系统中未找到ffprobe命令，请确保已安装FFmpeg: %v", err)
+		}
+		return 0, fmt.Errorf("ffprobe命令执行失败: %v", err)
+	}
+
+	// 解析输出的时长（秒）
+	durationStr := strings.TrimSpace(string(output))
+	durationSec, err := strconv.ParseFloat(durationStr, 64)
+	if err != nil {
+		return 0, fmt.Errorf("无法解析音频时长: %v", err)
+	}
+
+	// 检查解析到的时长是否有效
+	if durationSec <= 0 {
+		return 0, fmt.Errorf("解析到无效的音频时长: %f", durationSec)
+	}
+
+	// 转换为微秒
+	return int64(durationSec * 1000000), nil
 }
 
 // findJianyingDraftFolder 查找剪映草稿文件夹
@@ -106,10 +142,35 @@ func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
 		return fmt.Errorf("未找到图片文件")
 	}
 
-	// 获取音频文件时长（这里简化处理，使用一个估算值）
-	audioDuration := int64(30000000) // 30秒，实际应用中应该读取音频文件获取准确时长
+	// 获取音频文件实际时长
+	audioDuration, err := getAudioDuration(audioFile)
+	if err != nil {
+		return fmt.Errorf("获取音频时长失败: %v", err)
+	}
 
-	// 创建草稿文件 (1080x1920 竖屏视频)
+	// 计算音频时长（秒）
+	audioDurationSec := float64(audioDuration) / 1000000.0
+
+	// 计算台词总字数
+	totalSubtitleChars := 0
+	if srtFile != "" {
+		srtEntries, err := srt.ParseSrtFile(srtFile)
+		if err != nil {
+			fmt.Printf("解析字幕文件失败: %v\n", err)
+		} else {
+			for _, entry := range srtEntries {
+				totalSubtitleChars += len([]rune(entry.Text))
+			}
+		}
+	}
+
+	// 输出日志信息
+	fmt.Printf("🎵 音频时长: %.2f秒 (%d微秒)\n", audioDurationSec, audioDuration)
+	fmt.Printf("🖼️  图片资源: %d张\n", len(imageFiles))
+	fmt.Printf("📄 视频资源: 1个 (音频文件: %s)\n", filepath.Base(audioFile))
+	fmt.Printf("💬 台词字数: %d个字符\n", totalSubtitleChars)
+
+	// 创建草稿文件 (1080x1920 手机竖屏视频)
 	sf, err := script.NewScriptFile(1080, 1920, 30) // 宽度、高度、帧率
 	if err != nil {
 		return fmt.Errorf("创建草稿文件失败: %v", err)
@@ -216,8 +277,16 @@ func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
 	if srtFile != "" {
 		srtEntries, err := srt.ParseSrtFile(srtFile)
 		if err != nil {
-			fmt.Printf("解析字幕文件失败: %v\n", err)
+			return fmt.Errorf("解析字幕文件失败: %v", err)
 		} else {
+			// 重新计算字幕时间戳，使其与音频总时长相匹配
+			// 首先获取原始字幕总时长
+			var originalSubtitleDuration int64
+			if len(srtEntries) > 0 {
+				lastEntry := srtEntries[len(srtEntries)-1]
+				originalSubtitleDuration = lastEntry.End
+			}
+
 			// 添加文本轨道和字幕
 			textTrackName := stringPtr("字幕轨道")
 			sf.AddTrack(track.TrackTypeText, textTrackName)
@@ -225,9 +294,27 @@ func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
 			// 获取文本轨道并添加字幕片段
 			textTrack, err := sf.GetTrack("text", textTrackName)
 			if err != nil {
-				fmt.Printf("获取文本轨道失败: %v\n", err)
+				return fmt.Errorf("获取文本轨道失败: %v", err)
 			} else {
 				for _, entry := range srtEntries {
+					// 根据音频时长与原始字幕时长的比例调整字幕时间
+					var adjustedStart, adjustedEnd int64
+					if originalSubtitleDuration > 0 {
+						// 按比例调整时间戳
+						ratio := float64(audioDuration) / float64(originalSubtitleDuration)
+						adjustedStart = int64(float64(entry.Start) * ratio)
+						adjustedEnd = int64(float64(entry.End) * ratio)
+						
+						// 确保最后一个字幕精确结束于音频末尾
+						if entry.End == originalSubtitleDuration && entry.End > 0 {
+							adjustedEnd = audioDuration
+						}
+					} else {
+						// 如果无法计算比例，直接使用原始时间
+						adjustedStart = entry.Start
+						adjustedEnd = entry.End
+					}
+
 					// 创建文本样式
 					textStyle := segment.NewTextStyle()
 					textStyle.Size = 24.0
@@ -311,7 +398,7 @@ func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
 					// 创建文本片段，使用刚添加的文本素材ID
 					textSegment := segment.NewTextSegment(
 						entry.Text, // text
-						types.NewTimerange(entry.Start, entry.End-entry.Start), // targetTimerange
+						types.NewTimerange(adjustedStart, adjustedEnd-adjustedStart), // targetTimerange - 调整后的时间
 						"",           // font (空字符串使用默认字体)
 						textStyle,    // style
 						clipSettings, // clipSettings - 添加位置设置
@@ -358,7 +445,7 @@ func (cg *CapcutGenerator) GenerateProject(inputDir string) error {
 	// 复制必要的项目文件到剪映项目目录
 	err = copyProjectFiles(outputPath, newProjectDir, inputDir)
 	if err != nil {
-		return fmt.Errorf("复制项目文件失败: %v", err)
+			return fmt.Errorf("复制项目文件失败: %v", err)
 	}
 
 	fmt.Printf("项目已复制到剪映目录: %s\n", newProjectDir)
@@ -404,8 +491,33 @@ func (cg *CapcutGenerator) GenerateProjectWithOutputDir(inputDir, outputDir stri
 		return fmt.Errorf("未找到图片文件")
 	}
 
-	// 获取音频文件时长（这里简化处理，使用一个估算值）
-	audioDuration := int64(30000000) // 30秒，实际应用中应该读取音频文件获取准确时长
+	// 获取音频文件实际时长
+	audioDuration, err := getAudioDuration(audioFile)
+	if err != nil {
+		return fmt.Errorf("获取音频时长失败: %v", err)
+	}
+
+	// 计算音频时长（秒）
+	audioDurationSec := float64(audioDuration) / 1000000.0
+
+	// 计算台词总字数
+	totalSubtitleChars := 0
+	if srtFile != "" {
+		srtEntries, err := srt.ParseSrtFile(srtFile)
+		if err != nil {
+			fmt.Printf("解析字幕文件失败: %v\n", err)
+		} else {
+			for _, entry := range srtEntries {
+				totalSubtitleChars += len([]rune(entry.Text))
+			}
+		}
+	}
+
+	// 输出日志信息
+	fmt.Printf("🎵 音频时长: %.2f秒 (%d微秒)\n", audioDurationSec, audioDuration)
+	fmt.Printf("🖼️  图片资源: %d张\n", len(imageFiles))
+	fmt.Printf("📄 视频资源: 1个 (音频文件: %s)\n", filepath.Base(audioFile))
+	fmt.Printf("💬 台词字数: %d个字符\n", totalSubtitleChars)
 
 	// 创建草稿文件 (1080x1920 竖屏视频)
 	sf, err := script.NewScriptFile(1080, 1920, 30) // 宽度、高度、帧率
@@ -514,8 +626,16 @@ func (cg *CapcutGenerator) GenerateProjectWithOutputDir(inputDir, outputDir stri
 	if srtFile != "" {
 		srtEntries, err := srt.ParseSrtFile(srtFile)
 		if err != nil {
-			fmt.Printf("解析字幕文件失败: %v\n", err)
+			return fmt.Errorf("解析字幕文件失败: %v", err)
 		} else {
+			// 重新计算字幕时间戳，使其与音频总时长相匹配
+			// 首先获取原始字幕总时长
+			var originalSubtitleDuration int64
+			if len(srtEntries) > 0 {
+				lastEntry := srtEntries[len(srtEntries)-1]
+				originalSubtitleDuration = lastEntry.End
+			}
+
 			// 添加文本轨道和字幕
 			textTrackName := stringPtr("字幕轨道")
 			sf.AddTrack(track.TrackTypeText, textTrackName)
@@ -523,9 +643,27 @@ func (cg *CapcutGenerator) GenerateProjectWithOutputDir(inputDir, outputDir stri
 			// 获取文本轨道并添加字幕片段
 			textTrack, err := sf.GetTrack("text", textTrackName)
 			if err != nil {
-				fmt.Printf("获取文本轨道失败: %v\n", err)
+				return fmt.Errorf("获取文本轨道失败: %v", err)
 			} else {
 				for _, entry := range srtEntries {
+					// 根据音频时长与原始字幕时长的比例调整字幕时间
+					var adjustedStart, adjustedEnd int64
+					if originalSubtitleDuration > 0 {
+						// 按比例调整时间戳
+						ratio := float64(audioDuration) / float64(originalSubtitleDuration)
+						adjustedStart = int64(float64(entry.Start) * ratio)
+						adjustedEnd = int64(float64(entry.End) * ratio)
+						
+						// 确保最后一个字幕精确结束于音频末尾
+						if entry.End == originalSubtitleDuration && entry.End > 0 {
+							adjustedEnd = audioDuration
+						}
+					} else {
+						// 如果无法计算比例，直接使用原始时间
+						adjustedStart = entry.Start
+						adjustedEnd = entry.End
+					}
+
 					// 创建文本样式
 					textStyle := segment.NewTextStyle()
 					textStyle.Size = 24.0
@@ -609,7 +747,7 @@ func (cg *CapcutGenerator) GenerateProjectWithOutputDir(inputDir, outputDir stri
 					// 创建文本片段，使用刚添加的文本素材ID
 					textSegment := segment.NewTextSegment(
 						entry.Text, // text
-						types.NewTimerange(entry.Start, entry.End-entry.Start), // targetTimerange
+						types.NewTimerange(adjustedStart, adjustedEnd-adjustedStart), // targetTimerange - 调整后的时间
 						"",           // font (空字符串使用默认字体)
 						textStyle,    // style
 						clipSettings, // clipSettings - 添加位置设置
@@ -680,8 +818,11 @@ func (cg *CapcutGenerator) GenerateAndImportProject(inputDir, projectName string
 		return fmt.Errorf("未找到图片文件")
 	}
 
-	// 获取音频文件时长（这里简化处理，使用一个估算值）
-	audioDuration := int64(30000000) // 30秒，实际应用中应该读取音频文件获取准确时长
+	// 获取音频文件实际时长
+	audioDuration, err := getAudioDuration(audioFile)
+	if err != nil {
+		return fmt.Errorf("获取音频时长失败: %v", err)
+	}
 
 	// 创建草稿文件 (1080x1920 竖屏视频)
 	sf, err := script.NewScriptFile(1080, 1920, 30) // 宽度、高度、帧率
@@ -790,8 +931,16 @@ func (cg *CapcutGenerator) GenerateAndImportProject(inputDir, projectName string
 	if srtFile != "" {
 		srtEntries, err := srt.ParseSrtFile(srtFile)
 		if err != nil {
-			fmt.Printf("解析字幕文件失败: %v\n", err)
+			return fmt.Errorf("解析字幕文件失败: %v", err)
 		} else {
+			// 重新计算字幕时间戳，使其与音频总时长相匹配
+			// 首先获取原始字幕总时长
+			var originalSubtitleDuration int64
+			if len(srtEntries) > 0 {
+				lastEntry := srtEntries[len(srtEntries)-1]
+				originalSubtitleDuration = lastEntry.End
+			}
+
 			// 添加文本轨道和字幕
 			textTrackName := stringPtr("字幕轨道")
 			sf.AddTrack(track.TrackTypeText, textTrackName)
@@ -799,9 +948,27 @@ func (cg *CapcutGenerator) GenerateAndImportProject(inputDir, projectName string
 			// 获取文本轨道并添加字幕片段
 			textTrack, err := sf.GetTrack("text", textTrackName)
 			if err != nil {
-				fmt.Printf("获取文本轨道失败: %v\n", err)
+				return fmt.Errorf("获取文本轨道失败: %v", err)
 			} else {
 				for _, entry := range srtEntries {
+					// 根据音频时长与原始字幕时长的比例调整字幕时间
+					var adjustedStart, adjustedEnd int64
+					if originalSubtitleDuration > 0 {
+						// 按比例调整时间戳
+						ratio := float64(audioDuration) / float64(originalSubtitleDuration)
+						adjustedStart = int64(float64(entry.Start) * ratio)
+						adjustedEnd = int64(float64(entry.End) * ratio)
+						
+						// 确保最后一个字幕精确结束于音频末尾
+						if entry.End == originalSubtitleDuration && entry.End > 0 {
+							adjustedEnd = audioDuration
+						}
+					} else {
+						// 如果无法计算比例，直接使用原始时间
+						adjustedStart = entry.Start
+						adjustedEnd = entry.End
+					}
+
 					// 创建文本样式
 					textStyle := segment.NewTextStyle()
 					textStyle.Size = 24.0
@@ -885,7 +1052,7 @@ func (cg *CapcutGenerator) GenerateAndImportProject(inputDir, projectName string
 					// 创建文本片段，使用刚添加的文本素材ID
 					textSegment := segment.NewTextSegment(
 						entry.Text, // text
-						types.NewTimerange(entry.Start, entry.End-entry.Start), // targetTimerange
+						types.NewTimerange(adjustedStart, adjustedEnd-adjustedStart), // targetTimerange - 调整后的时间
 						"",           // font (空字符串使用默认字体)
 						textStyle,    // style
 						clipSettings, // clipSettings - 添加位置设置

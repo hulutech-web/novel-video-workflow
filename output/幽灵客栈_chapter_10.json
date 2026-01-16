@@ -27,11 +27,11 @@
     },
     "cover": null,
     "create_time": 0,
-    "duration": 30000000,
+    "duration": 338359909,
     "extra_info": null,
     "fps": 30,
     "group_container": null,
-    "id": "7e203543b6a84e83b3a91703eddda289",
+    "id": "30112a3270904b988c0326cac13e4635",
     "keyframes": {
         "adjusts": [],
         "audios": [],
@@ -60,7 +60,7 @@
                 "category_name": "local",
                 "check_flag": 1,
                 "copyright_limit_type": "none",
-                "duration": 30000000,
+                "duration": 338359909,
                 "effect_id": "",
                 "formula_id": "",
                 "id": "66e3974f8ce539048b51ba6952ab4b4c",
@@ -141,7 +141,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"8f25c9a2-7d46-470f-b17a-40a031ba2f71\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第10章\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"f44c411c-4712-448c-91ea-a71d0a54d6d1\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第10章\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -154,7 +154,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "1311a5df-93f1-4e3a-b174-706747114668",
+                "id": "ca3fa5f3-25ae-40c0-8694-774cd478c777",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -201,7 +201,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"65181862-f27a-4ece-ab35-40db8dd70af9\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第一封信\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"74511510-e5c5-4eb1-83fb-66c8516abd00\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第一封信\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -214,7 +214,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "dd19fd9a-0959-4402-8355-2829b346e78d",
+                "id": "4f2ba873-7403-410f-8aa7-a60fc96c1538",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -261,7 +261,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"0112d9df-3756-447c-8b28-434f35463c90\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e叶萧：\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"79fdd5a6-7aaf-4fdb-a077-8ed1f57a9afc\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e叶萧：\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -274,7 +274,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "83c59ef5-adbc-4c90-829c-0f1e13461f3a",
+                "id": "c5f2d7c8-1ff2-482f-bc48-5ff4203898bd",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -321,7 +321,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"142929d4-5c11-4893-82ac-5cd8dc39baf5\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e你还好吗？\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"9fcca1da-b0b1-4c53-abb7-61f3d2133c11\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e你还好吗？\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -334,7 +334,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "bbd74d06-d764-424f-a2bf-b2b321cff579",
+                "id": "f62fd06e-d32a-4ff3-a4a3-913f9541a3f8",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -381,7 +381,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"21ef73ef-6b11-46e7-864c-102b86164b8d\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e真不知道这封信该如何开头，不过我能够想象，当你收到这封寄自幽灵客栈的信时，将会是怎样的一副表情。我的朋友，请你不要担心，我周旋还好好地活着，正在幽灵客栈里呼吸海边湿润的空气。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"23531f85-33fe-4120-8e61-aa1b4a9aa0c2\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e真不知道这封信该如何开头，不过我能够想象，当你收到这封寄自幽灵客栈的信时，将会是怎样的一副表情。我的朋友，请你不要担心，我周旋还好好地活着，正在幽灵客栈里呼吸海边湿润的空气。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -394,7 +394,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "14bea489-adcd-492b-95cb-fa52346502f5",
+                "id": "c5501a5c-497f-4fd1-bfbc-f68b6740a561",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -441,7 +441,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"71097977-9b15-4ba0-9e89-4e6b43c7eea1\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e也许你不会相信我目前正在经历的事情，这一切太像英国哥特式小说了。或者，你就干脆就把它当作小说来读吧。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"be4d646c-b98c-4fd1-b6e6-7b12edd28064\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e也许你不会相信我目前正在经历的事情，这一切太像英国哥特式小说了。或者，你就干脆就把它当作小说来读吧。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -454,7 +454,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "3af52d09-074c-4159-b6da-f96ce021e97d",
+                "id": "586731bd-9126-4ac6-9e1b-8520ab07c248",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -501,7 +501,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"fb4ae2e6-2956-4568-821c-29b10a47f332\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e是的，昨天下午我安全抵达了西冷镇，在一间茶馆里，我向当地老人们询问了关于幽灵客栈的事情。但没想到，我的话让他们非常害怕，当地人似乎把幽灵客栈当成了一个绝对的禁忌，没有人敢谈论。不过，他们越是对幽灵客栈遮遮掩掩，就越是激起了我的好奇心与探险欲。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"9422e6d8-5b7f-413c-b5e9-006da4bda7a9\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e是的，昨天下午我安全抵达了西冷镇，在一间茶馆里，我向当地老人们询问了关于幽灵客栈的事情。但没想到，我的话让他们非常害怕，当地人似乎把幽灵客栈当成了一个绝对的禁忌，没有人敢谈论。不过，他们越是对幽灵客栈遮遮掩掩，就越是激起了我的好奇心与探险欲。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -514,7 +514,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "d6e73b37-e420-4942-93b9-e68d92eee31f",
+                "id": "4236128a-15f8-4a0f-aab9-1b7f5a8d6c5e",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -561,7 +561,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"ee5c7c49-4a94-447c-b298-48ffd234c53b\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e就在我苦苦寻觅的时候，一个年轻人愿意带我去幽灵客栈，当然我是要付钱的。坐在他的摩托车上，走了大约半个小时，终于在黄昏时分抵达了幽灵客栈，那是一块靠近海岸的荒凉山坡，幽灵客栈就孤零零地矗立在那儿，当时我就给客栈拍了张一次成像的照片，附在这封信里寄给你。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"fe13c3a7-68d9-4ce6-8fe3-63e42ac90add\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e就在我苦苦寻觅的时候，一个年轻人愿意带我去幽灵客栈，当然我是要付钱的。坐在他的摩托车上，走了大约半个小时，终于在黄昏时分抵达了幽灵客栈，那是一块靠近海岸的荒凉山坡，幽灵客栈就孤零零地矗立在那儿，当时我就给客栈拍了张一次成像的照片，附在这封信里寄给你。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -574,7 +574,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "59b0939c-be13-45e2-ad54-99a493451d76",
+                "id": "ffed6213-a871-45eb-a90b-713a6540f9d4",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -621,7 +621,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"0403dccc-cb2c-449b-bb85-5e66f2847789\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e昨天夜里上海下雨了吗？真倒霉，我来到幽灵客栈的时候，正赶上风雨大作电闪雷鸣。我拼命地敲着门，当时我最害怕的就是客栈里一个人都没有，就在我几乎绝望的时候，大门突然开了。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"26c99289-a7ab-4e90-b651-89caafe27ab2\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e昨天夜里上海下雨了吗？真倒霉，我来到幽灵客栈的时候，正赶上风雨大作电闪雷鸣。我拼命地敲着门，当时我最害怕的就是客栈里一个人都没有，就在我几乎绝望的时候，大门突然开了。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -634,7 +634,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "f1bdff22-dd5b-4c2b-8f64-fece2b818086",
+                "id": "bf016449-1882-4c77-b534-e4f59f279b93",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -681,7 +681,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"9f335e87-37e9-4d6c-9ee9-d3abe0af7853\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我看到了“卡西莫多”。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"65e50e84-4042-4d45-9375-e89dbdc36fb3\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我看到了“卡西莫多”。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -694,7 +694,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "79b70755-43e4-477e-8533-c51ba8494df4",
+                "id": "dba2d66c-6e53-4f65-8015-4468fda2e2ca",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -741,7 +741,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"2f9c8fc9-0ace-440b-b90c-7fa4a237bc73\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e对不起，我只能用雨果的《巴黎圣母院》里的“卡西莫多”来形容为我开门的那个人。他的手里端着一盏煤油灯，在昏黄闪烁的灯光下，我看清了那张丑陋的无与伦比的脸。两只眼睛特别吓人，左眼很大，右眼却非常小，鼻子是扭曲的，嘴唇斜着裂开，而下巴则完全错位。那张脸上还布满了大大小小的肉疙瘩，光着的头顶看不到一根头发，我实在无法估算他的年龄。总而言之，这不应该是上帝塑造的脸，我真为这个人感到不幸。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"da7ef297-60eb-49d1-9210-8759b324ee4a\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e对不起，我只能用雨果的《巴黎圣母院》里的“卡西莫多”来形容为我开门的那个人。他的手里端着一盏煤油灯，在昏黄闪烁的灯光下，我看清了那张丑陋的无与伦比的脸。两只眼睛特别吓人，左眼很大，右眼却非常小，鼻子是扭曲的，嘴唇斜着裂开，而下巴则完全错位。那张脸上还布满了大大小小的肉疙瘩，光着的头顶看不到一根头发，我实在无法估算他的年龄。总而言之，这不应该是上帝塑造的脸，我真为这个人感到不幸。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -754,7 +754,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "f2fe2edd-01fa-4b22-a179-de1f04dbd1b1",
+                "id": "24cac6b3-3712-4dbd-a7ce-e170107b68a1",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -801,7 +801,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"5b8b83a8-6553-42ac-bce4-809c5c6cf452\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e当时我见到那张脸以后，完全吓坏了，愣在门口不敢进去。那个人举起煤油灯照了照我的脸，然后向后退了一步，看起来是要让我进来。当时我已经浑身都被雨水打湿了，只能硬着头皮走进了那扇门。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"f8acfc76-8884-4ede-af8a-047b6cdf8d66\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e当时我见到那张脸以后，完全吓坏了，愣在门口不敢进去。那个人举起煤油灯照了照我的脸，然后向后退了一步，看起来是要让我进来。当时我已经浑身都被雨水打湿了，只能硬着头皮走进了那扇门。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -814,7 +814,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "cc62d4a6-bc67-4133-bf85-7e77002179d7",
+                "id": "f589b331-5513-44ca-b48b-d11346f5491a",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -861,7 +861,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"d09029eb-be26-459f-bcda-8d5e2728c31a\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我进入了幽灵客栈。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"c4c5c3b6-9add-4806-9aa7-ca81981a44ff\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我进入了幽灵客栈。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -874,7 +874,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "c86e75ea-914f-40ff-804a-29dfc6a68418",
+                "id": "c78feb91-cc6c-460c-bc66-99f25012b116",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -921,7 +921,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"513ca462-92ff-4747-9e0c-e34665fe0c0d\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e里面的光线太昏暗了，除了那盏煤油灯光所及之处，我实在看不清楚。那个卡西莫多似的人缓缓地走到我身后，又关上了客栈的大门。瞬间，我有了一种走进古代地宫中的感觉，虽然当时又冷又累，但却连喘气都不敢大声。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"7282a8f0-5163-49e3-a36a-3e0dd3232955\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e里面的光线太昏暗了，除了那盏煤油灯光所及之处，我实在看不清楚。那个卡西莫多似的人缓缓地走到我身后，又关上了客栈的大门。瞬间，我有了一种走进古代地宫中的感觉，虽然当时又冷又累，但却连喘气都不敢大声。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -934,7 +934,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "f8f245db-38c9-4d03-9061-c4abca08b997",
+                "id": "8c006ea6-5abd-490a-b7a1-41579e2fada6",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -981,7 +981,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"07651c5b-037c-4083-a6aa-15a30dce82ff\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“卡西莫多”伸出手在墙上摸索了一会儿，忽然房间里亮了起来，又把我吓了一跳。我的眼睛一下子没适应过来，手搭凉蓬看了看头顶，见到了天花板上的一盏电灯。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"12d26520-bf90-4590-8040-e4451710f064\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“卡西莫多”伸出手在墙上摸索了一会儿，忽然房间里亮了起来，又把我吓了一跳。我的眼睛一下子没适应过来，手搭凉蓬看了看头顶，见到了天花板上的一盏电灯。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -994,7 +994,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "29077a43-8436-457b-a7fd-edfaf52a8c3f",
+                "id": "d041a9ec-b569-475c-9ffc-699e4b09e879",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1041,7 +1041,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"0bd61381-97f5-497c-b74a-72ca5c83a917\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e电灯的亮度适中，基本上照亮了这个房间，我粗略地估算了一下，大约有五六十个平方大小，中间竖着几根碗口粗的木柱子，里面还有一道木楼梯通往楼上。房间的右侧是一个半圆形的柜台，后面的门上挂着一卷帘子，此外还有一个放着乱七八糟的东西的木架子。房子内侧还摆着一张长方形的木桌子，我想大概是餐桌吧。墙壁粉刷着白色的石灰，但有许多都剥落了，在左侧的墙壁上挂着几张老式的镜框，镜框里面是黑白照片，由于离灯光太远，镜框的玻璃又反光，我看不太清楚照片里的人。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"1d5210d3-350b-422c-a5f3-3b7e6c5a3383\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e电灯的亮度适中，基本上照亮了这个房间，我粗略地估算了一下，大约有五六十个平方大小，中间竖着几根碗口粗的木柱子，里面还有一道木楼梯通往楼上。房间的右侧是一个半圆形的柜台，后面的门上挂着一卷帘子，此外还有一个放着乱七八糟的东西的木架子。房子内侧还摆着一张长方形的木桌子，我想大概是餐桌吧。墙壁粉刷着白色的石灰，但有许多都剥落了，在左侧的墙壁上挂着几张老式的镜框，镜框里面是黑白照片，由于离灯光太远，镜框的玻璃又反光，我看不太清楚照片里的人。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1054,7 +1054,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "6906327e-3a0d-4e5f-acaa-094406e9484e",
+                "id": "b71ce941-b8cd-4d99-997a-510332973452",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1101,7 +1101,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"ad14f749-ff77-44dc-9d63-ac8ca131311c\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e让我感到奇怪的是，“卡西莫多”始终一言不发，他那双“大小眼”紧紧地盯着我，让我感到不寒而栗。突然，我听到了一阵急促的脚步声，刚刚平缓下来的心跳立刻又加快了。柜台后面的帘子忽然掀了起来，从里面走出来一个30多岁的男人。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"e2f8f1be-6cc6-443a-851a-fc282f539251\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e让我感到奇怪的是，“卡西莫多”始终一言不发，他那双“大小眼”紧紧地盯着我，让我感到不寒而栗。突然，我听到了一阵急促的脚步声，刚刚平缓下来的心跳立刻又加快了。柜台后面的帘子忽然掀了起来，从里面走出来一个30多岁的男人。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1114,7 +1114,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "5ff067b8-e379-40c4-88fb-1b7cb4b236a8",
+                "id": "5d2132ae-fe3d-4560-81c7-957754ccff03",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1161,7 +1161,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"7796a79d-724d-455a-afb0-7f056a9992b9\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e这个男人有着健硕的身材，长着一张冷峻严肃的国字脸，用一双精干的目光紧盯着我的眼睛。忽然，他的嘴角露出一丝诡异的微笑，然后从柜台里走出来，用极其沉闷的声音说：\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"1d0d4a47-ffe5-4249-b6a4-f61f87178cfc\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e这个男人有着健硕的身材，长着一张冷峻严肃的国字脸，用一双精干的目光紧盯着我的眼睛。忽然，他的嘴角露出一丝诡异的微笑，然后从柜台里走出来，用极其沉闷的声音说：\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1174,7 +1174,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "b96ead8a-e765-4a3a-8b91-d732b32bc953",
+                "id": "d66e6de5-e069-43c4-a673-7210f84863c2",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1221,7 +1221,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"31de19ec-e5f4-4b79-85af-d926896967fd\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“欢迎你来到幽灵客栈。”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"703f0ab7-e240-4689-945a-35c211860af9\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“欢迎你来到幽灵客栈。”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1234,7 +1234,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "0aeb57d6-d909-4208-8656-c808b60bbd5e",
+                "id": "9717034d-efce-46f5-ad2e-26369c983d3d",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1281,7 +1281,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"0f92cbe2-789f-409f-9dfe-444bc63b87ac\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我急忙后退了一大步，脑子一团空白，不知道该如何回答。我来这里是干什么的？对，是为了田园的木匣。可当时我已经完全忘记了来这里的使命，只感到自己又冷又饿，我只能出于本能地说了一句：“这里有什么吃的吗？”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"77e9eec4-85ff-4462-8442-4574beeb01a2\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我急忙后退了一大步，脑子一团空白，不知道该如何回答。我来这里是干什么的？对，是为了田园的木匣。可当时我已经完全忘记了来这里的使命，只感到自己又冷又饿，我只能出于本能地说了一句：“这里有什么吃的吗？”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1294,7 +1294,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "9329e1cb-c08a-4402-ad7c-263316b4002d",
+                "id": "2f538ad2-4511-4dbe-a53a-bc414939e327",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1341,7 +1341,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"0840565a-36a8-4519-9e26-338da568f208\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“你是来投宿的吗？”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"9e9dce18-25e4-4b79-991b-79bd10075521\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e“你是来投宿的吗？”\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1354,7 +1354,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "c823370d-1f87-42ad-a500-1c0c1b267f90",
+                "id": "b1c475cd-a06e-400a-8d71-0a365d82666c",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1401,7 +1401,7 @@
                 "border_color": "",
                 "border_width": 0.08,
                 "check_flag": 7,
-                "content": "\u003cfont id=\"dba38e68-70ba-4e47-b545-18bfaf965873\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我茫然地看着他的眼睛，不由自主地点了点头。外面正风雨交加，反正今晚我肯定是回不去了。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "content": "\u003cfont id=\"e736bf25-b89a-4a1d-bd75-d6096e865d6c\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e我茫然地看着他的眼睛，不由自主地点了点头。外面正风雨交加，反正今晚我肯定是回不去了。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
                 "font_category_id": "",
                 "font_category_name": "",
                 "font_id": "",
@@ -1414,7 +1414,7 @@
                 "fonts": [],
                 "global_alpha": 1,
                 "has_shadow": false,
-                "id": "ddd1c84b-39ea-46df-9d44-052995fadf7e",
+                "id": "f3323ed2-a842-4b2c-b395-8f3fab45a321",
                 "initial_scale": 1,
                 "is_rich_text": false,
                 "italic_degree": 0,
@@ -1765,7 +1765,7 @@
         {
             "attribute": 0,
             "flag": 0,
-            "id": "870e70ff-de27-4da6-87d5-026d7a242262",
+            "id": "4a08304d-1fbf-4c6f-981e-c2722350c695",
             "is_default_name": false,
             "name": "视频轨道_0",
             "render_index": 0,
@@ -1797,22 +1797,22 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "ca30ee6e-8a1d-43ef-b25b-ab3bd15be599"
+                        "6f973d81-7e85-444a-b53d-511cba9234c5"
                     ],
                     "filters": [],
-                    "id": "f527a2cf-44e0-4ef3-a6cb-66f23d5f6ce4",
+                    "id": "a3c72ee0-c227-4b9e-8d64-1ec9be52ce32",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "3ea9aa2e8fbc39b1833863727d39a7c3",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
+                        "duration": 33835990,
                         "start": 0
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
+                        "duration": 33835990,
                         "start": 0
                     },
                     "track_attribute": 0,
@@ -1852,23 +1852,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "333d5098-3c47-4eae-999e-b638910c48e6"
+                        "6615f844-17db-4efe-b4ac-e0f3a5c23169"
                     ],
                     "filters": [],
-                    "id": "806219c3-9149-4f36-9d04-dd85070af97e",
+                    "id": "07a87801-2056-4540-9c4a-336e9c1a0b04",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "ce475d439ef4398b81dd2cd5eff55e4d",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 3000000
+                        "duration": 33835990,
+                        "start": 33835990
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 3000000
+                        "duration": 33835990,
+                        "start": 33835990
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -1907,23 +1907,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "b92e092f-cec4-4390-9e98-83e9e52b6679"
+                        "1b92956e-038a-40dd-bff4-77e34f7f45f6"
                     ],
                     "filters": [],
-                    "id": "2d0c66fd-8df6-4449-96d0-5e635577da2d",
+                    "id": "87bffb8c-dbcf-4b78-8c9a-8ad4f09b5683",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "960399d591ba3e04b4e626065a9d152a",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 6000000
+                        "duration": 33835990,
+                        "start": 67671980
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 6000000
+                        "duration": 33835990,
+                        "start": 67671980
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -1962,23 +1962,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "f35fc362-c746-4365-a6c8-e8607b459778"
+                        "1ae19541-685e-4b24-bb88-fd2a78c56aa3"
                     ],
                     "filters": [],
-                    "id": "3459eb2e-fe37-4ee5-882a-1c330ea00a7f",
+                    "id": "a3354bb8-42ad-4cd2-af26-c121f3bf37c4",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "019cd1b7dc6a382bbd860f4b3daf1048",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 9000000
+                        "duration": 33835990,
+                        "start": 101507970
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 9000000
+                        "duration": 33835990,
+                        "start": 101507970
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2017,23 +2017,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "b9b56367-1bd7-429b-8613-3b768bcc9b2d"
+                        "965696c4-bdf2-4ba0-9b9a-095598af0c76"
                     ],
                     "filters": [],
-                    "id": "ec62dcdd-f4c2-41f1-9acd-f8776bb612be",
+                    "id": "094e93ca-7d45-4db6-851b-d5d7080b95f9",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "dabe44855b3d3a52a185c14ed0c56fad",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 12000000
+                        "duration": 33835990,
+                        "start": 135343960
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 12000000
+                        "duration": 33835990,
+                        "start": 135343960
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2072,23 +2072,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "be28234a-ec9f-40b3-8861-90e5f33ac40c"
+                        "209c67ad-9631-47dc-9811-2a33e126625f"
                     ],
                     "filters": [],
-                    "id": "deff777d-58d0-4ac0-a5cd-4b2ba9b59cd5",
+                    "id": "b3f57b84-035e-48e1-b38e-9ad8aab0c6cc",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "6aedf1a6a31a3bcca3f4aeb18a2e0b18",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 15000000
+                        "duration": 33835990,
+                        "start": 169179950
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 15000000
+                        "duration": 33835990,
+                        "start": 169179950
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2127,23 +2127,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "c270837d-dc3c-4385-b5a6-235cf17d3bed"
+                        "d3237486-ac3d-4c32-ad17-a94dd330629c"
                     ],
                     "filters": [],
-                    "id": "670cad65-e101-4589-8f59-96c754378f82",
+                    "id": "70c764b5-374d-4234-8464-79d30a7c28ab",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "0a3116efa6ed325796902eff927506d8",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 18000000
+                        "duration": 33835990,
+                        "start": 203015940
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 18000000
+                        "duration": 33835990,
+                        "start": 203015940
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2182,23 +2182,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "6d518d24-ddcd-4c41-86e3-af18e26b16fc"
+                        "f3cd74c9-a6d8-4c35-8c22-4a6856d4b067"
                     ],
                     "filters": [],
-                    "id": "2d25d369-7b60-46ad-9ef6-ce4738b4668f",
+                    "id": "b445a476-1b09-4529-914b-e60345975009",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "1d3b5109d0463ad0bfd2a26aefccf768",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 21000000
+                        "duration": 33835990,
+                        "start": 236851930
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 21000000
+                        "duration": 33835990,
+                        "start": 236851930
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2237,23 +2237,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "662b590a-f968-4210-a8d6-4835e409bba2"
+                        "975a4e00-723e-4768-b0b1-19d74dd2c3bf"
                     ],
                     "filters": [],
-                    "id": "3d164b26-ccae-4e46-9924-feb6859bdcb1",
+                    "id": "36ef41fe-9eff-4c33-ae0e-e933c1cf68e3",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "f7b2c2dee527326fa6b6fb09712926d4",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 24000000
+                        "duration": 33835990,
+                        "start": 270687920
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 24000000
+                        "duration": 33835990,
+                        "start": 270687920
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2292,23 +2292,23 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "45404042-14b4-4bf6-8582-4735225535ed"
+                        "d24b8f1e-2f3c-4371-8108-9204076146e4"
                     ],
                     "filters": [],
-                    "id": "c8a956fd-555d-4b74-a760-c344f9a9bc0f",
+                    "id": "11f6cd9d-fed3-47e5-a293-958dbe727381",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "7b8a58565e8d33a79e06d4e67fb4cc0c",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 3000000,
-                        "start": 27000000
+                        "duration": 33835999,
+                        "start": 304523910
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 3000000,
-                        "start": 27000000
+                        "duration": 33835999,
+                        "start": 304523910
                     },
                     "track_attribute": 0,
                     "track_render_index": 0,
@@ -2326,7 +2326,7 @@
         {
             "attribute": 0,
             "flag": 0,
-            "id": "c05b7a41-21ef-4d2c-b91b-2ce2a953a4f0",
+            "id": "89982a2b-c1d1-409f-93be-2376466dd6e8",
             "is_default_name": false,
             "name": "音频轨道",
             "render_index": 0,
@@ -2342,21 +2342,21 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "e1c6a78e-6ad2-4fcb-8529-3d01188b9415"
+                        "cbad03d2-3f86-4ff5-862c-2bb58f3419d1"
                     ],
-                    "id": "52692e27-1930-4938-96b5-21b5375c4a64",
+                    "id": "ab6d0247-ba44-4f67-8b29-5e0d0a17855f",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
                     "material_id": "66e3974f8ce539048b51ba6952ab4b4c",
                     "render_index": 0,
                     "reverse": false,
                     "source_timerange": {
-                        "duration": 30000000,
+                        "duration": 338359909,
                         "start": 0
                     },
                     "speed": 1,
                     "target_timerange": {
-                        "duration": 30000000,
+                        "duration": 338359909,
                         "start": 0
                     },
                     "track_attribute": 0,
@@ -2371,7 +2371,7 @@
         {
             "attribute": 0,
             "flag": 0,
-            "id": "9889b270-a22d-455f-81f2-a9464cbc25d6",
+            "id": "2bc7b457-0ba8-4f67-aa9c-11a38bf74a17",
             "is_default_name": false,
             "name": "字幕轨道",
             "render_index": 15000,
@@ -2402,15 +2402,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "0cfc2bfb-074d-4e68-8afd-8b4e0b8d7d9d"
+                        "611bff61-9013-42ec-9c0c-6ea08f6e5347"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "6c515e88-77ac-47b4-8708-29fcbf014701",
+                    "id": "f1031edd-e667-4687-8b7c-70b67a5fa094",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "1311a5df-93f1-4e3a-b174-706747114668",
+                    "material_id": "ca3fa5f3-25ae-40c0-8694-774cd478c777",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2432,7 +2432,7 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 891000,
+                        "duration": 891005,
                         "start": 0
                     },
                     "text": "第10章",
@@ -2472,15 +2472,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "78233f0a-4076-4ddb-bc89-39b12e45f4fd"
+                        "e84d8b27-5590-4556-a2b3-cbc44b2e8b1a"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "4faa83fd-ea64-45ab-be83-3557e6d2b77a",
+                    "id": "f92bf9c8-6592-40c2-9d10-8a4cdb667ec4",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "dd19fd9a-0959-4402-8355-2829b346e78d",
+                    "material_id": "4f2ba873-7403-410f-8aa7-a60fc96c1538",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2502,8 +2502,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 891000,
-                        "start": 891000
+                        "duration": 891005,
+                        "start": 891005
                     },
                     "text": "第一封信",
                     "track_attribute": 0,
@@ -2542,15 +2542,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "875f44d7-3204-40c5-be30-ad449475b062"
+                        "ec6c0045-4517-4f94-b81b-83ec178fe3c6"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "a34dbd1c-ff39-4548-b5f1-c003be156dae",
+                    "id": "7517056f-8aff-45b9-afc1-3cc4322c4532",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "83c59ef5-adbc-4c90-829c-0f1e13461f3a",
+                    "material_id": "c5f2d7c8-1ff2-482f-bc48-5ff4203898bd",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2572,8 +2572,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 669000,
-                        "start": 1782000
+                        "duration": 669003,
+                        "start": 1782010
                     },
                     "text": "叶萧：",
                     "track_attribute": 0,
@@ -2612,15 +2612,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "4d5868b0-f951-462b-87a9-9c601a75e8e9"
+                        "a0814c13-5112-4fac-928a-9f815f08563f"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "66d57d4d-389a-40c8-a414-614b0707420b",
+                    "id": "4aa177af-43f5-4315-81f5-802abe8e4e0c",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "bbd74d06-d764-424f-a2bf-b2b321cff579",
+                    "material_id": "f62fd06e-d32a-4ff3-a4a3-913f9541a3f8",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2642,8 +2642,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 1114000,
-                        "start": 2451000
+                        "duration": 1114007,
+                        "start": 2451013
                     },
                     "text": "你还好吗？",
                     "track_attribute": 0,
@@ -2682,15 +2682,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "ac7b1c37-94f1-4c0d-91c1-8c17f0a1ce12"
+                        "516bff51-d293-4ee7-82ef-8ffd3eb22d80"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "1cac129f-c819-4fb8-ae3e-633560597d74",
+                    "id": "8fd14594-6e6c-46d0-924c-972d484fef9f",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "14bea489-adcd-492b-95cb-fa52346502f5",
+                    "material_id": "c5501a5c-497f-4fd1-bfbc-f68b6740a561",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2712,8 +2712,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 19392000,
-                        "start": 3565000
+                        "duration": 19392109,
+                        "start": 3565020
                     },
                     "text": "真不知道这封信该如何开头，不过我能够想象，当你收到这封寄自幽灵客栈的信时，将会是怎样的一副表情。我的朋友，请你不要担心，我周旋还好好地活着，正在幽灵客栈里呼吸海边湿润的空气。",
                     "track_attribute": 0,
@@ -2752,15 +2752,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "52c63731-16b4-46e0-ade4-caed92ea93e1"
+                        "0619a901-c078-4af7-a751-f96a6931db23"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "b4057e65-acd1-47ce-af59-35704eba740e",
+                    "id": "5322d021-4d05-4ff1-837a-838139ad3e45",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "3af52d09-074c-4159-b6da-f96ce021e97d",
+                    "material_id": "586731bd-9126-4ac6-9e1b-8520ab07c248",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2782,8 +2782,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 11146000,
-                        "start": 22957000
+                        "duration": 11146063,
+                        "start": 22957129
                     },
                     "text": "也许你不会相信我目前正在经历的事情，这一切太像英国哥特式小说了。或者，你就干脆就把它当作小说来读吧。",
                     "track_attribute": 0,
@@ -2822,15 +2822,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "5b3ba5f3-9f3d-4f96-8895-82d622480094"
+                        "0024671b-a6a1-4683-b9ba-f930d2e0312d"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "a2289643-1c40-4199-93a5-039b0771906f",
+                    "id": "b50474a4-d0b4-4a3e-9604-812e027b2aec",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "d6e73b37-e420-4942-93b9-e68d92eee31f",
+                    "material_id": "4236128a-15f8-4a0f-aab9-1b7f5a8d6c5e",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2852,8 +2852,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 26970000,
-                        "start": 34103000
+                        "duration": 26970152,
+                        "start": 34103192
                     },
                     "text": "是的，昨天下午我安全抵达了西冷镇，在一间茶馆里，我向当地老人们询问了关于幽灵客栈的事情。但没想到，我的话让他们非常害怕，当地人似乎把幽灵客栈当成了一个绝对的禁忌，没有人敢谈论。不过，他们越是对幽灵客栈遮遮掩掩，就越是激起了我的好奇心与探险欲。",
                     "track_attribute": 0,
@@ -2892,15 +2892,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "f2330e35-f15b-4cde-9962-a1eb05744b9a"
+                        "5e5044c8-414c-46d0-ac32-5e92f5373582"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "88778616-f32f-4bf6-9584-9c70126a9144",
+                    "id": "94670154-8df1-453a-9c4a-4f79e40cefac",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "59b0939c-be13-45e2-ad54-99a493451d76",
+                    "material_id": "ffed6213-a871-45eb-a90b-713a6540f9d4",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2922,8 +2922,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 27863000,
-                        "start": 61073000
+                        "duration": 27863157,
+                        "start": 61073344
                     },
                     "text": "就在我苦苦寻觅的时候，一个年轻人愿意带我去幽灵客栈，当然我是要付钱的。坐在他的摩托车上，走了大约半个小时，终于在黄昏时分抵达了幽灵客栈，那是一块靠近海岸的荒凉山坡，幽灵客栈就孤零零地矗立在那儿，当时我就给客栈拍了张一次成像的照片，附在这封信里寄给你。",
                     "track_attribute": 0,
@@ -2962,15 +2962,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "16a25198-032e-4ce9-adf6-ad151a2f1565"
+                        "11144ff6-7805-4b75-89ba-46b8ffe9ff9d"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "360472a3-6be5-4657-a756-953da067cc27",
+                    "id": "6fb897eb-8663-4f9e-a877-a9ce6e8cfc8c",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "f1bdff22-dd5b-4c2b-8f64-fece2b818086",
+                    "material_id": "bf016449-1882-4c77-b534-e4f59f279b93",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -2992,8 +2992,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 18500000,
-                        "start": 88936000
+                        "duration": 18500105,
+                        "start": 88936501
                     },
                     "text": "昨天夜里上海下雨了吗？真倒霉，我来到幽灵客栈的时候，正赶上风雨大作电闪雷鸣。我拼命地敲着门，当时我最害怕的就是客栈里一个人都没有，就在我几乎绝望的时候，大门突然开了。",
                     "track_attribute": 0,
@@ -3032,15 +3032,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "d50e0149-5461-40b2-a6a0-c1b4b72c7999"
+                        "3c9a8af0-399e-4b84-b03c-3c004ae0d2c1"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "acb4a222-2692-4580-9876-0aff1925064e",
+                    "id": "d365e372-e703-482c-8a2e-95454e5b12b2",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "79b70755-43e4-477e-8533-c51ba8494df4",
+                    "material_id": "dba2d66c-6e53-4f65-8015-4468fda2e2ca",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3062,8 +3062,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 2452000,
-                        "start": 107436000
+                        "duration": 2452013,
+                        "start": 107436606
                     },
                     "text": "我看到了“卡西莫多”。",
                     "track_attribute": 0,
@@ -3102,15 +3102,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "462347c2-26c2-4e1a-bc87-0e32ccc4b84b"
+                        "bd375071-6713-4fe2-a812-476b8c1099ca"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "645b1163-d77f-4e4c-aa8d-395a405fb4d3",
+                    "id": "b0d9114a-6dae-4ab8-83e0-2d308631bdde",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "f2fe2edd-01fa-4b22-a179-de1f04dbd1b1",
+                    "material_id": "24cac6b3-3712-4dbd-a7ce-e170107b68a1",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3132,8 +3132,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 42351000,
-                        "start": 109888000
+                        "duration": 42351239,
+                        "start": 109888619
                     },
                     "text": "对不起，我只能用雨果的《巴黎圣母院》里的“卡西莫多”来形容为我开门的那个人。他的手里端着一盏煤油灯，在昏黄闪烁的灯光下，我看清了那张丑陋的无与伦比的脸。两只眼睛特别吓人，左眼很大，右眼却非常小，鼻子是扭曲的，嘴唇斜着裂开，而下巴则完全错位。那张脸上还布满了大大小小的肉疙瘩，光着的头顶看不到一根头发，我实在无法估算他的年龄。总而言之，这不应该是上帝塑造的脸，我真为这个人感到不幸。",
                     "track_attribute": 0,
@@ -3172,15 +3172,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "1f23e045-74bb-4087-852d-eb502cabda0e"
+                        "0bb1cc09-9e79-49eb-b0c8-02f5e2d58ea0"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "534dc0c6-5dd5-4487-ac87-648c4b5b1f4e",
+                    "id": "6d9e7bc4-26d2-4364-a479-127ae66136b1",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "cc62d4a6-bc67-4133-bf85-7e77002179d7",
+                    "material_id": "f589b331-5513-44ca-b48b-d11346f5491a",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3202,8 +3202,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 19615000,
-                        "start": 152239000
+                        "duration": 19615111,
+                        "start": 152239858
                     },
                     "text": "当时我见到那张脸以后，完全吓坏了，愣在门口不敢进去。那个人举起煤油灯照了照我的脸，然后向后退了一步，看起来是要让我进来。当时我已经浑身都被雨水打湿了，只能硬着头皮走进了那扇门。",
                     "track_attribute": 0,
@@ -3242,15 +3242,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "e549defd-7b95-4fab-9cf7-a521643fc935"
+                        "440e84d4-604f-4b30-9bb3-5d615df66527"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "a7ec6e9b-aec3-47ad-8d39-dbfe4316c39f",
+                    "id": "424b9d6e-f1ac-4d6e-8868-76e0f393be7c",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "c86e75ea-914f-40ff-804a-29dfc6a68418",
+                    "material_id": "c78feb91-cc6c-460c-bc66-99f25012b116",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3272,8 +3272,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 2006000,
-                        "start": 171854000
+                        "duration": 2006011,
+                        "start": 171854969
                     },
                     "text": "我进入了幽灵客栈。",
                     "track_attribute": 0,
@@ -3312,15 +3312,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "42b7cd7e-9724-408c-8316-c96a29e78eeb"
+                        "ae78b601-a882-4e0e-b1db-1bd57ce2739d"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "ca0475df-cb64-4069-83e5-c949b36c34ef",
+                    "id": "ff2bcd8a-ed60-4c0b-9a25-5ffc2f30fdf2",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "f8f245db-38c9-4d03-9061-c4abca08b997",
+                    "material_id": "8c006ea6-5abd-490a-b7a1-41579e2fada6",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3342,8 +3342,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 21844000,
-                        "start": 173860000
+                        "duration": 21844124,
+                        "start": 173860980
                     },
                     "text": "里面的光线太昏暗了，除了那盏煤油灯光所及之处，我实在看不清楚。那个卡西莫多似的人缓缓地走到我身后，又关上了客栈的大门。瞬间，我有了一种走进古代地宫中的感觉，虽然当时又冷又累，但却连喘气都不敢大声。",
                     "track_attribute": 0,
@@ -3382,15 +3382,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "38988c58-878a-4d1e-8bc0-066bbe925b2a"
+                        "43579667-6ef2-4bb3-82ae-e5c05ebfbcc9"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "f9549056-7183-4009-b4de-489665831696",
+                    "id": "e25bbad7-788e-48be-b21b-114a2c1f0fb9",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "29077a43-8436-457b-a7fd-edfaf52a8c3f",
+                    "material_id": "d041a9ec-b569-475c-9ffc-699e4b09e879",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3412,8 +3412,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 16271000,
-                        "start": 195704000
+                        "duration": 16271091,
+                        "start": 195705104
                     },
                     "text": "“卡西莫多”伸出手在墙上摸索了一会儿，忽然房间里亮了起来，又把我吓了一跳。我的眼睛一下子没适应过来，手搭凉蓬看了看头顶，见到了天花板上的一盏电灯。",
                     "track_attribute": 0,
@@ -3452,15 +3452,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "0fc7ed45-4096-4808-847d-5fca428ecf4c"
+                        "13c8b65d-adae-4297-8c9b-b34a581a9c74"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "95073845-d7d4-4f94-84b0-be406b4c9b11",
+                    "id": "86a9b19e-d992-40ba-abde-f68c020ba86e",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "6906327e-3a0d-4e5f-acaa-094406e9484e",
+                    "material_id": "b71ce941-b8cd-4d99-997a-510332973452",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3482,8 +3482,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 48592000,
-                        "start": 211975000
+                        "duration": 48592275,
+                        "start": 211976195
                     },
                     "text": "电灯的亮度适中，基本上照亮了这个房间，我粗略地估算了一下，大约有五六十个平方大小，中间竖着几根碗口粗的木柱子，里面还有一道木楼梯通往楼上。房间的右侧是一个半圆形的柜台，后面的门上挂着一卷帘子，此外还有一个放着乱七八糟的东西的木架子。房子内侧还摆着一张长方形的木桌子，我想大概是餐桌吧。墙壁粉刷着白色的石灰，但有许多都剥落了，在左侧的墙壁上挂着几张老式的镜框，镜框里面是黑白照片，由于离灯光太远，镜框的玻璃又反光，我看不太清楚照片里的人。",
                     "track_attribute": 0,
@@ -3522,15 +3522,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "b90766f6-ed8e-4822-bddb-c82e67979bb2"
+                        "addcffdd-d6ad-4257-9a62-9790df048530"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "c49aadf6-bbd8-440a-9d7d-e806794dd073",
+                    "id": "d1beb94e-80d4-4dfd-9d4a-ba2dcfbd67a2",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "5ff067b8-e379-40c4-88fb-1b7cb4b236a8",
+                    "material_id": "5d2132ae-fe3d-4560-81c7-957754ccff03",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3552,8 +3552,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 24074000,
-                        "start": 260567000
+                        "duration": 24074135,
+                        "start": 260568470
                     },
                     "text": "让我感到奇怪的是，“卡西莫多”始终一言不发，他那双“大小眼”紧紧地盯着我，让我感到不寒而栗。突然，我听到了一阵急促的脚步声，刚刚平缓下来的心跳立刻又加快了。柜台后面的帘子忽然掀了起来，从里面走出来一个30多岁的男人。",
                     "track_attribute": 0,
@@ -3592,15 +3592,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "872ad208-2cd4-4eeb-8903-a93634f1edbe"
+                        "f777a6d1-3722-4443-88f3-7acfc3fa7264"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "a28e8a48-bf9c-4205-aa25-b17df99f20fb",
+                    "id": "bc2b1ea9-92e4-4a19-90cf-e54da9830348",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "b96ead8a-e765-4a3a-8b91-d732b32bc953",
+                    "material_id": "d66e6de5-e069-43c4-a673-7210f84863c2",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3622,8 +3622,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 17385000,
-                        "start": 284641000
+                        "duration": 17385099,
+                        "start": 284642605
                     },
                     "text": "这个男人有着健硕的身材，长着一张冷峻严肃的国字脸，用一双精干的目光紧盯着我的眼睛。忽然，他的嘴角露出一丝诡异的微笑，然后从柜台里走出来，用极其沉闷的声音说：",
                     "track_attribute": 0,
@@ -3662,15 +3662,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "bb19fa67-5ca3-4dd7-a1b2-a2dd9c4292b1"
+                        "ee973630-d61c-474b-9143-ba99764703f0"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "78d2da5c-6daf-4c2f-835a-b8b5a2c3a6a4",
+                    "id": "0ff9579e-a3fb-4b42-84b7-777de2f5513c",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "0aeb57d6-d909-4208-8656-c808b60bbd5e",
+                    "material_id": "9717034d-efce-46f5-ad2e-26369c983d3d",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3692,8 +3692,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 2675000,
-                        "start": 302026000
+                        "duration": 2675015,
+                        "start": 302027704
                     },
                     "text": "“欢迎你来到幽灵客栈。”",
                     "track_attribute": 0,
@@ -3732,15 +3732,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "7ef88a62-ce4b-49ee-b81a-e0da760c7bc4"
+                        "fb79bf94-f1e9-4f68-9dd5-f6e447080032"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "153cdb81-af9b-44dd-a38d-4f86b7fa568e",
+                    "id": "1adaaba8-9df0-4191-9504-941355bbc91d",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "9329e1cb-c08a-4402-ad7c-263316b4002d",
+                    "material_id": "2f538ad2-4511-4dbe-a53a-bc414939e327",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3762,8 +3762,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 22068000,
-                        "start": 304701000
+                        "duration": 22068124,
+                        "start": 304702719
                     },
                     "text": "我急忙后退了一大步，脑子一团空白，不知道该如何回答。我来这里是干什么的？对，是为了田园的木匣。可当时我已经完全忘记了来这里的使命，只感到自己又冷又饿，我只能出于本能地说了一句：“这里有什么吃的吗？”",
                     "track_attribute": 0,
@@ -3802,15 +3802,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "0596f1a0-c7d7-491a-bd32-015b2698c1e0"
+                        "d60ce07a-1a2e-4733-8b07-d5826327bfbf"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "b35e03e2-9e9b-43d8-b5c5-3ed37eaf1a57",
+                    "id": "9da00101-ea04-4b16-8f9c-d450bfb60f6b",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "c823370d-1f87-42ad-a500-1c0c1b267f90",
+                    "material_id": "b1c475cd-a06e-400a-8d71-0a365d82666c",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3832,8 +3832,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 2228000,
-                        "start": 326769000
+                        "duration": 2228013,
+                        "start": 326770843
                     },
                     "text": "“你是来投宿的吗？”",
                     "track_attribute": 0,
@@ -3872,15 +3872,15 @@
                     "enable_lut": true,
                     "enable_smart_color_adjust": false,
                     "extra_material_refs": [
-                        "b00cfd34-35f5-4970-8ffe-5f460babe7b1"
+                        "798645e1-eddd-4adf-b9df-0bf1b788cd3a"
                     ],
                     "fixed_height": -1,
                     "fixed_width": -1,
                     "font": "",
-                    "id": "5ae86d00-349e-489e-aae1-202c792b04e2",
+                    "id": "fbf055da-188c-4f80-971b-2161700c455b",
                     "keyframe_refs": [],
                     "last_nonzero_volume": 1,
-                    "material_id": "ddd1c84b-39ea-46df-9d44-052995fadf7e",
+                    "material_id": "f3323ed2-a842-4b2c-b395-8f3fab45a321",
                     "render_index": 15000,
                     "reverse": false,
                     "source_timerange": null,
@@ -3902,8 +3902,8 @@
                         "vertical": false
                     },
                     "target_timerange": {
-                        "duration": 9361000,
-                        "start": 328997000
+                        "duration": 9361053,
+                        "start": 328998856
                     },
                     "text": "我茫然地看着他的眼睛，不由自主地点了点头。外面正风雨交加，反正今晚我肯定是回不去了。",
                     "track_attribute": 0,
