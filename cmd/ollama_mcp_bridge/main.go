@@ -25,7 +25,7 @@ func main() {
 	defer logger.Sync()
 
 	// 创建工作流处理器
-	processor, err := workflow.NewProcessor(logger)
+	_, err := workflow.NewProcessor(logger)
 	if err != nil {
 		log.Fatalf("创建工作流处理器失败: %v", err)
 	}

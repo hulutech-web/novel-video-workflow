@@ -29,7 +29,7 @@
 
 ## 🏗️ MCP服务架构图
 
-```mermaid
+```
 graph TB
     subgraph "📦 用户输入层"
         A[📖 小说文本]
@@ -322,19 +322,22 @@ output/
 ![截屏2026-01-16 02.29.02.png](%E6%88%AA%E5%B1%8F2026-01-16%2002.29.02.png)
 
 ## 🎬 效果一览 
-[chapter_10.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/chapter_10.srt)
-[chapter_10.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/chapter_10.wav)
-![scene_01.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_01.png)
-![scene_02.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_02.png)
-![scene_03.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_03.png)
-![scene_04.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_04.png)
-![scene_05.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_05.png)
-![scene_06.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_06.png)
-![scene_07.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_07.png)
-![scene_08.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_08.png)
-![scene_09.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_09.png)
-![scene_10.png](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_10.png)
 
+### 音频与字幕示例
+- [chapter_10.srt](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/chapter_10.srt)
+- [chapter_10.wav](output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/chapter_10.wav)
+
+### AI生成图像示例 (宫格展示)
+
+<div align="center">
+
+<img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_01.png" width="200" alt="场景 01" title="AI生成图像 - 场景 01"> <img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_02.png" width="200" alt="场景 02" title="AI生成图像 - 场景 02">  
+<img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_03.png" width="200" alt="场景 03" title="AI生成图像 - 场景 03"> <img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_04.png" width="200" alt="场景 04" title="AI生成图像 - 场景 04">  
+<img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_05.png" width="200" alt="场景 05" title="AI生成图像 - 场景 05"> <img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_06.png" width="200" alt="场景 06" title="AI生成图像 - 场景 06">  
+<img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_07.png" width="200" alt="场景 07" title="AI生成图像 - 场景 07"> <img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_08.png" width="200" alt="场景 08" title="AI生成图像 - 场景 08">  
+<img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_09.png" width="200" alt="场景 09" title="AI生成图像 - 场景 09"> <img src="output/%E5%B9%BD%E7%81%B5%E5%AE%A2%E6%A0%88/chapter_10/scene_10.png" width="200" alt="场景 10" title="AI生成图像 - 场景 10">
+
+</div>
 
 ## 🤝 贡献
 
