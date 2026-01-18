@@ -217,7 +217,7 @@ func (c *OllamaClient) AnalyzeScenesAndGeneratePrompts(content, style string, es
 	c.Logger.Info("发送Ollama请求分析场景并生成分镜提示词",
 		zap.String("endpoint", endpoint),
 		zap.String("model", request.Model))
-
+	c.BroadcastService.SendMessage("场景分析请求成功", fmt.Sprintf("请等待Ollama生成提示词"), broadcast.GetTimeStr())
 	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(payload))
 	if err != nil {
 		c.Logger.Error("创建Ollama请求失败", zap.Error(err))

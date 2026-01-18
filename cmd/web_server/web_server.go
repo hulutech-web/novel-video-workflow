@@ -1058,6 +1058,20 @@ func webServerMain() {
 	r.GET("/api/files/content", fileContentHandler)
 	r.DELETE("/api/files/delete", fileDeleteHandler)
 	r.POST("/api/files/upload", fileUploadHandler)
+	// 添加数据库跟踪相关的API端点
+	r.GET("/api/chapter-processes", getChapterProcessesHandler)
+	r.GET("/api/chapter-process", getChapterProcessHandler)
+	r.POST("/api/retry-chapter", retryChapterHandler)
+	r.POST("/api/retry-step", retryStepHandler)
+	// 添加项目管理相关的API端点
+	r.GET("/api/projects", getProjectsHandler)
+	r.GET("/api/project", getProjectHandler)
+	r.POST("/api/project", createProjectHandler)
+	// 添加扫描input目录自动创建项目的API端点
+	r.POST("/api/scan-input-projects", scanInputForProjectsHandler)
+	// 添加场景管理相关的API端点
+	r.GET("/api/scenes", getScenesByChapterHandler)
+	r.POST("/api/update-scene-prompt", updateScenePromptHandler)
 
 	// 添加静态文件服务，用于提供input和output目录的文件访问
 	// 使用项目根路径确保正确访问input和output目录
@@ -1349,13 +1363,12 @@ func oneClickFilmHandler(c *gin.Context) {
 					}
 					defer logger.Sync()
 
-					// 初始化各组件
-					wp := &WorkflowProcessor{
-						logger:        logger,
-						fileManager:   file.NewFileManager(),
-						ttsClient:     indextts2.NewIndexTTS2Client(logger, "http://localhost:7860"),
-						aegisubGen:    aegisub.NewAegisubGenerator(),
-						drawThingsGen: drawthings.NewChapterImageGenerator(logger),
+					// 使用数据库跟踪的工作流处理器
+					processor, err := workflow_pkg.NewProcessor(logger)
+					if err != nil {
+						broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 创建工作流处理器失败: %v", err), broadcast.GetTimeStr())
+						c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("创建工作流处理器失败: %v", err)})
+						return
 					}
 
 					// 广播开始生成音频
@@ -1364,53 +1377,60 @@ func oneClickFilmHandler(c *gin.Context) {
 					// 遍历章节处理
 					for key, val := range file.ChapterMap {
 						outputDir := filepath.Join(projectRoot, "output", item.Name())
+						chapterName := fmt.Sprintf("chapter_%02d", key)
+						inputFilePath := filepath.Join(novelDir, chapterName, chapterName+".txt")
 
-						audioFile := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key), fmt.Sprintf("chapter_%02d.wav", key))
-
-						// 使用参考音频文件
-						refAudioPath := filepath.Join(projectRoot, "assets", "ref_audio", "ref.m4a")
-						if _, err := os.Stat(refAudioPath); os.IsNotExist(err) {
-							broadcast.GlobalBroadcastService.SendLog("voice", "[一键出片] ⚠️  未找到参考音频文件，跳过音频生成", broadcast.GetTimeStr())
-						} else {
-							err = wp.ttsClient.GenerateTTSWithAudio(refAudioPath, val, audioFile)
-							if err != nil {
-								broadcast.GlobalBroadcastService.SendLog("voice", fmt.Sprintf("[一键出片] ⚠️  音频生成失败: %v", err), broadcast.GetTimeStr())
-
-								wp.ttsClient.HTTPClient.CloseIdleConnections()
-								c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("音频生成失败: %v", err)})
-								return
-							} else {
-								broadcast.GlobalBroadcastService.SendLog("voice", fmt.Sprintf("[一键出片] ✅ 音频生成完成: %s", audioFile), broadcast.GetTimeStr())
-
-								// 显式关闭IndexTTS2客户端连接
-								if wp.ttsClient.HTTPClient != nil {
-									wp.ttsClient.HTTPClient.CloseIdleConnections()
-								}
+						// 检查章节输入文件是否存在
+						if _, err := os.Stat(inputFilePath); os.IsNotExist(err) {
+							// 如果不存在，创建临时文件
+							chapterDir := filepath.Join(novelDir, chapterName)
+							if err := os.MkdirAll(chapterDir, 0755); err != nil {
+								broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 创建章节目录失败: %v", err), broadcast.GetTimeStr())
+								continue
+							}
+							inputFilePath = filepath.Join(chapterDir, chapterName+".txt")
+							if err := os.WriteFile(inputFilePath, []byte(val), 0644); err != nil {
+								broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 创建章节输入文件失败: %v", err), broadcast.GetTimeStr())
+								continue
 							}
 						}
 
-						// 步骤3: 生成台词/字幕
-						broadcast.GlobalBroadcastService.SendLog("aegisub", "[一键出片] 📜 步骤3 - 生成台词/字幕...", broadcast.GetTimeStr())
+						// 使用数据库跟踪处理章节
+						_, err := processor.ProcessChapterWithTracking(item.Name(), chapterName, inputFilePath, outputDir)
+						if err != nil {
+							broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ❌ 章节处理失败 %s: %v", chapterName, err), broadcast.GetTimeStr())
+							c.JSON(http.StatusOK, gin.H{"status": "error", "message": fmt.Sprintf("章节处理失败 %s: %v", chapterName, err)})
+							return
+						}
 
-						subtitleFile := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key), fmt.Sprintf("chapter_%02d.srt", key))
+						broadcast.GlobalBroadcastService.SendLog("movie", fmt.Sprintf("[一键出片] ✅ 章节处理完成: %s", chapterName), broadcast.GetTimeStr())
 
+						// 检查音频文件是否存在
+						audioFile := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key), "audio.wav")
 						if _, err := os.Stat(audioFile); err == nil {
-							// 如果音频文件存在，生成字幕
-							err = wp.aegisubGen.GenerateSubtitleFromIndextts2Audio(audioFile, val, subtitleFile)
+							// 步骤3: 生成字幕
+							broadcast.GlobalBroadcastService.SendLog("aegisub", "[一键出片] 📝 步骤3 - 生成字幕...", broadcast.GetTimeStr())
+
+							// 使用Aegisub生成字幕
+							subtitleFile := strings.TrimSuffix(audioFile, ".wav") + ".srt"
+							chapterText, err := os.ReadFile(inputFilePath)
 							if err != nil {
-								broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ⚠️  字幕生成失败: %v", err), broadcast.GetTimeStr())
-
+								broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ❌ 读取章节文本失败: %v", err), broadcast.GetTimeStr())
 							} else {
-								broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ✅ 字幕生成完成: %s", subtitleFile), broadcast.GetTimeStr())
-
+								err = processor.GetAegisubTool().ProcessIndextts2OutputWithCustomName(audioFile, string(chapterText), subtitleFile)
+								if err != nil {
+									broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ⚠️  字幕生成失败: %v", err), broadcast.GetTimeStr())
+								} else {
+									broadcast.GlobalBroadcastService.SendLog("aegisub", fmt.Sprintf("[一键出片] ✅ 字幕生成完成: %s", subtitleFile), broadcast.GetTimeStr())
+								}
 							}
 						} else {
 							broadcast.GlobalBroadcastService.SendLog("aegisub", "[一键出片] ⚠️  由于音频文件不存在，跳过字幕生成", broadcast.GetTimeStr())
-
 						}
-						broadcast.GlobalBroadcastService.SendLog("image", "[一键出片] 🎨 步骤4 - 生成图像...", broadcast.GetTimeStr())
 
 						// 步骤4: 生成图像
+						broadcast.GlobalBroadcastService.SendLog("image", "[一键出片] 🎨 步骤4 - 生成图像...", broadcast.GetTimeStr())
+
 						imagesDir := filepath.Join(outputDir, fmt.Sprintf("chapter_%02d", key))
 						if err := os.MkdirAll(imagesDir, 0755); err != nil {
 							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ❌ 创建图像目录失败: %v", err), broadcast.GetTimeStr())
@@ -1439,6 +1459,10 @@ func oneClickFilmHandler(c *gin.Context) {
 						}
 
 						// 使用Ollama优化的提示词生成图像
+						wp := &WorkflowProcessor{
+							logger:        logger,
+							drawThingsGen: processor.GetDrawThingsTool(),
+						}
 						err = wp.generateImagesWithOllamaPrompts(val, imagesDir, key, estimatedAudioDuration)
 						if err != nil {
 							broadcast.GlobalBroadcastService.SendLog("image", fmt.Sprintf("[一键出片] ⚠️  图像生成失败: %v", err), broadcast.GetTimeStr())
@@ -1461,7 +1485,7 @@ func oneClickFilmHandler(c *gin.Context) {
 							capcutGenerator := capcut.NewCapcutGenerator(nil) // 传递logger或nil
 							err = capcutGenerator.GenerateProject(chapterDir)
 							if err != nil {
-								//broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ⚠️  剪映项目生成失败: %v", err), broadcast.GetTimeStr())
+								broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ⚠️  剪映项目生成失败: %v", err), broadcast.GetTimeStr())
 							} else {
 								broadcast.GlobalBroadcastService.SendLog("capcut", fmt.Sprintf("[一键出片] ✅ 剪映项目生成完成，章节: %d", key), broadcast.GetTimeStr())
 							}
@@ -1474,6 +1498,10 @@ func oneClickFilmHandler(c *gin.Context) {
 
 					return // 处理完一个小说就返回
 				}
+
+				broadcast.GlobalBroadcastService.SendLog("workflow", "[一键出片] ✅ 一键出片完整工作流执行完成！", broadcast.GetTimeStr())
+
+				return // 处理完一个小说就返回
 			}
 		}
 	}
@@ -1570,4 +1598,450 @@ func capcutProjectHandler(c *gin.Context) {
 	}()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "CapCut project generation started"})
+}
+
+// getChapterProcessesHandler 获取小说的所有章节处理记录
+func getChapterProcessesHandler(c *gin.Context) {
+	novelName := c.Query("novel_name")
+
+	if novelName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name parameter", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	processes, err := processor.GetChapterProcesses(novelName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to get chapter processes: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"processes": processes, "status": "success"})
+}
+
+// getChapterProcessHandler 获取特定章节的处理记录
+func getChapterProcessHandler(c *gin.Context) {
+	novelName := c.Query("novel_name")
+	chapterName := c.Query("chapter_name")
+
+	if novelName == "" || chapterName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name or chapter_name parameter", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	process, err := processor.GetChapterProcess(novelName, chapterName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to get chapter process: %v", err), "status": "error"})
+		return
+	}
+
+	if process == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Chapter process not found", "status": "not_found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"process": process, "status": "success"})
+}
+
+// retryChapterHandler 重试章节处理
+func retryChapterHandler(c *gin.Context) {
+	var reqBody map[string]interface{}
+	err := json.NewDecoder(c.Request.Body).Decode(&reqBody)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON", "status": "error"})
+		return
+	}
+
+	novelName, ok := reqBody["novel_name"].(string)
+	chapterName, ok2 := reqBody["chapter_name"].(string)
+
+	if !ok || !ok2 || novelName == "" || chapterName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name or chapter_name", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	err = processor.RetryChapterProcess(novelName, chapterName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to retry chapter: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Chapter retry initiated"})
+}
+
+// retryStepHandler 重试特定步骤
+func retryStepHandler(c *gin.Context) {
+	var reqBody map[string]interface{}
+	err := json.NewDecoder(c.Request.Body).Decode(&reqBody)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON", "status": "error"})
+		return
+	}
+
+	novelName, ok := reqBody["novel_name"].(string)
+	chapterName, ok2 := reqBody["chapter_name"].(string)
+	stepName, ok3 := reqBody["step_name"].(string)
+
+	if !ok || !ok2 || !ok3 || novelName == "" || chapterName == "" || stepName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name, chapter_name, or step_name", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	err = processor.RetryStepForChapter(novelName, chapterName, stepName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to retry step: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Step retry initiated"})
+}
+
+// updateScenePromptHandler 更新场景提示词
+func updateScenePromptHandler(c *gin.Context) {
+	var reqBody map[string]interface{}
+	err := json.NewDecoder(c.Request.Body).Decode(&reqBody)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON", "status": "error"})
+		return
+	}
+
+	sceneIDFloat, ok := reqBody["scene_id"].(float64) // JSON解码时数字默认为float64
+	newPrompt, ok2 := reqBody["new_prompt"].(string)
+
+	if !ok || !ok2 || sceneIDFloat <= 0 || newPrompt == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing scene_id or new_prompt", "status": "error"})
+		return
+	}
+
+	sceneID := uint(sceneIDFloat)
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	err = processor.UpdateScenePrompt(sceneID, newPrompt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to update scene prompt: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "Scene prompt updated successfully"})
+}
+
+// getProjectsHandler 获取所有项目
+func getProjectsHandler(c *gin.Context) {
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	projects, err := processor.GetProjects()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to get projects: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"projects": projects, "status": "success"})
+}
+
+// getProjectHandler 获取特定项目
+func getProjectHandler(c *gin.Context) {
+	novelName := c.Query("novel_name")
+
+	if novelName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name parameter", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	project, err := processor.GetProject(novelName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to get project: %v", err), "status": "error"})
+		return
+	}
+
+	if project == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found", "status": "not_found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"project": project, "status": "success"})
+}
+
+// createProjectHandler 创建新项目
+func createProjectHandler(c *gin.Context) {
+	var reqBody map[string]interface{}
+	err := json.NewDecoder(c.Request.Body).Decode(&reqBody)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON", "status": "error"})
+		return
+	}
+
+	novelName, ok := reqBody["name"].(string)
+	description, _ := reqBody["description"].(string)
+	genre, _ := reqBody["genre"].(string)
+	atmosphere, _ := reqBody["atmosphere"].(string)
+
+	if !ok || novelName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing project name", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	project, err := processor.CreateProject(novelName, description, genre, atmosphere)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to create project: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"project": project, "status": "success", "message": "Project created successfully"})
+}
+
+// getScenesByChapterHandler 获取章节的所有场景
+func getScenesByChapterHandler(c *gin.Context) {
+	novelName := c.Query("novel_name")
+	chapterName := c.Query("chapter_name")
+
+	if novelName == "" || chapterName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing novel_name or chapter_name parameter", "status": "error"})
+		return
+	}
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	scenes, err := processor.GetScenesByChapter(novelName, chapterName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to get scenes: %v", err), "status": "error"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"scenes": scenes, "status": "success"})
+}
+
+// scanInputForProjectsHandler 扫描input目录并自动创建项目
+func scanInputForProjectsHandler(c *gin.Context) {
+	// 获取项目根目录
+	wd, err := os.Getwd()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法获取当前工作目录", "status": "error"})
+		return
+	}
+
+	projectRoot := wd
+	if strings.HasSuffix(wd, "/cmd/web_server") {
+		projectRoot = filepath.Dir(filepath.Dir(wd)) // 回退两级到项目根目录
+	}
+
+	// 获取input目录路径
+	inputDir := filepath.Join(projectRoot, "input")
+
+	// 读取input目录
+	items, err := os.ReadDir(inputDir)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "无法读取input目录", "status": "error"})
+		return
+	}
+
+	createdProjects := make([]map[string]interface{}, 0)
+	skippedProjects := make([]string, 0)
+
+	// 创建logger
+	logger, err := zap.NewProduction()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create logger", "status": "error"})
+		return
+	}
+	defer logger.Sync()
+
+	// 创建处理器
+	processor, err := workflow_pkg.NewProcessor(logger)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create processor", "status": "error"})
+		return
+	}
+	defer processor.GetDbManager().Close() // 确保关闭数据库连接
+
+	// 遍历input目录寻找小说目录
+	for _, item := range items {
+		if item.IsDir() { // 只处理目录
+			novelDir := filepath.Join(inputDir, item.Name())
+
+			// 在小说目录中寻找对应的小说文件
+			novelFiles, err := os.ReadDir(novelDir)
+			if err != nil {
+				broadcast.GlobalBroadcastService.SendLog("scan", fmt.Sprintf("[扫描] ❌ 无法读取小说目录 %s: %v", item.Name(), err), broadcast.GetTimeStr())
+				continue
+			}
+
+			// 寻找与目录名匹配的.txt文件（例如 幽灵客栈/幽灵客栈.txt）
+			for _, novelFile := range novelFiles {
+				expectedFileName := item.Name() + ".txt"
+				if !novelFile.IsDir() && strings.EqualFold(novelFile.Name(), expectedFileName) {
+					// 检查项目是否已存在
+					existingProject, err := processor.GetProject(item.Name())
+					if err != nil {
+						broadcast.GlobalBroadcastService.SendLog("scan", fmt.Sprintf("[扫描] 检查项目时出错 %s: %v", item.Name(), err), broadcast.GetTimeStr())
+					}
+					
+					if existingProject == nil {
+						// 项目不存在，创建新项目
+						project, err := processor.CreateProject(item.Name(), fmt.Sprintf("项目: %s", item.Name()), "", "")
+						if err != nil {
+							broadcast.GlobalBroadcastService.SendLog("scan", fmt.Sprintf("[扫描] ❌ 创建项目失败 %s: %v", item.Name(), err), broadcast.GetTimeStr())
+						} else {
+							broadcast.GlobalBroadcastService.SendLog("scan", fmt.Sprintf("[扫描] ✅ 自动创建项目: %s", item.Name()), broadcast.GetTimeStr())
+							createdProjects = append(createdProjects, map[string]interface{}{
+								"name":        project.Name,
+								"description": project.Description,
+								"genre":       project.Genre,
+								"atmosphere":  project.Atmosphere,
+							})
+						}
+					} else {
+						// 项目已存在，跳过
+						broadcast.GlobalBroadcastService.SendLog("scan", fmt.Sprintf("[扫描] 📋 项目已存在，跳过: %s", item.Name()), broadcast.GetTimeStr())
+						skippedProjects = append(skippedProjects, item.Name())
+					}
+				}
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":           "success",
+		"message":          fmt.Sprintf("扫描完成，创建了 %d 个项目", len(createdProjects)),
+		"created_projects": createdProjects,
+		"skipped_projects": skippedProjects,
+		"total_found":      len(createdProjects) + len(skippedProjects),
+	})
 }

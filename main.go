@@ -8,6 +8,7 @@ import (
 	"novel-video-workflow/pkg/mcp"
 	"novel-video-workflow/pkg/tools/aegisub"
 	"novel-video-workflow/pkg/tools/drawthings"
+	"novel-video-workflow/pkg/database"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -23,6 +24,14 @@ import (
 
 func main() {
 	fmt.Println("启动小说视频工作流系统...")
+
+	// 初始化数据库
+	fmt.Println("初始化数据库...")
+	if err := database.InitDatabase(); err != nil {
+		fmt.Printf("数据库初始化失败: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println("数据库初始化完成")
 
 	// 启动 MCP 服务器
 	go runMCPModeBackground()

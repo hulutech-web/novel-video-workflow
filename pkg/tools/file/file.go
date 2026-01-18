@@ -216,6 +216,58 @@ func (fm *FileManager) convertChineseNumberToArabic(chineseNum string) int {
 	return 0
 }
 
+// GetFilesInDir 获取目录中指定扩展名的文件
+func (fm *FileManager) GetFilesInDir(dirPath string, extension string) ([]string, error) {
+	var files []string
+	
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		
+		if !info.IsDir() {
+			fileExt := strings.ToLower(filepath.Ext(path))
+			if strings.ToLower(extension) == fileExt {
+				files = append(files, path)
+			}
+		}
+		
+		return nil
+	})
+	
+	if err != nil {
+		return nil, err
+	}
+	
+	return files, nil
+}
+
+// GetFilesInDirByExt 获取目录中指定扩展名的文件（只返回文件名，不含路径）
+func (fm *FileManager) GetFilesInDirByExt(dirPath string, extension string) ([]string, error) {
+	var files []string
+	
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		
+		if !info.IsDir() {
+			fileExt := strings.ToLower(filepath.Ext(path))
+			if strings.ToLower(extension) == fileExt {
+				files = append(files, filepath.Base(path))
+			}
+		}
+		
+		return nil
+	})
+	
+	if err != nil {
+		return nil, err
+	}
+	
+	return files, nil
+}
+
 // output则参考input的结构生成目录结构，分出章节，每个章节内参考如下即可
 /*
 ```

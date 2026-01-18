@@ -231,12 +231,41 @@
             animation: rotate 20s linear infinite;
             z-index: -1;
         }
+        
+        .step-card {
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .step-completed {
+            background-color: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .step-processing {
+            background-color: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .step-failed {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        
+        .step-pending {
+            background-color: rgba(107, 114, 128, 0.15);
+            border-color: rgba(107, 114, 128, 0.3);
+        }
     </style>
 </head>
 <body class="min-h-screen">
     <!-- 视频背景 -->
 
-    <video id="myVideo" muted autoplay loop class="video-background">
+    <video id="myVideo" muted autoplay  class="video-background">
         <source src="assets/m1.mp4" type="video/mp4">
         <source src="assets/m2.mp4" type="video/mp4">
         <source src="assets/m3.mp4" type="video/mp4">
@@ -315,6 +344,12 @@
                 <button class="nav-tab active px-8 py-4 font-semibold text-sm md:text-base text-white bg-white bg-opacity-30 hover:bg-white hover:bg-opacity-40 transition-colors future-glow" onclick="switchTab('dashboard')">
                     <i class="fas fa-film mr-2 text-lg"></i>仪表板
                 </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('oneclick')">
+                    <i class="fas fa-bolt mr-2 text-lg"></i>一键出片
+                </button>
+                <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('projectmgmt')">
+                    <i class="fas fa-project-diagram mr-2 text-lg"></i>项目管理
+                </button>
                 <button class="nav-tab px-8 py-4 font-semibold text-sm md:text-base text-gray-200 bg-transparent hover:bg-white hover:bg-opacity-30 transition-colors" onclick="switchTab('tools')">
                     <i class="fas fa-cogs mr-2 text-lg"></i>MCP 工具
                 </button>
@@ -345,6 +380,50 @@
                         <i class="fas fa-stop-circle mr-2 text-base"></i>停止执行
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- 一键出片 Tab -->
+        <div id="oneclick" class="tab-content glass-effect rounded-xl p-6 mb-4 hidden card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-bolt mr-2 text-yellow-300 text-xl"></i>一键出片
+            </h2>
+            <div class="mb-6">
+                <label class="block text-lg font-medium text-gray-200 mb-3">选择项目:</label>
+                <select id="projectSelect" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                    <option value="">-- 请选择项目 --</option>
+                </select>
+                <p class="mt-2 text-sm text-gray-400">从现有项目中选择，或上传新项目到input目录后刷新列表</p>
+            </div>
+            <div class="mb-6">
+                <button onclick="checkProjectAvailability()" class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base">
+                    <i class="fas fa-search mr-2 text-base"></i>检查项目可用性
+                </button>
+                <p id="projectCheckResult" class="mt-3 text-base text-gray-300"></p>
+            </div>
+            <div class="mb-6">
+                <button onclick="startOneClickFilm()" class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg transition-all duration-200 flex items-center shadow-lg hover:shadow-xl future-glow text-base disabled:opacity-50" id="startOneClickBtn" disabled>
+                    <i class="fas fa-play mr-2 text-base"></i>开始一键出片
+                </button>
+            </div>
+        </div>
+
+        <!-- 项目管理 Tab -->
+        <div id="projectmgmt" class="tab-content glass-effect rounded-xl p-6 mb-4 hidden card-hover relative z-20">
+            <h2 class="text-xl font-semibold mb-4 text-white flex items-center">
+                <i class="fas fa-project-diagram mr-2 text-purple-300 text-xl"></i>项目管理
+            </h2>
+            <div class="mb-6">
+                <label class="block text-lg font-medium text-gray-200 mb-3">选择项目:</label>
+                <select id="mgmtProjectSelect" class="w-full px-4 py-3 bg-black bg-opacity-30 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg" onchange="loadProjectChapters()">
+                    <option value="">-- 请选择项目 --</option>
+                </select>
+            </div>
+            <div id="chaptersContainer" class="hidden">
+                <h3 class="text-lg font-medium text-white mb-4 flex items-center">
+                    <i class="fas fa-book mr-2 text-blue-300"></i>章节列表
+                </h3>
+                <div id="chaptersList" class="space-y-4"></div>
             </div>
         </div>
 
@@ -515,6 +594,416 @@
             consoleDiv.scrollTop = consoleDiv.scrollHeight;
         };
         
+        // 页面加载时获取项目列表
+        window.onload = function() {
+            loadProjects();
+        };
+        
+        // 加载项目列表
+        function loadProjects() {
+            // 首先扫描input目录自动创建项目
+            fetch('/api/scan-input-projects', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(scanData => {
+                console.log('Input目录扫描完成:', scanData);
+                
+                // 然后获取所有项目
+                return fetch('/api/projects');
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                const projectSelect = document.getElementById('projectSelect');
+                const mgmtProjectSelect = document.getElementById('mgmtProjectSelect');
+                
+                // 清空选项
+                projectSelect.innerHTML = '<option value="">-- 请选择项目 --</option>';
+                mgmtProjectSelect.innerHTML = '<option value="">-- 请选择项目 --</option>';
+                
+                // 添加项目选项
+                data.projects.forEach(project => {
+                    const option1 = document.createElement('option');
+                    option1.value = project.name;
+                    option1.textContent = project.name;
+                    projectSelect.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = project.name;
+                    option2.textContent = project.name;
+                    mgmtProjectSelect.appendChild(option2);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading projects:', error);
+            });
+        }
+        
+        // 检查项目可用性
+        function checkProjectAvailability() {
+            const projectName = document.getElementById('projectSelect').value;
+            if (!projectName) {
+                alert('请先选择一个项目');
+                return;
+            }
+            
+            // 检查input目录下是否存在对应的项目文件夹
+            fetch('/api/files/list?dir=./input')
+                .then(response => response.json())
+                .then(data => {
+                    const projectDirExists = data.files.some(file => file.name === projectName && file.isDir);
+                    const resultElement = document.getElementById('projectCheckResult');
+                    
+                    if (projectDirExists) {
+                        resultElement.innerHTML = `<span class="text-green-400">项目 "${projectName}" 在input目录中可用，可以开始一键出片。</span>`;
+                        document.getElementById('startOneClickBtn').disabled = false;
+                    } else {
+                        resultElement.innerHTML = `<span class="text-red-400">项目 "${projectName}" 在input目录中不存在。请先上传项目文件夹。</span>`;
+                        document.getElementById('startOneClickBtn').disabled = true;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking project availability:', error);
+                    document.getElementById('projectCheckResult').innerHTML = `<span class="text-red-400">检查项目可用性时出错: ${error.message}</span>`;
+                });
+        }
+        
+        // 开始一键出片
+        function startOneClickFilm() {
+            const projectName = document.getElementById('projectSelect').value;
+            if (!projectName) {
+                alert('请先选择一个项目');
+                return;
+            }
+            
+            // 构造参数并调用一键出片API
+            fetch('/api/one-click-film', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({projectName: projectName})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('一键出片工作流已启动:', data);
+                if (data.status === 'success') {
+                    alert(`一键出片已为项目 "${projectName}" 启动`);
+                } else {
+                    alert(`启动失败: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error('一键出片执行错误:', error);
+                alert(`启动失败: ${error.message}`);
+            });
+        }
+        
+        // 加载项目章节
+        function loadProjectChapters() {
+            const projectName = document.getElementById('mgmtProjectSelect').value;
+            if (!projectName) {
+                document.getElementById('chaptersContainer').classList.add('hidden');
+                return;
+            }
+            
+            // 获取项目章节列表
+            fetch(`/api/chapter-processes?novel_name=${encodeURIComponent(projectName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const chaptersList = document.getElementById('chaptersList');
+                    chaptersList.innerHTML = '';
+                    
+                    if (data.processes && data.processes.length > 0) {
+                        data.processes.forEach(chapter => {
+                            const chapterCard = createChapterCard(chapter, projectName);
+                            chaptersList.appendChild(chapterCard);
+                        });
+                        
+                        document.getElementById('chaptersContainer').classList.remove('hidden');
+                    } else {
+                        chaptersList.innerHTML = '<div class="text-center py-8 text-xl text-gray-300">该项目暂无章节处理记录</div>';
+                        document.getElementById('chaptersContainer').classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading chapters:', error);
+                    document.getElementById('chaptersList').innerHTML = '<div class="text-center py-8 text-xl text-red-400">加载章节列表失败: ' + error.message + '</div>';
+                    document.getElementById('chaptersContainer').classList.remove('hidden');
+                });
+        }
+        
+        // 创建章节卡片
+        function createChapterCard(chapter, projectName) {
+            const card = document.createElement('div');
+            card.className = 'glass-effect rounded-xl p-6 mb-4';
+            
+            // 根据章节状态设置不同的样式
+            let statusClass = 'step-pending';
+            let statusText = '待处理';
+            if (chapter.Status === 'completed') {
+                statusClass = 'step-completed';
+                statusText = '已完成';
+            } else if (chapter.Status === 'processing') {
+                statusClass = 'step-processing';
+                statusText = '处理中';
+            } else if (chapter.Status === 'failed') {
+                statusClass = 'step-failed';
+                statusText = '失败';
+            }
+            
+            card.classList.add(statusClass);
+            
+            // 获取章节步骤信息
+            let stepsHtml = '<div class="mt-4"><h4 class="text-lg font-medium text-white mb-3">处理步骤:</h4><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">';
+            
+            // 默认步骤
+            const defaultSteps = [
+                { name: 'audio', displayName: '音频生成', status: 'pending' },
+                { name: 'image', displayName: '图像生成', status: 'pending' },
+                { name: 'subtitle', displayName: '字幕生成', status: 'pending' },
+                { name: 'capcut', displayName: '剪映项目', status: 'pending' }
+            ];
+            
+            // 如果章节有具体的步骤信息，使用实际状态
+            if (chapter.Steps && Array.isArray(chapter.Steps)) {
+                chapter.Steps.forEach(step => {
+                    const stepInfo = defaultSteps.find(s => s.name === step.StepName);
+                    if (stepInfo) {
+                        stepInfo.status = step.Status;
+                    }
+                });
+            }
+            
+            defaultSteps.forEach(step => {
+                let stepClass = 'step-pending';
+                let stepStatus = '待处理';
+                
+                if (step.status === 'completed') {
+                    stepClass = 'step-completed';
+                    stepStatus = '已完成';
+                } else if (step.status === 'processing') {
+                    stepClass = 'step-processing';
+                    stepStatus = '处理中';
+                } else if (step.status === 'failed') {
+                    stepClass = 'step-failed';
+                    stepStatus = '失败';
+                } else if (step.status === 'skipped') {
+                    stepClass = 'step-pending';
+                    stepStatus = '已跳过';
+                }
+                
+                stepsHtml += `
+                <div class="step-card glass-effect rounded-lg p-3 border ${stepClass}">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-gray-200">${step.displayName}</span>
+                        <span class="text-xs px-2 py-1 rounded-full ${stepClass.replace('step-', 'bg-')} text-white">${stepStatus}</span>
+                    </div>
+                    <div class="mt-2 flex gap-2">
+                        <button onclick="retryStep('${projectName}', '${chapter.ChapterName}', '${step.name}')" class="text-xs bg-gray-600 hover:bg-gray-700 text-white px-2 py-1 rounded transition-colors">重试</button>
+                        <button onclick="adjustStep('${projectName}', '${chapter.ChapterName}', '${step.name}')" class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded transition-colors">调整</button>
+                    </div>
+                </div>`;
+            });
+            
+            stepsHtml += '</div></div>';
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <i class="fas fa-book mr-2 text-blue-300"></i>
+                            章节: ${chapter.ChapterName}
+                            <span class="ml-4 text-sm px-3 py-1 rounded-full ${statusClass.replace('step-', 'bg-')} text-white">${statusText}</span>
+                        </h3>
+                        <p class="text-gray-300 mt-2">输入文件: ${chapter.InputFilePath || 'N/A'}</p>
+                        <p class="text-gray-300">输出目录: ${chapter.OutputDir || 'N/A'}</p>
+                        <p class="text-gray-300">持续时间: ${chapter.Duration || 0}秒</p>
+                    </div>
+                    <div>
+                        <button onclick="retryChapter('${projectName}', '${chapter.ChapterName}')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors mr-2">
+                            <i class="fas fa-redo mr-1"></i>重试章节
+                        </button>
+                        <button onclick="viewChapterDetails(${JSON.stringify(chapter).replace(/"/g, '&quot;')})" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-info-circle mr-1"></i>详情
+                        </button>
+                    </div>
+                </div>
+                ${stepsHtml}
+            `;
+            
+            return card;
+        }
+        
+        // 重试章节
+        function retryChapter(projectName, chapterName) {
+            if (confirm(`确定要重试项目 "${projectName}" 的章节 "${chapterName}" 吗？`)) {
+                fetch('/api/retry-chapter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        novel_name: projectName,
+                        chapter_name: chapterName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(`章节 "${chapterName}" 重试已启动`);
+                        // 重新加载章节列表
+                        loadProjectChapters();
+                    } else {
+                        alert(`重试失败: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error retrying chapter:', error);
+                    alert(`重试失败: ${error.message}`);
+                });
+            }
+        }
+        
+        // 重试步骤
+        function retryStep(projectName, chapterName, stepName) {
+            if (confirm(`确定要重试项目 "${projectName}" 的章节 "${chapterName}" 中的 "${stepName}" 步骤吗？`)) {
+                fetch('/api/retry-step', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        novel_name: projectName,
+                        chapter_name: chapterName,
+                        step_name: stepName
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(`步骤 "${stepName}" 重试已启动`);
+                        // 重新加载章节列表
+                        loadProjectChapters();
+                    } else {
+                        alert(`重试失败: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error retrying step:', error);
+                    alert(`重试失败: ${error.message}`);
+                });
+            }
+        }
+        
+        // 调整步骤（人工干预）
+        function adjustStep(projectName, chapterName, stepName) {
+            alert(`即将为项目 "${projectName}" 的章节 "${chapterName}" 中的 "${stepName}" 步骤提供人工调整功能`);
+            // 这里可以实现具体的人工调整功能，比如修改参数、重新配置等
+        }
+        
+        // 查看章节详情
+        function viewChapterDetails(chapter) {
+            // 创建模态框显示章节详细信息
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            overlay.id = 'modalOverlay';
+            
+            const modal = document.createElement('div');
+            modal.className = 'glass-effect rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-white border-opacity-30';
+            
+            const header = document.createElement('div');
+            header.className = 'flex justify-between items-center p-6 border-b border-white border-opacity-30 rounded-t-2xl';
+            header.innerHTML = `
+                <h3 class="text-xl font-bold text-white">章节详情: ${chapter.ChapterName}</h3>
+                <button onclick="closeModal()" class="text-gray-300 hover:text-white text-3xl leading-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'p-6 flex-grow overflow-auto';
+            
+            // 格式化时间
+            const formatDate = (dateStr) => {
+                if (!dateStr) return 'N/A';
+                return new Date(dateStr).toLocaleString();
+            };
+            
+            contentDiv.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="glass-effect rounded-xl p-4">
+                        <h4 class="text-lg font-medium text-white mb-3">基本信息</h4>
+                        <ul class="space-y-2 text-gray-200">
+                            <li><strong>项目名称:</strong> ${chapter.ProjectName || 'N/A'}</li>
+                            <li><strong>章节名称:</strong> ${chapter.ChapterName || 'N/A'}</li>
+                            <li><strong>状态:</strong> ${chapter.Status || 'N/A'}</li>
+                            <li><strong>输入文件:</strong> ${chapter.InputFilePath || 'N/A'}</li>
+                            <li><strong>输出目录:</strong> ${chapter.OutputDir || 'N/A'}</li>
+                        </ul>
+                    </div>
+                    <div class="glass-effect rounded-xl p-4">
+                        <h4 class="text-lg font-medium text-white mb-3">时间信息</h4>
+                        <ul class="space-y-2 text-gray-200">
+                            <li><strong>创建时间:</strong> ${formatDate(chapter.CreatedAt)}</li>
+                            <li><strong>开始时间:</strong> ${formatDate(chapter.StartTime)}</li>
+                            <li><strong>结束时间:</strong> ${formatDate(chapter.EndTime)}</li>
+                            <li><strong>持续时间:</strong> ${chapter.Duration || 0}秒</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                ${chapter.Steps && Array.isArray(chapter.Steps) && chapter.Steps.length > 0 ? `
+                <div class="glass-effect rounded-xl p-4 mb-6">
+                    <h4 class="text-lg font-medium text-white mb-3">处理步骤详情</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-600">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">步骤名称</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">状态</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">开始时间</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">结束时间</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">持续时间</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-300">错误信息</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-600">
+                                ${chapter.Steps.map(step => `
+                                <tr>
+                                    <td class="px-4 py-3 text-sm text-gray-200">${step.StepName}</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 rounded-full ${
+                                            step.Status === 'completed' ? 'bg-green-500' : 
+                                            step.Status === 'processing' ? 'bg-blue-500' : 
+                                            step.Status === 'failed' ? 'bg-red-500' : 
+                                            'bg-gray-500'
+                                        } text-white">${step.Status}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-gray-200">${formatDate(step.StartTime)}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-200">${formatDate(step.EndTime)}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-200">${step.Duration || 0}秒</td>
+                                    <td class="px-4 py-3 text-sm text-gray-200">${step.ErrorMsg || ''}</td>
+                                </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                ` : '<p class="text-gray-300">暂无步骤详情</p>'}
+            `;
+            
+            modal.appendChild(header);
+            modal.appendChild(contentDiv);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        }
+        
         // 文件管理相关函数
         let currentDirectory = 'input'; // 默认目录
         
@@ -551,11 +1040,11 @@
                     table.innerHTML = `
                         <thead class="bg-black bg-opacity-20">
                             <tr>
-                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-tl-lg">名称</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-l-lg">名称</th>
                                 <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">类型</th>
                                 <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">大小</th>
                                 <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider">修改时间</th>
-                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-tr-lg">操作</th>
+                                <th class="px-6 py-5 text-left text-lg font-bold text-gray-300 uppercase tracking-wider rounded-r-lg">操作</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-600"></tbody>
@@ -922,6 +1411,8 @@
                     // 所有文件上传完成后刷新文件列表
                     loadFileList(currentDirectory);
                     document.getElementById('uploadStatus').innerHTML = `所有文件上传完成 (${files.length} 个文件)`;
+                    // 同时刷新项目列表
+                    loadProjects();
                     return;
                 }
                 
@@ -1413,12 +1904,9 @@
             });
         }
         
-        // 初始化 - 加载工具列表
+        // 初始化 - 加载项目列表
         window.onload = function() {
-            // 在初始状态下加载工具列表
-            if (document.querySelector('.nav-tab.active').textContent.includes('MCP 工具')) {
-                loadToolsList();
-            }
+            loadProjects();
         };
     </script>
 </body>

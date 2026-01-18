@@ -640,9 +640,9 @@ func (c *IndexTTS2Client) GenerateTTSWithFile(audioPath string, text string) (*T
 	scanner := bufio.NewScanner(resultResp.Body)
 	for scanner.Scan() {
 		line := scanner.Text()
-		c.Logger.Info("接收到SSE结果....", zap.String("line", line))
+		c.Logger.Info("TTS....", zap.String("line", line))
 		//发送广播
-		c.sendBroadcast("接收到SSE结果....", line)
+		c.sendBroadcast("TTS....", line)
 		if strings.HasPrefix(line, "data: ") {
 			data := strings.TrimPrefix(line, "data: ")
 

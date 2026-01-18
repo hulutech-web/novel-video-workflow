@@ -1,0 +1,3443 @@
+{
+    "canvas_config": {
+        "height": 1920,
+        "ratio": "original",
+        "width": 1080
+    },
+    "color_space": 0,
+    "config": {
+        "adjust_max_index": 1,
+        "attachment_info": [],
+        "combination_max_index": 1,
+        "export_range": null,
+        "extract_audio_last_index": 1,
+        "lyrics_recognition_id": "",
+        "lyrics_sync": true,
+        "lyrics_taskinfo": [],
+        "maintrack_adsorb": true,
+        "material_save_mode": 0,
+        "original_sound_last_index": 1,
+        "record_audio_last_index": 1,
+        "sticker_max_index": 1,
+        "subtitle_recognition_id": "",
+        "subtitle_sync": true,
+        "subtitle_taskinfo": [],
+        "video_mute": false,
+        "zoom_info_params": null
+    },
+    "cover": null,
+    "create_time": 0,
+    "duration": 337553560,
+    "extra_info": null,
+    "fps": 30,
+    "group_container": null,
+    "id": "7d15fca70374425d9c145f28eec38053",
+    "keyframes": {
+        "adjusts": [],
+        "audios": [],
+        "filters": [],
+        "handwrites": [],
+        "stickers": [],
+        "texts": [],
+        "videos": []
+    },
+    "last_modified_platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "materials": {
+        "ai_translates": [],
+        "audio_balances": [],
+        "audio_effects": [],
+        "audio_fades": [],
+        "audio_track_indexes": [],
+        "audios": [
+            {
+                "app_id": 0,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 1,
+                "copyright_limit_type": "none",
+                "duration": 337553560,
+                "effect_id": "",
+                "formula_id": "",
+                "id": "bc6ade60043433eaa716c4e5242352b7",
+                "intensifies_path": "",
+                "is_ai_clone_tone": false,
+                "is_text_edit_overdub": false,
+                "is_ugc": false,
+                "local_material_id": "bc6ade60043433eaa716c4e5242352b7",
+                "music_id": "bc6ade60043433eaa716c4e5242352b7",
+                "name": "chapter_06.wav",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/chapter_06.wav",
+                "query": "",
+                "remote_url": null,
+                "request_id": "",
+                "resource_id": "",
+                "search_id": "",
+                "source_from": "",
+                "source_platform": 0,
+                "team_id": "",
+                "text_id": "",
+                "tone_category_id": "",
+                "tone_category_name": "",
+                "tone_effect_id": "",
+                "tone_effect_name": "",
+                "tone_platform": "",
+                "tone_second_category_id": "",
+                "tone_second_category_name": "",
+                "tone_speaker": "",
+                "tone_type": "",
+                "type": "extract_music",
+                "video_id": "",
+                "wave_points": []
+            }
+        ],
+        "beats": [],
+        "canvases": [],
+        "chromas": [],
+        "color_curves": [],
+        "digital_humans": [],
+        "drafts": [],
+        "effects": [],
+        "flowers": [],
+        "green_screens": [],
+        "handwrites": [],
+        "hsl": [],
+        "images": [],
+        "log_color_wheels": [],
+        "loudnesses": [],
+        "manual_deformations": [],
+        "masks": [],
+        "material_animations": [],
+        "material_colors": [],
+        "multi_language_refs": [],
+        "placeholders": [],
+        "plugin_effects": [],
+        "primary_color_wheels": [],
+        "realtime_denoises": [],
+        "shapes": [],
+        "smart_crops": [],
+        "smart_relights": [],
+        "sound_channel_mappings": [],
+        "speeds": [],
+        "stickers": [],
+        "tail_leaders": [],
+        "text_templates": [],
+        "texts": [
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"671ca2b3-85ab-4413-8dfb-3d2de0ac91f3\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e第6章\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "9203cd31-690d-4a74-a6a6-41cbf5be7852",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"c635e91a-e61a-41ff-a94a-69d21cc97038\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e田园就躺在他的眼前。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "8d5c19dd-0864-48b0-b1a3-32103f8f4425",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"1c4d424c-8a8d-4d9b-9100-86ff2f6c40dc\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e一条白色的被单盖住了她的身体，只露出那张平静的脸，冷气从她身下幽幽地浮起，缠缠绵绵地围绕着她。叶萧像一尊雕塑般站在旁边，只感到冷气穿越田园冰凉的躯壳，缓缓渗入了他的身体。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "e6dfc228-983a-4efb-87eb-6b045f996775",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"cac555e7-9c0f-4063-88d1-222bcef8bda2\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e现在他终于相信了周旋的话，这女人的身上确实有一股特殊的气质，即便在她死了以后仍然没有变。叶萧最后看了她一眼，心里却在想着她永远都不会说出口的那半句话。然后，他匆匆地离开了法医实验室。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "4bd73954-765f-4938-b3f5-7e454f8d2ee2",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"2248e9d2-2c49-4bb1-8eb5-27c02ce7c799\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e刚才，叶萧已经询问过法医，尸检的结果证明田园确实是死于心脏病，纯属自然死亡。警方也检查过她生前的房子，除了挂在半空的电话机以外，死亡现场没有任何可疑的迹像，已经排除了谋杀的可能。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "7ea4968c-275e-41ea-b3d1-3adf54cac20e",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"1f0a6ee3-c00a-4348-b699-7e2afe79721c\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e法医实验室外的走廊寂静无声，除了外面汨汨的雨声。高高的窗户透进来幽暗的天光，使这里显得潮湿而阴暗，叶萧站在窗前看着雨点滑过玻璃，渐渐有些出神。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "d3f5c0f2-afbc-48d9-a1a1-12037da1de21",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"6071d0de-4127-46f4-bd13-57259584379c\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e就在一小时之前，叶萧刚通过公安局内部的系统，查到了田园的简历。田园生于一个传统戏曲之家，她从小就学戏，很早就表现出了戏曲方面的天赋，12岁便登台演出，到了20岁已经是戏曲界的后起之秀。年轻漂亮的女演员，总是能引起男人们的兴趣，在她最红的时候，身边总是围绕着一群表面上附庸风雅、脑子里却一团浆糊的暴发户，这恐怕也是她那间豪宅的来历。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "4d237162-8009-4957-8d04-fcc4856dfd03",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"31eeb832-932d-4083-bae3-3578eee89cc0\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e然而好景不长，正当3年前田园红得发紫的时候，却在一次重要的表演中突然昏了过去。人们把她送到医院，幸亏医生抢救及时，才挽救了她的生命。也就是在这一天，她被查出患有严重的心脏病，绝对不能唱戏了。从此，田园的舞台生涯宣告结束，她就像一颗流星般划过戏曲的夜空，又迅速地消失。一开始还有戏迷经常来探望她，但时间一长人们就渐渐地淡忘了她。3年来，田园一直深居简出地生活着，没有多少人了解她的近况，所以，她的死并没有引起人们的注意，只有一家报纸做了报道。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "b6441f90-078b-4734-abe5-0f3355ede1ea",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"d7588764-c5a5-4594-9817-45b56b2ee223\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e想着想着，叶萧不禁有了一股世态炎凉的感觉。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "0b4d3792-fa19-406a-86c6-486a8aa88917",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"04b62e8c-daef-4bba-bb08-a0ba1eda728b\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e这几天警方调查了田园最近的病史。医院的病历记录表面，最近一年来她的病情每况愈下，发病的频率也越来越高，几乎每一次都差点要了她的命。医生甚至认为，她随时随地都有可能在睡梦中死去。她自己也很清楚这一点，所以在一个月前申请做器官捐献，手续还没办下来，她自己就已经先去了。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "02f844ad-ea2d-4efb-95ab-21605501c489",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"c2139950-c14b-4daf-90c9-ff068d253fa8\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e还有重要的发现，在她死前3个月，曾经去过一次精神病院，病历记录表明她精神衰弱，因为死亡的恐惧始终缠绕着她。叶萧相信在这种情况下，任何人的心理都会崩溃的，就算真得了精神病也不奇怪。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "5fc84bac-2202-4c3c-b21c-f89fcacbf4b2",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"ede7ea65-c1be-49b1-bfaf-eea60c151f85\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e叶萧开始相信，周旋所遭遇的一切，全都是田园事先安排好的。这个叫田园的不幸女子，知道自己随时随地都会死去，而她还有一件重要的事情还没有办好，那就是木匣，还有——幽灵客栈。所以，她选择了周旋，一个正在寻求灵感的年轻作家。最后，她在濒临死亡的时刻，关照周旋去完成任务。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "49b8d706-9372-43db-ad5a-dbe5cb8edd33",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"bf55a40c-7983-436b-a7db-f820e5907085\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e可惜，死神没来得及让她把话说完。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "08be9ea8-3c31-4ec3-a6b5-ea22bfe32f9c",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"37e6ee92-a306-4ff0-8f37-37e50ee56f15\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e但叶萧转念又想了想，田园为什么不在把木匣交给周旋的同时，就把去幽灵客栈的要求说给他听呢？又何必要等到最后关头才打电话呢？或许她是考虑到，只有在死亡时刻的遗嘱，才能让周旋真正坚定去幽灵客栈的决心吧。否则，谁会为一个萍水相逢的女人做这种事呢？\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "f7a5a815-775a-4e3c-bbc9-0e6040c12c7a",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"cf36086b-15e3-49ed-817c-edd5a3a667d5\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e不过还是有许多疑点，叶萧的脑子越来越模糊了。也许，这只是一个绝望的心脏病患者，在临死前的恶作剧吧，而那个被她选中的倒霉蛋就是周旋，至少她曾经去过精神病院。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "0ce33a14-f6c4-40fe-a08a-ccaa0d99b1c1",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"199f764c-073f-4249-9367-8ec906c69f7f\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e窗外，雨下个不停。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "dd616b81-6631-4658-9013-87640ec4fe9b",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            },
+            {
+                "add_type": 2,
+                "alignment": 1,
+                "background_alpha": 1,
+                "background_color": "",
+                "background_height": 1,
+                "background_horizontal_offset": 0,
+                "background_round_radius": 0,
+                "background_vertical_offset": 0,
+                "background_width": 1,
+                "bold_width": 0,
+                "border_color": "",
+                "border_width": 0.08,
+                "check_flag": 7,
+                "content": "\u003cfont id=\"3a2f9fa5-8e56-421b-8aa6-7904ade19e65\" path=\"/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf\"\u003e\u003ccolor=(1.000000, 1.000000, 1.000000, 1.000000)\u003e\u003csize=5.000000\u003e叶萧感到一阵窒息，他快步冲出走廊。穿破外面的雨幕，他钻进了那辆跟随了他好几年的桑塔纳中，挡风玻璃上的刮雨器不停划动着，他振作精神踩下了油门，向市图书馆的方向疾驰而去。\u003c/size\u003e\u003c/color\u003e\u003c/font\u003e",
+                "font_category_id": "",
+                "font_category_name": "",
+                "font_id": "",
+                "font_name": "",
+                "font_path": "/Applications/VideoFusion-macOS.app/Contents/Resources/Font/SystemFont/zh-hans.ttf",
+                "font_resource_id": "",
+                "font_size": 5,
+                "font_title": "none",
+                "font_url": "",
+                "fonts": [],
+                "global_alpha": 1,
+                "has_shadow": false,
+                "id": "37db5a69-91b2-484a-8935-9ed5e5fd11aa",
+                "initial_scale": 1,
+                "is_rich_text": false,
+                "italic_degree": 0,
+                "ktv_color": "",
+                "layer_weight": 1,
+                "letter_spacing": 0,
+                "line_spacing": 0.02,
+                "recognize_type": 0,
+                "shadow_alpha": 0.8,
+                "shadow_angle": -45,
+                "shadow_color": "",
+                "shadow_distance": 8,
+                "shadow_point": {
+                    "x": 1.0182337649086284,
+                    "y": -1.0182337649086284
+                },
+                "shadow_smoothing": 1,
+                "shape_clip_x": false,
+                "shape_clip_y": false,
+                "style_name": "",
+                "sub_type": 0,
+                "text_alpha": 1,
+                "text_color": "#FFFFFF",
+                "text_size": 30,
+                "text_to_audio_ids": [],
+                "type": "subtitle",
+                "typesetting": 0,
+                "underline": false,
+                "underline_offset": 0.22,
+                "underline_width": 0.05,
+                "use_effect_default_color": true
+            }
+        ],
+        "time_marks": [],
+        "transitions": [],
+        "video_effects": [],
+        "video_trackings": [],
+        "videos": [
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                "local_material_id": "",
+                "material_id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                "material_name": "scene_01.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_01.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                "local_material_id": "",
+                "material_id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                "material_name": "scene_02.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_02.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "960399d591ba3e04b4e626065a9d152a",
+                "local_material_id": "",
+                "material_id": "960399d591ba3e04b4e626065a9d152a",
+                "material_name": "scene_03.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_03.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                "local_material_id": "",
+                "material_id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                "material_name": "scene_04.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_04.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "dabe44855b3d3a52a185c14ed0c56fad",
+                "local_material_id": "",
+                "material_id": "dabe44855b3d3a52a185c14ed0c56fad",
+                "material_name": "scene_05.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_05.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "6aedf1a6a31a3bcca3f4aeb18a2e0b18",
+                "local_material_id": "",
+                "material_id": "6aedf1a6a31a3bcca3f4aeb18a2e0b18",
+                "material_name": "scene_06.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_06.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "0a3116efa6ed325796902eff927506d8",
+                "local_material_id": "",
+                "material_id": "0a3116efa6ed325796902eff927506d8",
+                "material_name": "scene_07.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_07.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "1d3b5109d0463ad0bfd2a26aefccf768",
+                "local_material_id": "",
+                "material_id": "1d3b5109d0463ad0bfd2a26aefccf768",
+                "material_name": "scene_08.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_08.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "f7b2c2dee527326fa6b6fb09712926d4",
+                "local_material_id": "",
+                "material_id": "f7b2c2dee527326fa6b6fb09712926d4",
+                "material_name": "scene_09.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_09.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "7b8a58565e8d33a79e06d4e67fb4cc0c",
+                "local_material_id": "",
+                "material_id": "7b8a58565e8d33a79e06d4e67fb4cc0c",
+                "material_name": "scene_10.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_10.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "965b06f83e3b3ee7a767e73455a75e29",
+                "local_material_id": "",
+                "material_id": "965b06f83e3b3ee7a767e73455a75e29",
+                "material_name": "scene_11.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_11.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            },
+            {
+                "audio_fade": null,
+                "category_id": "",
+                "category_name": "local",
+                "check_flag": 63487,
+                "crop": {
+                    "lower_left_x": 0,
+                    "lower_left_y": 1,
+                    "lower_right_x": 1,
+                    "lower_right_y": 1,
+                    "upper_left_x": 0,
+                    "upper_left_y": 0,
+                    "upper_right_x": 1,
+                    "upper_right_y": 0
+                },
+                "crop_ratio": "free",
+                "crop_scale": 1,
+                "duration": 10800000000,
+                "height": 1080,
+                "id": "675e2598cc183e4f8b1f97815f961173",
+                "local_material_id": "",
+                "material_id": "675e2598cc183e4f8b1f97815f961173",
+                "material_name": "scene_12.png",
+                "media_path": "",
+                "path": "/Users/mac/code/ai/novel-video-workflow/output/幽灵客栈/chapter_06/scene_12.png",
+                "remote_url": null,
+                "type": "photo",
+                "width": 1920
+            }
+        ],
+        "vocal_beautifys": [],
+        "vocal_separations": []
+    },
+    "mutable_config": null,
+    "name": "",
+    "new_version": "57.0.0",
+    "platform": {
+        "app_id": 3704,
+        "app_version": "3.4.1",
+        "os": "mac",
+        "os_version": "26.2"
+    },
+    "relationships": [],
+    "render_index_track_mode_on": true,
+    "retouch_cover": null,
+    "source": "default",
+    "static_cover_image_path": "",
+    "tracks": [
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "159fc737-7e39-4480-a460-699fe51526c7",
+            "is_default_name": false,
+            "name": "视频轨道_0",
+            "render_index": 0,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "1346fb66-cd22-4285-9008-6f2a6e6298f2"
+                    ],
+                    "filters": [],
+                    "id": "a2fefb32-498b-42ec-95dd-a65c3967863c",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "3ea9aa2e8fbc39b1833863727d39a7c3",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "87e8299b-d88d-497e-ae09-da3b8d3538fe"
+                    ],
+                    "filters": [],
+                    "id": "84fc80aa-9cbf-46ff-aa3a-ed64496e3e4b",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "ce475d439ef4398b81dd2cd5eff55e4d",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 28129463
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 28129463
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "be8746b8-8a58-4892-9788-b89b9b1b9d7b"
+                    ],
+                    "filters": [],
+                    "id": "5480b62c-7971-48b6-be66-26c8f1962513",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "960399d591ba3e04b4e626065a9d152a",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 56258926
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 56258926
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "9aeb8301-144c-4ce6-adaf-14e8fae72c68"
+                    ],
+                    "filters": [],
+                    "id": "a7bf5cc9-0454-4284-a089-661248163fd0",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "019cd1b7dc6a382bbd860f4b3daf1048",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 84388389
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 84388389
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "6ce5a658-c848-40ba-b867-5216c680e04f"
+                    ],
+                    "filters": [],
+                    "id": "fb7aa2e9-46ed-4b81-a9b6-a89e5eb04349",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "dabe44855b3d3a52a185c14ed0c56fad",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 112517852
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 112517852
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "891bd4d7-0bc1-4d4c-b53c-f607c86b91a5"
+                    ],
+                    "filters": [],
+                    "id": "ddb0fa72-6e0d-4616-bc68-03a43e9f8fc3",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "6aedf1a6a31a3bcca3f4aeb18a2e0b18",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 140647315
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 140647315
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "9f51fb47-a377-4b47-9750-98d4079a918b"
+                    ],
+                    "filters": [],
+                    "id": "cf8d0b6a-8178-4ade-a7fd-e1034cc6c22b",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "0a3116efa6ed325796902eff927506d8",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 168776778
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 168776778
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "c0cc498c-2226-48b5-a912-85b8fd787000"
+                    ],
+                    "filters": [],
+                    "id": "71c1aedb-f3ab-41af-acf2-e65e7c884a71",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "1d3b5109d0463ad0bfd2a26aefccf768",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 196906241
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 196906241
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "db2797ba-adff-4d7c-98cf-8f9102c54017"
+                    ],
+                    "filters": [],
+                    "id": "2146e48f-17d3-4b75-87e1-81522d9ae318",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "f7b2c2dee527326fa6b6fb09712926d4",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 225035704
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 225035704
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "8410b507-9da6-42b3-8e2e-ec9669bf0429"
+                    ],
+                    "filters": [],
+                    "id": "24c43ecd-da1e-4b87-872f-4fa5ef8718dc",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "7b8a58565e8d33a79e06d4e67fb4cc0c",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 253165167
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 253165167
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "c39ecbc9-5567-4f8c-a9c8-c80aa8c80c12"
+                    ],
+                    "filters": [],
+                    "id": "3dc9a2df-e6db-44c2-a1fa-c37bd443d457",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "965b06f83e3b3ee7a767e73455a75e29",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129463,
+                        "start": 281294630
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129463,
+                        "start": 281294630
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": 0
+                        }
+                    },
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "67dca93b-a9b4-464b-b787-2d19192b92da"
+                    ],
+                    "filters": [],
+                    "id": "169aefe6-ccbf-4602-bf58-94010309ddee",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "675e2598cc183e4f8b1f97815f961173",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 28129467,
+                        "start": 309424093
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 28129467,
+                        "start": 309424093
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "video",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "video"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "2fb3ef07-9b8c-4e8e-b00b-095d3d05eb54",
+            "is_default_name": false,
+            "name": "音频轨道",
+            "render_index": 0,
+            "segments": [
+                {
+                    "common_keyframes": [],
+                    "effects": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "0fc9238f-0fd1-4120-aa3b-cea1fe8cab16"
+                    ],
+                    "id": "904c345b-2164-4d75-be8d-da0a5539440f",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "bc6ade60043433eaa716c4e5242352b7",
+                    "render_index": 0,
+                    "reverse": false,
+                    "source_timerange": {
+                        "duration": 337553560,
+                        "start": 0
+                    },
+                    "speed": 1,
+                    "target_timerange": {
+                        "duration": 337553560,
+                        "start": 0
+                    },
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "audio",
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "audio"
+        },
+        {
+            "attribute": 0,
+            "flag": 0,
+            "id": "73cd4f0a-14f5-4608-914b-a601d4406dea",
+            "is_default_name": false,
+            "name": "字幕轨道",
+            "render_index": 15000,
+            "segments": [
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "0c026836-84d7-4c08-aaf2-86399d706baf"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "546f0539-7da6-4e41-a06f-9fc07d0fa394",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "9203cd31-690d-4a74-a6a6-41cbf5be7852",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 717003,
+                        "start": 0
+                    },
+                    "text": "第6章",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "eb7fdc23-4429-40f4-aef8-0b998bfac364"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "e742d219-6e3d-4019-bd9a-682d3218708a",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "8d5c19dd-0864-48b0-b1a3-32103f8f4425",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 2391011,
+                        "start": 717003
+                    },
+                    "text": "田园就躺在他的眼前。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "5ba3f0f5-5111-453e-93ed-884a4b57c8bb"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "dd62d4af-72d2-4894-a0fa-13266fb928f5",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "e6dfc228-983a-4efb-87eb-6b045f996775",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 20335094,
+                        "start": 3108014
+                    },
+                    "text": "一条白色的被单盖住了她的身体，只露出那张平静的脸，冷气从她身下幽幽地浮起，缠缠绵绵地围绕着她。叶萧像一尊雕塑般站在旁边，只感到冷气穿越田园冰凉的躯壳，缓缓渗入了他的身体。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "2544c9ca-8430-4e13-948c-14fe861c7de6"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "0245a8a8-19f6-4194-9656-304d64d93d39",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "4bd73954-765f-4938-b3f5-7e454f8d2ee2",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 21770100,
+                        "start": 23443108
+                    },
+                    "text": "现在他终于相信了周旋的话，这女人的身上确实有一股特殊的气质，即便在她死了以后仍然没有变。叶萧最后看了她一眼，心里却在想着她永远都不会说出口的那半句话。然后，他匆匆地离开了法医实验室。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "b014ab15-5770-40b7-9f82-5a4e3200898c"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "c27bd709-99d0-4162-9c50-4961efce38aa",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "7ea4968c-275e-41ea-b3d1-3adf54cac20e",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 21291099,
+                        "start": 45213208
+                    },
+                    "text": "刚才，叶萧已经询问过法医，尸检的结果证明田园确实是死于心脏病，纯属自然死亡。警方也检查过她生前的房子，除了挂在半空的电话机以外，死亡现场没有任何可疑的迹像，已经排除了谋杀的可能。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "4e6fadce-91b1-4127-9aa1-e0fd896995bc"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "1f01ff30-8d6f-47b2-844f-e888507e51b0",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "d3f5c0f2-afbc-48d9-a1a1-12037da1de21",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 16986078,
+                        "start": 66504307
+                    },
+                    "text": "法医实验室外的走廊寂静无声，除了外面汨汨的雨声。高高的窗户透进来幽暗的天光，使这里显得潮湿而阴暗，叶萧站在窗前看着雨点滑过玻璃，渐渐有些出神。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "dbd9a3e3-5b14-4ac1-9fa9-ce184334cd67"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "ca549116-28b8-4146-9540-f126db77475b",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "4d237162-8009-4957-8d04-fcc4856dfd03",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 39473183,
+                        "start": 83490385
+                    },
+                    "text": "就在一小时之前，叶萧刚通过公安局内部的系统，查到了田园的简历。田园生于一个传统戏曲之家，她从小就学戏，很早就表现出了戏曲方面的天赋，12岁便登台演出，到了20岁已经是戏曲界的后起之秀。年轻漂亮的女演员，总是能引起男人们的兴趣，在她最红的时候，身边总是围绕着一群表面上附庸风雅、脑子里却一团浆糊的暴发户，这恐怕也是她那间豪宅的来历。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "394a6b4b-7429-4c5e-87d8-bdc3eb0ea3d7"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "14711767-949f-4986-87cf-7d57f022e29a",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "b6441f90-078b-4734-abe5-0f3355ede1ea",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 52630243,
+                        "start": 122963568
+                    },
+                    "text": "然而好景不长，正当3年前田园红得发紫的时候，却在一次重要的表演中突然昏了过去。人们把她送到医院，幸亏医生抢救及时，才挽救了她的生命。也就是在这一天，她被查出患有严重的心脏病，绝对不能唱戏了。从此，田园的舞台生涯宣告结束，她就像一颗流星般划过戏曲的夜空，又迅速地消失。一开始还有戏迷经常来探望她，但时间一长人们就渐渐地淡忘了她。3年来，田园一直深居简出地生活着，没有多少人了解她的近况，所以，她的死并没有引起人们的注意，只有一家报纸做了报道。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "de22ab82-0785-45be-a761-ca409b365ea4"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "8ff1f0c9-30d9-4a3f-903c-8cbaa89e3618",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "0b4d3792-fa19-406a-86c6-486a8aa88917",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 5024023,
+                        "start": 175593811
+                    },
+                    "text": "想着想着，叶萧不禁有了一股世态炎凉的感觉。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "10ff2d52-68b3-4d43-9464-4da5ced35634"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "8007f2c0-f2fa-400e-b1fa-3088d7581dd4",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "02f844ad-ea2d-4efb-95ab-21605501c489",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 31580146,
+                        "start": 180617834
+                    },
+                    "text": "这几天警方调查了田园最近的病史。医院的病历记录表面，最近一年来她的病情每况愈下，发病的频率也越来越高，几乎每一次都差点要了她的命。医生甚至认为，她随时随地都有可能在睡梦中死去。她自己也很清楚这一点，所以在一个月前申请做器官捐献，手续还没办下来，她自己就已经先去了。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "fc422530-bb34-4c0e-92d8-cf70dfa93f00"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "910572ae-cf48-4416-9220-32913817bab0",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "5fc84bac-2202-4c3c-b21c-f89fcacbf4b2",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 21290099,
+                        "start": 212197980
+                    },
+                    "text": "还有重要的发现，在她死前3个月，曾经去过一次精神病院，病历记录表明她精神衰弱，因为死亡的恐惧始终缠绕着她。叶萧相信在这种情况下，任何人的心理都会崩溃的，就算真得了精神病也不奇怪。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "ddeba7ac-490e-4f47-bca4-d331c2de6102"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "59eb3bc6-386f-4399-9711-7f9133b08381",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "49b8d706-9372-43db-ad5a-dbe5cb8edd33",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 31339144,
+                        "start": 233488079
+                    },
+                    "text": "叶萧开始相信，周旋所遭遇的一切，全都是田园事先安排好的。这个叫田园的不幸女子，知道自己随时随地都会死去，而她还有一件重要的事情还没有办好，那就是木匣，还有——幽灵客栈。所以，她选择了周旋，一个正在寻求灵感的年轻作家。最后，她在濒临死亡的时刻，关照周旋去完成任务。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "8855e101-b8bc-46a7-93a5-87130197852c"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "4e467511-c458-48b2-9325-49685cdc5d87",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "08be9ea8-3c31-4ec3-a6b5-ea22bfe32f9c",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 3828018,
+                        "start": 264827223
+                    },
+                    "text": "可惜，死神没来得及让她把话说完。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "fb69e825-044f-407c-a01a-0f9ace80f4e3"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "7fbe7c27-6cec-4d73-a6e9-2eb4eb11f7b8",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "f7a5a815-775a-4e3c-bbc9-0e6040c12c7a",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 28468132,
+                        "start": 268655241
+                    },
+                    "text": "但叶萧转念又想了想，田园为什么不在把木匣交给周旋的同时，就把去幽灵客栈的要求说给他听呢？又何必要等到最后关头才打电话呢？或许她是考虑到，只有在死亡时刻的遗嘱，才能让周旋真正坚定去幽灵客栈的决心吧。否则，谁会为一个萍水相逢的女人做这种事呢？",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "db3b90f5-4f0d-4319-aee3-32d7d6c04d75"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "17446396-39d6-4e9d-8aae-3976dd779a08",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "0ce33a14-f6c4-40fe-a08a-ccaa0d99b1c1",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 18421085,
+                        "start": 297123373
+                    },
+                    "text": "不过还是有许多疑点，叶萧的脑子越来越模糊了。也许，这只是一个绝望的心脏病患者，在临死前的恶作剧吧，而那个被她选中的倒霉蛋就是周旋，至少她曾经去过精神病院。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "6a10511f-07e3-48ea-8af3-668ccc33b50d"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "3611232f-6809-4b15-966a-f9244a612b92",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "dd616b81-6631-4658-9013-87640ec4fe9b",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 2154010,
+                        "start": 315544458
+                    },
+                    "text": "窗外，雨下个不停。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                },
+                {
+                    "clip": {
+                        "alpha": 1,
+                        "flip": {
+                            "horizontal": false,
+                            "vertical": false
+                        },
+                        "rotation": 0,
+                        "scale": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "transform": {
+                            "x": 0,
+                            "y": -0.8
+                        }
+                    },
+                    "common_keyframes": [],
+                    "enable_adjust": true,
+                    "enable_color_correct_adjust": false,
+                    "enable_color_curves": true,
+                    "enable_color_match_adjust": false,
+                    "enable_color_wheels": true,
+                    "enable_lut": true,
+                    "enable_smart_color_adjust": false,
+                    "extra_material_refs": [
+                        "3d221ff1-d11f-40db-9e11-98fd1fe547fb"
+                    ],
+                    "fixed_height": -1,
+                    "fixed_width": -1,
+                    "font": "",
+                    "id": "1686b63f-83c0-46ef-b15d-b363636853c3",
+                    "keyframe_refs": [],
+                    "last_nonzero_volume": 1,
+                    "material_id": "37db5a69-91b2-484a-8935-9ed5e5fd11aa",
+                    "render_index": 15000,
+                    "reverse": false,
+                    "source_timerange": null,
+                    "speed": 1,
+                    "style": {
+                        "align": 1,
+                        "alpha": 1,
+                        "bold": true,
+                        "color": [
+                            1,
+                            1,
+                            1
+                        ],
+                        "italic": false,
+                        "letter_spacing": 0,
+                        "line_spacing": 0,
+                        "size": 24,
+                        "underline": false,
+                        "vertical": false
+                    },
+                    "target_timerange": {
+                        "duration": 19855092,
+                        "start": 317698468
+                    },
+                    "text": "叶萧感到一阵窒息，他快步冲出走廊。穿破外面的雨幕，他钻进了那辆跟随了他好几年的桑塔纳中，挡风玻璃上的刮雨器不停划动着，他振作精神踩下了油门，向市图书馆的方向疾驰而去。",
+                    "track_attribute": 0,
+                    "track_render_index": 0,
+                    "type": "text",
+                    "uniform_scale": {
+                        "on": true,
+                        "value": 1
+                    },
+                    "visible": true,
+                    "volume": 1
+                }
+            ],
+            "type": "text"
+        }
+    ],
+    "update_time": 0,
+    "version": "360000"
+}
