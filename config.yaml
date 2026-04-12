@@ -26,7 +26,7 @@ workflow:
 
 # 图片生成配置
 image:
-  engine: "drawthings"  # 可选: drawthings, stable_diffusion, dall_e
+  engine: "drawthings"  # 可选: drawthings,
   width: 512            # 调整为更适合手机观看的尺寸
   height: 896           # 调整为更适合手机观看的尺寸
   steps: 30

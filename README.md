@@ -265,7 +265,7 @@ output/
 
 系统通过 `config.yaml` 文件进行配置，主要配置项包括：
 
-- **服务端点**: Ollama, Stable Diffusion, IndexTTS2等服务地址
+- **服务端点**: Ollama, Drawthings, IndexTTS2等服务地址
 - **路径配置**: 输入输出目录、资源文件路径
 - **图像设置**: 生成图像的尺寸、质量、样式等
 - **音频设置**: 音频格式、采样率等

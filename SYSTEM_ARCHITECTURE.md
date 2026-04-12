@@ -51,7 +51,7 @@ novel-video-workflow/
 ### 工具组件 (`pkg/tools/`)
 
 #### 图像生成 (`pkg/tools/drawthings/`)
-- **`client.go`** - Stable Diffusion WebUI API客户端
+- **`client.go`** - Drawthings API客户端
 - **`ollama_client.go`** - Ollama API客户端，用于智能提示词生成
 - **`chapter_image_generator.go`** - 章节图像生成器，将文本转换为图像
 
@@ -122,7 +122,7 @@ go run main.go
 ### 环境准备
 1. 安装Go 1.25+
 2. 安装Ollama并下载模型
-3. 安装Stable Diffusion WebUI
+3. 安装Drawthings
 4. 安装IndexTTS2服务
 
 ### 快速开始
@@ -164,7 +164,7 @@ go run main.go
 - Web服务器：http://localhost:8080
 - MCP服务器：stdio协议（通过MCP客户端调用）
 - Ollama服务：http://localhost:11434
-- SD WebUI：http://localhost:7861
+- Drawthings服务：http://localhost:7861
 - IndexTTS2：http://localhost:7860
 
 ## 开发说明

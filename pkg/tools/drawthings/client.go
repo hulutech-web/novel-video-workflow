@@ -144,7 +144,7 @@ func (c *DrawThingsClient) Txt2Img(params Txt2ImgRequest) (*Txt2ImgResponse, err
 	// 先检查API是否可用
 	if !c.APIAvailable {
 		if !c.CheckAPIAvailability() {
-			return nil, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.BaseURL)
+			return nil, fmt.Errorf("DrawThings API不可用，请确保正在运行在 %s", c.BaseURL)
 		}
 	}
 	endpoint := c.BaseURL + "/sdapi/v1/txt2img"
@@ -207,7 +207,7 @@ func (c *DrawThingsClient) Img2Img(params Img2ImgRequest) (*Img2ImgResponse, err
 	// 先检查API是否可用
 	if !c.APIAvailable {
 		if !c.CheckAPIAvailability() {
-			return nil, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.BaseURL)
+			return nil, fmt.Errorf("DrawThings API不可用，请确保正在运行在 %s", c.BaseURL)
 		}
 	}
 	c.BroadcastService.SendMessage("Img2Img请求", fmt.Sprintf("图片数,%d", len(params.InitImages)), broadcast.GetTimeStr())
@@ -304,7 +304,7 @@ func (c *DrawThingsClient) GenerateImageFromText(text, outputFile string, width,
 
 	if !c.APIAvailable {
 		if !c.CheckAPIAvailability() {
-			return fmt.Errorf("无法连接到DrawThings API，请确保Stable Diffusion WebUI正在运行在 %s 并且可以通过该地址访问", c.BaseURL)
+			return fmt.Errorf("无法连接到DrawThings API，请确保正在运行在 %s 并且可以通过该地址访问", c.BaseURL)
 		}
 	}
 
@@ -358,7 +358,8 @@ func (c *DrawThingsClient) GenerateImageFromText(text, outputFile string, width,
 		HrUpscaler:        "",
 		HrSecondPassSteps: 0,
 		Tiling:            false,
-		Model:             "z_image_turbo_1.0_q6p.ckpt", // 使用z-image turbo模型
+		/*		Model:             "z_image_turbo_1.0_q6p.ckpt", // 使用z-image turbo模型*/
+		Model:             "flux_2_klein_4b_q6p.ckpt", // 使用flux模型
 		DenoisingStrength: &strengthValue,
 	}
 

@@ -105,7 +105,7 @@ func (c *ChapterImageGenerator) GenerateImagesFromChapter(chapterText, outputDir
 	// 检查DrawThings API可用性
 	if !c.Client.APIAvailable {
 		c.Logger.Warn("DrawThings API不可用，将跳过图像生成步骤", zap.String("api_url", c.Client.BaseURL))
-		return results, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.Client.BaseURL)
+		return results, fmt.Errorf("DrawThings API不可用，请确保正在运行在 %s", c.Client.BaseURL)
 	}
 
 	for i, paragraph := range paragraphs {
@@ -415,7 +415,7 @@ func (c *ChapterImageGenerator) GenerateImagesFromLyric(lyricText, outputDir str
 	// 检查DrawThings API可用性
 	if !c.Client.APIAvailable {
 		c.Logger.Warn("DrawThings API不可用，将跳过图像生成步骤", zap.String("api_url", c.Client.BaseURL))
-		return results, fmt.Errorf("DrawThings API不可用，请确保Stable Diffusion WebUI正在运行在 %s", c.Client.BaseURL)
+		return results, fmt.Errorf("DrawThings API不可用，正在运行在 %s", c.Client.BaseURL)
 	}
 	c.OllamaClient.AnalyzeSceneAndBackground(lyricText)
 
