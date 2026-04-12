@@ -13,7 +13,7 @@
 - Python 3.8或更高版本
 - Git
 - Ollama (用于AI模型)
-- Stable Diffusion WebUI (用于图像生成)
+- Drawthings (用于图像生成)
 
 ## 安装指南
 
@@ -48,12 +48,9 @@ ollama pull qwen3:4b
 ollama pull llama3.2
 ```
 
-#### 3.2 安装Stable Diffusion WebUI
-```bash
-git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-cd stable-diffusion-webui
-./webui.sh
-```
+#### 3.2 安装Drawthings
+
+Appstore中安装即可
 
 #### 3.3 安装IndexTTS2 (可选)
 如果您需要TTS功能，需要安装IndexTTS2服务。
@@ -67,7 +64,7 @@ services:
   ollama:
     url: "http://localhost:11434"
     model: "qwen3:4b"
-  stable_diffusion:
+  drawthings:
     url: "http://localhost:7861"
   indextts2:
     url: "http://localhost:7860"
@@ -225,7 +222,7 @@ services:
     model: "qwen3:4b"             # 使用的模型
     timeout: 300                   # 请求超时时间（秒）
   
-  stable_diffusion:
+  drawthings:
     url: "http://localhost:7861"   # SD WebUI地址
     timeout: 120                   # 请求超时时间
     sampler: "Euler a"             # 采样器

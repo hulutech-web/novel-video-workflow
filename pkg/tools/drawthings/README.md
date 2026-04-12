@@ -1,12 +1,12 @@
 # DrawThings API 集成
 
-本模块集成了 DrawThings API（Stable Diffusion API），支持文生图和图生图功能，特别适用于悬疑小说视频生成。
+本模块集成了 DrawThings API，支持文生图和图生图功能，特别适用于悬疑小说视频生成。
 
 ## 服务准备
 
-在使用 DrawThings API 之前，请确保已正确安装并运行 Stable Diffusion WebUI（AUTOMATIC1111）：
+在使用 DrawThings API 之前，请确保已正确安装并运行：
 
-1. 下载并安装 [AUTOMATIC1111/stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
+1. 下载并安装 DrawThings
 2. 启动服务时启用 API 模式：
    ```bash
    # Linux/Mac
@@ -113,4 +113,4 @@ curl http://localhost:7861
 
 - DrawThings API (通过 http://localhost:7861 访问)
 - Ollama (通过 http://localhost:11434 访问，默认模型 qwen3:4b)
-- Stable Diffusion WebUI
+- Drawthings API 运行时依赖
